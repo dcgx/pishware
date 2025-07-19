@@ -11,7 +11,8 @@ const supabaseServiceRoleClient = createClient(supabaseUrl, "eyJhbGciOiJIUzI1NiI
 @Injectable()
 export class UsersService {
     async getUsers() {
-        const { data, error } = await supabase.from('profiles').select('*');
+        const { data, error } = await supabaseServiceRoleClient.from('profiles').select('*');
+        console.log({data})
         if (error) throw new Error(error.message);
         return data;
     }
@@ -22,8 +23,8 @@ export class UsersService {
         username: string;
     }) {
         const generatedPassword = crypto.randomBytes(8).toString('hex');
+        console.log({generatedPassword})
 
-        // 1. Crear usuario Auth
         const { data: authUser, error: authError } = await supabaseServiceRoleClient.auth.admin.createUser({
             email: body.email,
             password: generatedPassword,
@@ -32,11 +33,11 @@ export class UsersService {
 
         if (authError) throw new Error(authError.message);
 
-        // 2. Crear perfil
         const { data: profile, error: profileError } = await supabaseServiceRoleClient.from('profiles').insert([
             {
                 id: authUser.user.id, // clave primaria igual al auth_id
                 first_name: body.name,
+                email: body.email,
                 username: body.username,
             }
         ]).select('*');

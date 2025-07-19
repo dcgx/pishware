@@ -30,26 +30,26 @@
               >
                 <td class="px-5 py-4 flex items-center gap-3">
                   <img :src="user.avatar" class="w-10 h-10 rounded-full" />
-                  <span class="font-medium text-gray-800 dark:text-white">{{ user.nombre }}</span>
+                  <span class="font-medium text-gray-800 dark:text-white">{{ user.first_name }}</span>
                 </td>
-                <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.correo }}</td>
-                <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.rol }}</td>
-                <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.grupo }}</td>
+                <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.email }}</td>
+                <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.role }}</td>
+                <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.group }}</td>
                 <td class="px-5 py-4">
                   <span
                     :class="[
                       'rounded-full px-2 py-0.5 text-sm font-medium',
                       {
                         'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500':
-                          user.estado === 'Activo',
+                          user.status === 'ACTIVE',
                         'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400':
-                          user.estado === 'Pendiente',
+                          user.status === 'PENDING',
                         'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500':
-                          user.estado === 'Inactivo',
+                          user.status === 'INACTIVE',
                       },
                     ]"
                   >
-                    {{ user.estado }}
+                    {{ user.status }}
                   </span>
                 </td>
                 <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.ultimo_acceso }}</td>
@@ -163,20 +163,18 @@ import Button from '@/components/ui/Button.vue'
 import AdminLayout from '../components/layout/AdminLayout.vue'
 
 import { useUsers } from '@/composables/useUsers'
+import { useUsersStore } from '@/stores/useUsersStore'
 
-const { users, fetchUsers, loading } = useUsers()
+const { users } = useUsersStore()
+const { fetchUsers, createUser, loading } = useUsers()
 
-onMounted(() => {
-  fetchUsers()
+onMounted(async () => {
+  await fetchUsers()
 })
 
 const newUser = ref({
-  nombre: '',
-  correo: '',
-  rol: '',
-  grupo: '',
-  estado: 'Activo',
-  avatar: '/images/user/default.jpg',
+  name: '',
+  email: '',
 })
 
 const isOpenCreateUserDialog = ref(false)
@@ -186,25 +184,19 @@ const setOpenCreateUserDialog = (value) => {
   isOpenCreateUserDialog.value = value
 }
 
-const handleCreateUser = () => {
-  if (!newUser.value.nombre || !newUser.value.correo || !newUser.value.rol) {
-    alert('Completa los campos obligatorios')
-    return
-  }
-  users.value.push({
-    ...newUser.value,
-    ultimo_acceso: 'Sin acceso',
-  })
-  setOpenCreateUserDialog(false)
+const handleCreateUser = async () => {
+  if (!newUser.value.nombre || !newUser.value.correo) return alert('Completa los campos')
 
-  newUser.value = {
-    nombre: '',
-    correo: '',
-    rol: '',
-    grupo: '',
-    estado: 'Activo',
-    avatar: '/images/user/default.jpg',
+  const { success, password } = await createUser(newUser.value)
+
+  if (success) {
+    alert(`Usuario creado correctamente, password temporal: ${password}`)
+    setOpenCreateUserDialog(false)
+  } else {
+    alert('Error al crear usuario')
   }
+
+  // Reset form
+  newUser.value = { nombre: '', correo: '', rol: '', grupo: '', estado: 'Activo', avatar: '' }
 }
-
 </script>

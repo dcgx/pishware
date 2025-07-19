@@ -1,5 +1,4 @@
 import { useUsersStore } from '@/stores/useUsersStore'
-import { ref } from 'vue'
 import axios from 'axios'
 
 export const useUsers = () => {
@@ -11,19 +10,50 @@ export const useUsers = () => {
     store.error = ''
     try {
       const { data } = await axios.get(`${apiUrl}/users`)
+      console.log(data,'data ')
       store.setUsers(data)
+      console.log(store.users, 'store user')
     } catch (err) {
-      console.error(err)
       store.error = 'Error al obtener usuarios'
     } finally {
       store.loading = false
     }
   }
 
+  const createUser = async (payload) => {
+    store.creating = true
+    store.error = ''
+    try {
+      const { data } = await axios.post(`${apiUrl}/users`, {
+        name: payload.nombre,
+        email: payload.correo,
+        username: payload.correo.split('@')[0] // Ejemplo simple de username
+      })
+      store.addUser({
+        nombre: payload.nombre,
+        correo: payload.correo,
+        rol: payload.rol,
+        grupo: payload.grupo,
+        estado: payload.estado,
+        avatar: payload.avatar,
+        ultimo_acceso: 'Sin acceso',
+        id: data.profile.id,
+      })
+      return { success: true, password: data.password }
+    } catch (err) {
+      store.error = 'Error creando usuario'
+      return { success: false, error: err }
+    } finally {
+      store.creating = false
+    }
+  }
+
   return {
     users: store.users,
     loading: store.loading,
+    creating: store.creating,
     error: store.error,
     fetchUsers,
+    createUser
   }
 }
