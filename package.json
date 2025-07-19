@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "run:dev:api": "pnpm --filter api run start:dev",
+    "run:dev:web": "pnpm --filter web run dev",
+    "run:dev": "concurrently \"pnpm run:dev:api\" \"pnpm run:dev:web\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -13,5 +16,8 @@
   "workspaces": [
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  }
 }
