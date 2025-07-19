@@ -88,24 +88,65 @@
                 class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
               >
                 <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
-                  Payment successful
+                  Crear nuevo usuario
                 </DialogTitle>
-                <div class="mt-2">
-                  <p class="text-sm text-gray-500">
-                    Your payment has been successfully submitted. We’ve sent you an email with all
-                    of the details of your order.
-                  </p>
-                </div>
 
-                <div class="mt-4">
-                  <button
-                    type="button"
-                    class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                    @click="closeModal"
-                  >
-                    Got it, thanks!
-                  </button>
-                </div>
+                <form @submit.prevent="handleCreateUser" class="mt-4 space-y-4">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Nombre</label>
+                    <input v-model="newUser.nombre" required class="w-full border p-2 rounded" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Correo</label>
+                    <input
+                      v-model="newUser.correo"
+                      type="email"
+                      required
+                      class="w-full border p-2 rounded"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Rol</label>
+                    <select v-model="newUser.rol" required class="w-full border p-2 rounded">
+                      <option value="">Seleccione un rol</option>
+                      <option>Administrador</option>
+                      <option>Gerente</option>
+                      <option>Empleado</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Grupo</label>
+                    <input v-model="newUser.grupo" class="w-full border p-2 rounded" />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Estado</label>
+                    <select v-model="newUser.estado" required class="w-full border p-2 rounded">
+                      <option>Activo</option>
+                      <option>Pendiente</option>
+                      <option>Inactivo</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700">Avatar (URL)</label>
+                    <input
+                      v-model="newUser.avatar"
+                      class="w-full border p-2 rounded"
+                      placeholder="https://..."
+                    />
+                  </div>
+                  <div class="pt-4 flex justify-end gap-3">
+                    <button
+                      type="button"
+                      @click="setOpenCreateUserDialog(false)"
+                      class="px-4 py-2 rounded bg-gray-100 text-gray-700"
+                    >
+                      Cancelar
+                    </button>
+                    <button type="submit" class="px-4 py-2 rounded bg-brand-500 text-white">
+                      Crear
+                    </button>
+                  </div>
+                </form>
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -121,12 +162,43 @@ import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } fro
 import Button from '@/components/ui/Button.vue'
 import AdminLayout from '../components/layout/AdminLayout.vue'
 
+const newUser = ref({
+  nombre: '',
+  correo: '',
+  rol: '',
+  grupo: '',
+  estado: 'Activo',
+  avatar: '/images/user/default.jpg',
+})
+
 const isOpenCreateUserDialog = ref(false)
 
 const setOpenCreateUserDialog = (value) => {
   console.log({ value })
   isOpenCreateUserDialog.value = value
 }
+
+const handleCreateUser = () => {
+  if (!newUser.value.nombre || !newUser.value.correo || !newUser.value.rol) {
+    alert('Completa los campos obligatorios')
+    return
+  }
+  users.value.push({
+    ...newUser.value,
+    ultimo_acceso: 'Sin acceso',
+  })
+  setOpenCreateUserDialog(false)
+
+  newUser.value = {
+    nombre: '',
+    correo: '',
+    rol: '',
+    grupo: '',
+    estado: 'Activo',
+    avatar: '/images/user/default.jpg',
+  }
+}
+
 const users = ref([
   {
     nombre: 'Diego Castillo',
