@@ -77,7 +77,7 @@ const router = createRouter({
       name: 'Signin',
       component: () => import('../views/Auth/Signin.vue'),
       meta: {
-        title: 'Signin',
+        title: 'Iniciar sesión',
       },
     },
     {
@@ -85,7 +85,15 @@ const router = createRouter({
       name: 'Signup',
       component: () => import('../views/Auth/Signup.vue'),
       meta: {
-        title: 'Signup',
+        title: 'Registrarse',
+      },
+    },
+    {
+      path: '/reset',
+      name: 'Reset',
+      component: () => import('../views/Auth/Reset.vue'),
+      meta: {
+        title: 'Recuperar contraseña',
       },
     },
   ],
