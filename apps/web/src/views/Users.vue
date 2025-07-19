@@ -157,10 +157,18 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 import Button from '@/components/ui/Button.vue'
 import AdminLayout from '../components/layout/AdminLayout.vue'
+
+import { useUsers } from '@/composables/useUsers'
+
+const { users, fetchUsers, loading } = useUsers()
+
+onMounted(() => {
+  fetchUsers()
+})
 
 const newUser = ref({
   nombre: '',
@@ -199,42 +207,4 @@ const handleCreateUser = () => {
   }
 }
 
-const users = ref([
-  {
-    nombre: 'Diego Castillo',
-    correo: 'diego.castillo@pishware.com',
-    avatar: '/images/user/diego.jpg',
-    rol: 'Administrador',
-    grupo: 'Equipo de Seguridad',
-    estado: 'Activo',
-    ultimo_acceso: '2025-07-16 14:22',
-  },
-  {
-    nombre: 'Andrea López',
-    correo: 'andrea.lopez@pishware.com',
-    avatar: '/images/user/andrea.jpg',
-    rol: 'Gerente',
-    grupo: 'Recursos Humanos',
-    estado: 'Pendiente',
-    ultimo_acceso: '2025-07-14 08:12',
-  },
-  {
-    nombre: 'Carlos Pérez',
-    correo: 'carlos.perez@pishware.com',
-    avatar: '/images/user/carlos.jpg',
-    rol: 'Empleado',
-    grupo: 'Soporte TI',
-    estado: 'Activo',
-    ultimo_acceso: '2025-07-17 09:45',
-  },
-  {
-    nombre: 'María González',
-    correo: 'maria.gonzalez@pishware.com',
-    avatar: '/images/user/maria.jpg',
-    rol: 'Empleado',
-    grupo: 'Marketing',
-    estado: 'Inactivo',
-    ultimo_acceso: '2025-06-30 11:00',
-  },
-])
 </script>
