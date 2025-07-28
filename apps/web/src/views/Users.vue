@@ -1,6 +1,7 @@
 <template>
   <admin-layout>
     <div>
+      {{ selectedUserForDeletion }}
       <div class="flex items-center justify-between">
         <h2 class="text-2xl font-semibold mb-4">Usuarios y Grupos</h2>
         <div class="flex gap-2">
@@ -75,6 +76,19 @@
                         </td>
                         <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
                           {{ user.ultimo_acceso }}
+                        </td>
+                        <td>
+                          <Button
+                            size="xs"
+                            variant="danger"
+                            @click="
+                              selectedUserForDeletion = user.id;
+                              setOpenDeleteUserDialog(true)
+                            "
+                            class="mt-2"
+                          >
+                            Eliminar
+                          </Button>
                         </td>
                       </tr>
                     </tbody>
@@ -155,6 +169,19 @@
                         </td>
                         <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
                           {{ profile.ultimo_acceso }}
+                        </td>
+                        <td>
+                          <Button
+                            size="xs"
+                            variant="danger"
+                            @click="
+                              selectedUserForDeletion = profile.profiles.id;
+                              setOpenDeleteUserDialog(true)
+                            "
+                            class="mt-2"
+                          >
+                            Eliminar
+                          </Button>
                         </td>
                       </tr>
                     </tbody>
@@ -305,6 +332,54 @@
         </div>
       </Dialog>
     </TransitionRoot>
+
+    <TransitionRoot appear :show="isOpenDeleteUserDialog" as="template">
+
+      <Dialog as="div" @close="setOpenDeleteUserDialog(false)" class="relative z-10">
+        <TransitionChild
+          as="template"
+          enter="duration-300 ease-out"
+          enter-from="opacity-0"
+          enter-to="opacity-100"
+          leave="duration-200 ease-in"
+          leave-from="opacity-100"
+          leave-to="opacity-0"
+        >
+          <div class="fixed inset-0 bg-black/25" />
+        </TransitionChild>
+
+        <div class="fixed inset-0 overflow-y-auto">
+          <div class="flex min-h-full items-center justify-center p-4 text-center">
+            <TransitionChild
+              as="template"
+              enter="duration-300 ease-out"
+              enter-from="opacity-0 scale-95"
+              enter-to="opacity-100 scale-100"
+              leave="duration-200 ease-in"
+              leave-from="opacity-100 scale-100"
+              leave-to="opacity-0 scale-95"
+            >
+              <DialogPanel
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              >
+                <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
+                  Eliminar usuario
+                </DialogTitle>
+                <p class="mt-2 text-sm text-gray-500">¿Estás seguro de que quieres eliminar este usuario?</p>
+                <div class="mt-4 flex justify-end gap-3">
+                  <Button size="sm" variant="outline" @click="setOpenDeleteUserDialog(false)">
+                    Cancelar
+                  </Button>
+                  <Button size="sm" variant="danger" @click="deleteUser(selectedUserForDeletion)">
+                    Eliminar
+                  </Button>
+                </div>
+              </DialogPanel>
+            </TransitionChild>
+          </div>
+        </div>
+      </Dialog>
+    </TransitionRoot>
   </admin-layout>
 </template>
 
@@ -329,7 +404,7 @@ import { useUsers } from '@/composables/useUsers'
 import { useGroups } from '@/composables/useGroups'
 import { useRoles } from '@/composables/useRoles'
 
-const { users, usersWithoutGroups, fetchUsers, createUser, loading } = useUsers()
+const { users, usersWithoutGroups, fetchUsers, createUser, loading, deleteUser } = useUsers()
 const { groups, fetchGroups, createGroup } = useGroups()
 const { fetchRoles, roles } = useRoles()
 
@@ -344,8 +419,11 @@ const newUser = ref({
   grupo: '',
 })
 
+const selectedUserForDeletion = ref(null)
+
 const isOpenCreateUserDialog = ref(false)
 const isOpenCreateGroupDialog = ref(false)
+const isOpenDeleteUserDialog = ref(false)
 
 const setOpenCreateUserDialog = (value) => {
   isOpenCreateUserDialog.value = value
@@ -353,6 +431,10 @@ const setOpenCreateUserDialog = (value) => {
 
 const setOpenCreateGroupDialog = (value) => {
   isOpenCreateGroupDialog.value = value
+}
+
+const setOpenDeleteUserDialog = (value) => {
+  isOpenDeleteUserDialog.value = value
 }
 
 const handleCreateUser = async () => {
