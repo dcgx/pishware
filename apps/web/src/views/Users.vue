@@ -15,11 +15,11 @@
       </div>
       <div class="w-full">
         <div class="w-full rounded-2xl bg-white p-2">
-          <Disclosure v-slot="{ open }">
+          <Disclosure v-slot="{ open }" v-if="usersWithoutGroups && usersWithoutGroups.length > 0">
             <DisclosureButton
               class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span>Sin grupo (3)</span>
+              <span>Sin grupo ({{ usersWithoutGroups ? usersWithoutGroups.length : 0 }})</span>
               <ChevronDownIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 text-purple-500"
@@ -43,7 +43,7 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                       <tr
-                        v-for="(user, index) in users"
+                        v-for="(user, index) in usersWithoutGroups"
                         :key="index"
                         class="border-t border-gray-100 dark:border-gray-800"
                       >
@@ -83,17 +83,79 @@
               </div>
             </DisclosurePanel>
           </Disclosure>
-          <Disclosure as="div" class="mt-2" v-slot="{ open }">
+          <Disclosure
+            as="div"
+            class="mt-2"
+            v-slot="{ open }"
+            v-for="group in groups"
+            :key="group.id"
+          >
             <DisclosureButton
               class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span>Marketing</span>
+              <span>{{ group.name }}</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 text-purple-500"
               />
             </DisclosureButton>
-            <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500"> No. </DisclosurePanel>
+            <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500">
+              <div
+                class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+              >
+                <div class="max-w-full overflow-x-auto custom-scrollbar">
+                  <table class="min-w-full">
+                    <thead>
+                      <tr class="border-b border-gray-200 dark:border-gray-700">
+                        <th class="px-5 py-3 text-left">Nombre</th>
+                        <th class="px-5 py-3 text-left">Correo</th>
+                        <th class="px-5 py-3 text-left">Rol</th>
+                        <th class="px-5 py-3 text-left">Grupo</th>
+                        <th class="px-5 py-3 text-left">Estado</th>
+                        <th class="px-5 py-3 text-left">Último acceso</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                      <tr
+                        v-for="(profile, index) in group.group_profile"
+                        :key="index"
+                        class="border-t border-gray-100 dark:border-gray-800"
+                      >
+                        <td class="px-5 py-4 flex items-center gap-3">
+                          <img :src="profile.avatar" class="w-10 h-10 rounded-full" />
+                          <span class="font-medium text-gray-800 dark:text-white">{{
+                            profile.profiles.first_name
+                          }}</span>
+                        </td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.profiles.email }}</td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.profiles.role }}</td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.profiles.group }}</td>
+                        <td class="px-5 py-4">
+                          <span
+                            :class="[
+                              'rounded-full px-2 py-0.5 text-sm font-medium',
+                              {
+                                'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500':
+                                  profile.status === 'ACTIVE',
+                                'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400':
+                                  profile.status === 'PENDING',
+                                'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500':
+                                  profile.status === 'INACTIVE',
+                              },
+                            ]"
+                          >
+                            {{ profile.status }}
+                          </span>
+                        </td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
+                          {{ profile.ultimo_acceso }}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </DisclosurePanel>
           </Disclosure>
         </div>
       </div>
@@ -225,7 +287,7 @@
                   Crear nuevo grupo
                 </DialogTitle>
 
-                <CreateGroupForm @submit="() => {}" @cancel="() => {}" />
+                <CreateGroupForm @submit="handleCreateGroup" @cancel="() => {}" />
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -255,8 +317,8 @@ import CreateGroupForm from '@/components/groups/CreateGroupForm.vue'
 import { useUsers } from '@/composables/useUsers'
 import { useGroups } from '@/composables/useGroups'
 
-const { users, fetchUsers, createUser, loading } = useUsers()
-const { fetchGroups } = useGroups()
+const { users, usersWithoutGroups, fetchUsers, createUser, loading } = useUsers()
+const { groups, fetchGroups, createGroup } = useGroups()
 
 onMounted(async () => {
   await fetchUsers()
@@ -293,5 +355,10 @@ const handleCreateUser = async () => {
 
   // Reset form
   newUser.value = { nombre: '', correo: '', rol: '', grupo: '', estado: 'Activo', avatar: '' }
+}
+
+const handleCreateGroup = async (groupData) => {
+  console.log('Creating group with data:', groupData)
+  await createGroup(groupData)
 }
 </script>

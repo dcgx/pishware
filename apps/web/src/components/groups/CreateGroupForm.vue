@@ -12,21 +12,19 @@
 
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar usuarios</label>
-      <!-- <select v-model="selectedUsers" multiple class="w-full rounded-md border p-2 h-32">
-        <option v-for="user in availableUsers" :key="user.id" :value="user">
-          {{ user.name }} ({{ user.email }})
-        </option>
-      </select> -->
       <Listbox v-model="selectedUsers" multiple>
         <div class="relative mt-1">
           <ListboxButton
             class="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white/75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm"
           >
-            <!-- <span class="block truncate">{{ selectedPerson.name }}</span>
+            <span class="block truncate">{{
+              selectedUsers.length > 0
+                ? selectedUsers.map((user) => user.email).join(', ')
+                : 'Selecciona usuarios'
+            }}</span>
             <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-            </span> -->
-            ??
+            </span>
           </ListboxButton>
 
           <transition
@@ -35,7 +33,7 @@
             leave-to-class="opacity-0"
           >
             <ListboxOptions
-              class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
+              class="absolute mt-1 max-h-60 h-32 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black/5 focus:outline-none sm:text-sm"
             >
               <ListboxOption
                 v-slot="{ active, selected }"
@@ -57,7 +55,20 @@
                     v-if="selected"
                     class="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600"
                   >
-                    <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="m4.5 12.75 6 6 9-13.5"
+                      />
+                    </svg>
                   </span>
                 </li>
               </ListboxOption>
@@ -70,7 +81,7 @@
       <label class="block text-sm font-medium text-gray-700 mb-1">Usuarios agregados</label>
       <ul class="space-y-2">
         <li
-          v-for="(user, index) in addedUsers"
+          v-for="(user, index) in selectedUsers"
           :key="index"
           class="flex items-center justify-between bg-gray-100 p-2 rounded"
         >
@@ -109,16 +120,15 @@ const selectedUsers = ref([])
 const addedUsers = ref([])
 
 const availableUsers = computed(() => {
-  return users.value.filter((user) => !addedUsers.value.includes(user))
+  return users.value.filter((user) => !selectedUsers.value.includes(user))
 })
 
 const handleSubmit = () => {
-  if (!groupName.value || addedUsers.value.length === 0) {
+  if (!groupName.value || selectedUsers.value.length === 0) {
     alert('Agrega nombre y al menos un usuario')
     return
   }
-  console.log('Grupo creado:', groupName.value, addedUsers.value)
-  emit('submit', { groupName: groupName.value, users: addedUsers.value })
+  emit('submit', { name: groupName.value, users: selectedUsers.value })
   resetForm()
 }
 
@@ -128,7 +138,9 @@ const handleCancel = () => {
 }
 
 const removeUser = (index) => {
-  addedUsers.value.splice(index, 1)
+  console.log('Removing user at index:', index)
+  let user = selectedUsers.value[index]
+  selectedUsers.value = selectedUsers.value.filter((u) => u !== user)
 }
 
 const resetForm = () => {

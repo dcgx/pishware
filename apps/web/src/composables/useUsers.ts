@@ -51,6 +51,7 @@ export const useUsers = () => {
 
   return {
     users: computed(() => store.users),
+    usersWithoutGroups: computed(() => store.usersWithoutGroup),
     loading: computed(() => store.loading),
     creating: computed(() => store.creating),
     error: store.error,
