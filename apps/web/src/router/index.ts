@@ -31,6 +31,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/roles',
+      name: 'roles',
+      component: () => import('../views/Roles.vue'),
+      meta: {
+        title: 'Roles',
+      },
+    },
+    {
       path: '/templates',
       name: 'templates',
       component: () => import('../views/Templates.vue'),

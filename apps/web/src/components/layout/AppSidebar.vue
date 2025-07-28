@@ -217,6 +217,11 @@ const menuGroups = [
         path: '/users',
       },
       {
+        icon: PlugInIcon,
+        name: 'Roles',
+        path: '/roles',
+      },
+      {
         icon: MailIcon,
         name: 'Plantillas',
         path: '/templates',

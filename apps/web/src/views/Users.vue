@@ -241,7 +241,7 @@ import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } fro
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import ChevronDownIcon from '@/icons/ChevronDownIcon.vue'
 import Button from '@/components/ui/Button.vue'
-import AdminLayout from '../components/layout/AdminLayout.vue'
+import AdminLayout from '@/components/layout/AdminLayout.vue'
 import CreateGroupForm from '@/components/groups/CreateGroupForm.vue'
 
 import { useUsers } from '@/composables/useUsers'
