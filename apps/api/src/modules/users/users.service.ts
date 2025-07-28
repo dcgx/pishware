@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
 import * as crypto from 'crypto';
+import { GroupsService } from '../groups/groups.service';
 
 const supabaseUrl = 'https://alqirwjbzzejpebmlpmy.supabase.co';
 const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFscWlyd2pienplanBlYm1scG15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzODM3NzcsImV4cCI6MjA2Nzk1OTc3N30.GgyDZAH9eKPvlMlwjzzhdPANJQbjxSLWEFmsCovIFbA';
@@ -10,11 +11,26 @@ const supabaseServiceRoleClient = createClient(supabaseUrl, "eyJhbGciOiJIUzI1NiI
 
 @Injectable()
 export class UsersService {
+    constructor(
+        private readonly groupsService: GroupsService,
+    ) { }
+
     async getUsers() {
         const { data, error } = await supabaseServiceRoleClient.from('profiles').select('*');
-        console.log({data})
+
         if (error) throw new Error(error.message);
-        return data;
+
+        const usersData = await Promise.all(
+            data.map(async user => {
+                console.log('user', user);
+                user.groups = await this.groupsService.getGroupsByUserId(user.id);
+                console.log('user.groups', user.groups);
+                return user;
+            })
+        );
+
+        console.log('getUsers resolved', { usersData });
+        return usersData;
     }
 
     async createUser(body: {
@@ -23,7 +39,7 @@ export class UsersService {
         username: string;
     }) {
         const generatedPassword = crypto.randomBytes(8).toString('hex');
-        console.log({generatedPassword})
+        console.log({ generatedPassword })
 
         const { data: authUser, error: authError } = await supabaseServiceRoleClient.auth.admin.createUser({
             email: body.email,
