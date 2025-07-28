@@ -66,4 +66,22 @@ export class UsersService {
             message: 'Usuario creado correctamente, correo enviado con instrucciones de acceso.',
         };
     }
+
+    async deleteUser(id: string) {
+        if (!id) throw new Error('ID de usuario no proporcionado.');
+
+        await supabaseServiceRoleClient.from('profiles').update({ deleted_at: new Date() })
+            .eq('id', id);
+
+        console.log('Eliminando usuario con ID:', id);
+
+        const { error: deleteError } = await supabaseServiceRoleClient.auth.admin.deleteUser(id);
+
+        if (deleteError) {
+            console.error('Error desde Supabase Admin:', deleteError);
+            throw new Error(`Error al eliminar el usuario: ${deleteError.message}`);
+        }
+
+        return { message: 'Usuario eliminado correctamente.' };
+    }
 }

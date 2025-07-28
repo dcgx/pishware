@@ -50,6 +50,18 @@ export const useUsers = () => {
     }
   }
 
+  const deleteUser = async (id) => {
+    try {
+      await axios.delete(`${apiUrl}/users/${id}`)
+      store.users = store.users.filter(user => user.id !== id)
+      store.usersWithoutGroup = store.usersWithoutGroup.filter(user => user.id !== id)
+      return { success: true }
+    } catch (err) {
+      store.error = 'Error eliminando usuario'
+      return { success: false, error: err }
+    }
+  }
+
   return {
     users: computed(() => store.users),
     usersWithoutGroups: computed(() => store.usersWithoutGroup),
@@ -57,6 +69,7 @@ export const useUsers = () => {
     creating: computed(() => store.creating),
     error: store.error,
     fetchUsers,
-    createUser
+    createUser,
+    deleteUser
   }
 }
