@@ -237,21 +237,30 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from '@headlessui/vue'
 import ChevronDownIcon from '@/icons/ChevronDownIcon.vue'
 import Button from '@/components/ui/Button.vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import CreateGroupForm from '@/components/groups/CreateGroupForm.vue'
 
 import { useUsers } from '@/composables/useUsers'
-import { useUsersStore } from '@/stores/useUsersStore'
+import { useGroups } from '@/composables/useGroups'
 
-const { users } = useUsersStore()
-const { fetchUsers, createUser, loading } = useUsers()
+const { users, fetchUsers, createUser, loading } = useUsers()
+const { fetchGroups } = useGroups()
 
 onMounted(async () => {
   await fetchUsers()
+  await fetchGroups()
 })
 
 const newUser = ref({

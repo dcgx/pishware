@@ -1,5 +1,6 @@
 import { useUsersStore } from '@/stores/useUsersStore'
 import axios from 'axios'
+import { computed } from 'vue'
 
 export const useUsers = () => {
   const store = useUsersStore()
@@ -49,9 +50,9 @@ export const useUsers = () => {
   }
 
   return {
-    users: store.users,
-    loading: store.loading,
-    creating: store.creating,
+    users: computed(() => store.users),
+    loading: computed(() => store.loading),
+    creating: computed(() => store.creating),
     error: store.error,
     fetchUsers,
     createUser
