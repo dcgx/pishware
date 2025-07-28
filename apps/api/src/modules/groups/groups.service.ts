@@ -11,8 +11,21 @@ const supabaseServiceRoleClient = createClient(supabaseUrl, "eyJhbGciOiJIUzI1NiI
 @Injectable()
 export class GroupsService {
     async getGroups() {
-        const { data, error } = await supabaseServiceRoleClient.from('groups').select('*');
-        console.log({data})
+        let { data, error } = await supabaseServiceRoleClient
+            .from('groups')
+            .select(`
+                *,
+                group_profile (
+                    profile_id,
+                    profiles (
+                        id,
+                        first_name,
+                        last_name,  
+                        email
+                    )
+                )
+            `);
+        // const { data, error } = await supabaseServiceRoleClient.from('groups').select('*');
         if (error) throw new Error(error.message);
         return data;
     }
@@ -31,31 +44,31 @@ export class GroupsService {
         const { data, error } = await supabaseServiceRoleClient
             .from('group_profile')
             .select('group_id')
-            .eq('profile_id', userId);  
+            .eq('profile_id', userId);
         if (error) throw new Error(error.message);
         return data.map(item => item.group_id);
     }
-    
+
     async createGroup(body: {
         name: string;
-        profileIds: string[];
+        users: any[];
     }) {
+        console.log('Creating group with body:', body);
         const { data, error } = await supabaseServiceRoleClient.from('groups').insert({
             name: body.name,
             created_at: new Date().toISOString(),
         }).select();
-        
+
         if (!data || data.length === 0) {
             throw new Error('Failed to create group: No data returned.');
         }
         const groupId = data[0].id;
 
         // 'group_profile'
-        body.profileIds.forEach(async (profileId) => {
-            console.log({profileId, groupId})
+        body.users.forEach(async (user) => {
             await supabaseServiceRoleClient.from('group_profile').insert({
                 group_id: groupId,
-                profile_id: profileId,
+                profile_id: user.id,
             });
         });
 
