@@ -127,9 +127,15 @@
                             profile.profiles.first_name
                           }}</span>
                         </td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.profiles.email }}</td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.profiles.role }}</td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.profiles.group }}</td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
+                          {{ profile.profiles.email }}
+                        </td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
+                          {{ profile.profiles.role }}
+                        </td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
+                          {{ profile.profiles.group }}
+                        </td>
                         <td class="px-5 py-4">
                           <span
                             :class="[
@@ -208,16 +214,21 @@
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700">Rol</label>
-                    <select v-model="newUser.rol" required class="w-full border p-2 rounded">
+                    <select v-model="newUser.roleId" required class="w-full border p-2 rounded">
                       <option value="">Seleccione un rol</option>
-                      <option>Administrador</option>
-                      <option>Gerente</option>
-                      <option>Empleado</option>
+                      <option v-for="role in roles" :key="role.id" :value="role.name">
+                        {{ role.name }}
+                      </option>
                     </select>
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700">Grupo</label>
-                    <input v-model="newUser.grupo" class="w-full border p-2 rounded" />
+                    <select v-model="newUser.grupo" required class="w-full border p-2 rounded">
+                      <option value="">Seleccione un grupo</option>
+                      <option v-for="group in groups" :key="group.id" :value="group.name">
+                        {{ group.name }}
+                      </option>
+                    </select>
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700">Estado</label>
@@ -316,18 +327,21 @@ import CreateGroupForm from '@/components/groups/CreateGroupForm.vue'
 
 import { useUsers } from '@/composables/useUsers'
 import { useGroups } from '@/composables/useGroups'
+import { useRoles } from '@/composables/useRoles'
 
 const { users, usersWithoutGroups, fetchUsers, createUser, loading } = useUsers()
 const { groups, fetchGroups, createGroup } = useGroups()
+const { fetchRoles, roles } = useRoles()
 
 onMounted(async () => {
-  await fetchUsers()
-  await fetchGroups()
+  await Promise.all([fetchUsers(), fetchGroups(), fetchRoles()])
 })
 
 const newUser = ref({
   name: '',
   email: '',
+  rol: '',
+  grupo: '',
 })
 
 const isOpenCreateUserDialog = ref(false)

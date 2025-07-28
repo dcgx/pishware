@@ -25,6 +25,7 @@ export const useUsers = () => {
     store.creating = true
     store.error = ''
     try {
+      console.log(payload, 'payload')
       const { data } = await axios.post(`${apiUrl}/users`, {
         name: payload.nombre,
         email: payload.correo,
