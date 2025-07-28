@@ -118,7 +118,7 @@ import Button from '@/components/ui/Button.vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import { useRoles } from '@/composables/useRoles'
 
-const { fetchRoles, loading } = useRoles()
+const { fetchRoles, createRole, roles, loading } = useRoles()
 
 const newRole = ref({
   name: '',
@@ -128,11 +128,16 @@ const isOpenCreateUserDialog = ref(false)
 const setOpenCreateRoleDialog = (value) => {
   isOpenCreateUserDialog.value = value
 }
-const roles = ref([
-  { id: 1, name: 'Administrador', description: 'Acceso total al sistema' },
-  { id: 2, name: 'Gerente', description: 'Acceso a gestión de usuarios y reportes' },
-  { id: 3, name: 'Empleado', description: 'Acceso limitado a sus funciones' },
-])
+
+
+const handleCreateRole = async () => {
+  if (newRole.value.name && newRole.value.description) {
+    await createRole(newRole.value)
+    await fetchRoles()
+    newRole.value = { name: '', description: '' }
+    setOpenCreateRoleDialog(false)
+  }
+}
 
 onMounted(async () => {
   await fetchRoles()
