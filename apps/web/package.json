@@ -13,6 +13,17 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-basic-styles": "^46.0.0",
+    "@ckeditor/ckeditor5-build-classic": "^44.3.0",
+    "@ckeditor/ckeditor5-editor-classic": "^46.0.0",
+    "@ckeditor/ckeditor5-essentials": "^46.0.0",
+    "@ckeditor/ckeditor5-heading": "^46.0.0",
+    "@ckeditor/ckeditor5-link": "^46.0.0",
+    "@ckeditor/ckeditor5-list": "^46.0.0",
+    "@ckeditor/ckeditor5-paragraph": "^46.0.0",
+    "@ckeditor/ckeditor5-source-editing": "^46.0.0",
+    "@ckeditor/ckeditor5-theme-lark": "^46.0.0",
+    "@ckeditor/ckeditor5-vue": "^7.3.0",
     "@fullcalendar/core": "^6.1.15",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.15",
