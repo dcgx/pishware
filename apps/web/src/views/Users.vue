@@ -1,7 +1,6 @@
 <template>
   <admin-layout>
     <div>
-      {{ selectedUserForDeletion }}
       <div class="flex items-center justify-between">
         <h2 class="text-2xl font-semibold mb-4">Usuarios y Grupos</h2>
         <div class="flex gap-2">
