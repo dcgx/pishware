@@ -1,4 +1,4 @@
-export const extractHtmlFromRawEmail = (raw: any) => {
+export default function extractHtmlFromRawEmail(raw: any) {
     // Extraer la sección Content-Type: text/html
     const htmlSectionMatch = raw.match(/Content-Type:\s*text\/html[^]*?(?=(\r?\n\r?\n))/i);
     if (!htmlSectionMatch) return null;

@@ -1,6 +1,6 @@
 <template>
   <TransitionRoot appear :show="show" as="template">
-    <Dialog as="div" @close="update(false)" class="relative z-10">
+    <Dialog as="div" @close="handleClose()" class="relative z-10">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"
@@ -28,7 +28,26 @@
               class="w-[700px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
             >
               <DialogTitle as="h3" class="text-lg my-2 font-medium leading-6 text-gray-900">
-                Crear plantilla
+                <div class="flex items-center justify-between">
+                  Crear plantilla
+
+                  <button @click="handleClose" class="text-gray-500 hover:text-gray-700">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M6 18 18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
+                </div>
               </DialogTitle>
 
               <CreateTemplateForm @submit="handleCreateTemplate" @cancel="() => {}" />
@@ -45,7 +64,7 @@ import { ref, defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 import CreateTemplateForm from '@/components/templates/CreateTemplateForm.vue'
 
-const emit = defineEmits(['create', 'cancel'])
+const emit = defineEmits(['close'])
 const props = defineProps({
   show: {
     type: Boolean,
@@ -53,8 +72,7 @@ const props = defineProps({
   },
 })
 
-const update = (value) => {
-  props.show = value
-  emit('update:show', value)
+const handleClose = () => {
+  emit('close')
 }
 </script>

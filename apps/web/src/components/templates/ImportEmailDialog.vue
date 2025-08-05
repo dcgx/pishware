@@ -1,7 +1,7 @@
 <template>
   <template>
     <TransitionRoot appear :show="show" as="template">
-      <Dialog as="div" class="relative z-10">
+      <Dialog as="div" class="relative z-10" @close="handleClose">
         <TransitionChild
           as="template"
           enter="duration-300 ease-out"
@@ -46,22 +46,6 @@
                     >Importar
                   </Button>
                 </form>
-
-                <!-- <div>
-                  <button
-                    @click="handleParseEmail"
-                    class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
-                  >
-                    Parsear Email
-                  </button>
-                </div>
-
-                <div class="mt-4">
-                  <label class="block text-sm font-medium text-gray-700"
-                    >Previsualización HTML:</label
-                  >
-                  <div v-html="htmlPreview" class="text-gray-800"></div>
-                </div> -->
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -74,10 +58,11 @@
 <script setup>
 import { ref } from 'vue'
 import { Dialog, DialogPanel, TransitionRoot, TransitionChild } from '@headlessui/vue'
-import { extractHtmlFromRawEmail } from '@/utils/extractEmail'
+import extractHtmlFromRawEmail from '@/utils/extractHtmlFromRawEmail'
 
 const rawEmail = ref('')
 const htmlPreview = ref('')
+
 const props = defineProps({
   show: {
     type: Boolean,
@@ -85,8 +70,14 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['close'])
+
 function handleParseEmail() {
   htmlPreview.value = extractHtmlFromRawEmail(rawEmail.value)
-  props.show = false
+  emit('close')
+}
+
+function handleClose() {
+  emit('close')
 }
 </script>

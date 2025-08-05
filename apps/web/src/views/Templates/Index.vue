@@ -13,10 +13,10 @@
       </div>
     </div>
 
-    <CreateTemplateModal
+    <CreateTemplateDialog
       :show="openCreateTemplateDialog"
       @create="handleCreateTemplate"
-      @cancel="() => setOpenCreateTemplateDialog(false)"
+      @close="() => setOpenCreateTemplateDialog(false)"
     />
   </admin-layout>
 </template>
@@ -25,7 +25,7 @@
 import { ref } from 'vue'
 import Button from '@/components/ui/Button.vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
-import CreateTemplateModal from '@/components/templates/CreateTemplateModal.vue'
+import CreateTemplateDialog from '@/components/templates/CreateTemplateDialog.vue'
 
 const openCreateTemplateDialog = ref(false)
 

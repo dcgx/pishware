@@ -3,7 +3,7 @@
     <div>
       <label class="block text-sm font-medium text-gray-700">Nombre</label>
       <input
-        v-model="groupName"
+        v-model="name"
         required
         class="w-full mt-1 rounded-md border p-2"
         placeholder="Ej: Microsoft Teams"
@@ -26,7 +26,6 @@
       />
     </div>
 
-    <!-- Tabs Text / HTML -->
     <div class="mt-4">
       <div class="flex border-b">
         <button
@@ -75,7 +74,10 @@
       Guardar Plantilla
     </button>
 
-    <ImportEmailDialog :show="openImportEmailDialog" />
+    <ImportEmailDialog
+      :show="openImportEmailDialog"
+      @close="() => setOpenImportEmailDialog(false)"
+    />
   </form>
 </template>
 
@@ -87,7 +89,7 @@ import ImportEmailDialog from './ImportEmailDialog.vue'
 const openImportEmailDialog = ref(false)
 
 const tab = ref('text')
-const groupName = ref('')
+const name = ref('')
 const subject = ref('')
 const textContent = ref('')
 const htmlContent = ref('')
@@ -97,12 +99,11 @@ const inactiveTabClass = 'px-4 py-2 text-gray-500 hover:text-blue-600'
 
 const setOpenImportEmailDialog = (value) => {
   openImportEmailDialog.value = value
-  console.log('Abrir diálogo de importación de email:', value)
 }
 
 const handleSubmit = () => {
   const payload = {
-    name: groupName.value,
+    name: name.value,
     subject: subject.value,
     contentType: tab.value,
     content: tab.value === 'text' ? textContent.value : htmlContent.value,
