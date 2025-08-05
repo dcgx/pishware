@@ -18,17 +18,17 @@
         <div class="w-full rounded-2xl bg-white p-2">
           <Disclosure v-slot="{ open }" v-if="usersWithoutGroups && usersWithoutGroups.length > 0">
             <DisclosureButton
-              class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
+              class="flex w-full justify-between rounded-lg  px-4 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
               <span>Sin grupo ({{ usersWithoutGroups ? usersWithoutGroups.length : 0 }})</span>
               <ChevronDownIcon
                 :class="open ? 'rotate-180 transform' : ''"
-                class="h-5 w-5 text-purple-500"
+                class="h-5 w-5"
               />
             </DisclosureButton>
             <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500">
               <div
-                class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+                class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]"
               >
                 <div class="max-w-full overflow-x-auto custom-scrollbar">
                   <table class="min-w-full">
@@ -105,7 +105,7 @@
             :key="group.id"
           >
             <DisclosureButton
-              class="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
+              class="flex w-full justify-between rounded-lg px-4 py-4 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
               <span>{{ group.name }}</span>
               <ChevronUpIcon
