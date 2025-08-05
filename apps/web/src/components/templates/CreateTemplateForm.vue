@@ -10,6 +10,12 @@
       />
     </div>
 
+    <div class="my-5">
+      <Button @click="() => setOpenImportEmailDialog(true)" size="sm" variant="outline">
+        Importar email
+      </Button>
+    </div>
+
     <div>
       <label class="block text-sm font-medium text-gray-700 mt-4">Subject</label>
       <input
@@ -68,11 +74,17 @@
     <button type="submit" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
       Guardar Plantilla
     </button>
+
+    <ImportEmailDialog :show="openImportEmailDialog" />
   </form>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import Button from '@/components/ui/Button.vue'
+import ImportEmailDialog from './ImportEmailDialog.vue'
+
+const openImportEmailDialog = ref(false)
 
 const tab = ref('text')
 const groupName = ref('')
@@ -82,6 +94,11 @@ const htmlContent = ref('')
 
 const activeTabClass = 'px-4 py-2 text-blue-600 border-b-2 border-blue-600 font-semibold'
 const inactiveTabClass = 'px-4 py-2 text-gray-500 hover:text-blue-600'
+
+const setOpenImportEmailDialog = (value) => {
+  openImportEmailDialog.value = value
+  console.log('Abrir diálogo de importación de email:', value)
+}
 
 const handleSubmit = () => {
   const payload = {
