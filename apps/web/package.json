@@ -34,6 +34,7 @@
     "@supabase/supabase-js": "^2.50.5",
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
+    "@vueup/vue-quill": "^1.2.0",
     "apexcharts": "^4.4.0",
     "axios": "^1.10.0",
     "dropzone": "^6.0.0-beta.2",
