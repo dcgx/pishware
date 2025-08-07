@@ -75,4 +75,9 @@ const props = defineProps({
 const handleClose = () => {
   emit('close')
 }
+
+const handleCreateTemplate = (templateData) => {
+  console.log('Template created:', templateData)
+  emit('close')
+}
 </script>

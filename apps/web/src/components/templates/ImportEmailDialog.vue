@@ -75,6 +75,7 @@ const emit = defineEmits(['close'])
 function handleParseEmail() {
   htmlPreview.value = extractHtmlFromRawEmail(rawEmail.value)
   emit('close')
+  emit('imported', { htmlPreview: htmlPreview.value })
 }
 
 function handleClose() {

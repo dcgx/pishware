@@ -76,17 +76,25 @@
 
     <ImportEmailDialog
       :show="openImportEmailDialog"
+      @imported="
+        ({ htmlPreview }) => {
+          htmlContent = htmlPreview
+          tab = 'html'
+        }
+      "
       @close="() => setOpenImportEmailDialog(false)"
     />
   </form>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import Button from '@/components/ui/Button.vue'
 import ImportEmailDialog from './ImportEmailDialog.vue'
 
 const openImportEmailDialog = ref(false)
+
+const emit = defineEmits(['submit'])
 
 const tab = ref('text')
 const name = ref('')
@@ -110,6 +118,6 @@ const handleSubmit = () => {
   }
 
   console.log('Form submitted:', payload)
-  // Aquí podrías emitir un evento o hacer una petición a una API
+  emit('submit', payload)
 }
 </script>
