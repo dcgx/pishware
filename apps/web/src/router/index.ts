@@ -54,6 +54,15 @@ const router = createRouter({
         title: 'Crear plantilla',
       },
     },
+
+    {
+      path: '/landing-pages',
+      name: 'landing-pages',
+      component: () => import('../views/LandingPages.vue'),
+      meta: {
+        title: 'Landing Pages',
+      },
+    },
     {
       path: '/reports',
       name: 'reports',

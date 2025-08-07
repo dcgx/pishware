@@ -223,8 +223,13 @@ const menuGroups = [
       },
       {
         icon: MailIcon,
-        name: 'Plantillas',
+        name: 'Plantillas de correo',
         path: '/templates',
+      },
+      {
+        icon: PageIcon,
+        name: 'Landing Pages',
+        path: '/landing-pages',
       },
       {
         icon: PaperclipIcon,
