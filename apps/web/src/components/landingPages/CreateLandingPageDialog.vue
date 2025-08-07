@@ -29,7 +29,7 @@
             >
               <DialogTitle as="h3" class="text-lg my-2 font-medium leading-6 text-gray-900">
                 <div class="flex items-center justify-between">
-                  Crear plantilla
+                  <h2>Crear página de destino</h2>
 
                   <button @click="handleClose" class="text-gray-500 hover:text-gray-700">
                     <svg
