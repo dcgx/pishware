@@ -7,13 +7,20 @@ import 'jsvectormap/dist/jsvectormap.css'
 import 'flatpickr/dist/flatpickr.css'
 
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import VueApexCharts from 'vue3-apexcharts'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const app = createApp(App)
+const pinia = createPinia()
 
 app.use(router)
+app.use(pinia)
 app.use(VueApexCharts)
+
+app.component('QuillEditor', QuillEditor)
 
 app.mount('#app')

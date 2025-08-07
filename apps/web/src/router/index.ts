@@ -31,11 +31,36 @@ const router = createRouter({
       },
     },
     {
+      path: '/roles',
+      name: 'roles',
+      component: () => import('../views/Roles.vue'),
+      meta: {
+        title: 'Roles',
+      },
+    },
+    {
       path: '/templates',
       name: 'templates',
-      component: () => import('../views/Templates.vue'),
+      component: () => import('../views/Templates/Index.vue'),
       meta: {
         title: 'Plantillas',
+      },
+    },
+    {
+      path: '/templates/create',
+      name: 'templates-create',
+      component: () => import('../views/Templates/Create.vue'),
+      meta: {
+        title: 'Crear plantilla',
+      },
+    },
+
+    {
+      path: '/landing-pages',
+      name: 'landing-pages',
+      component: () => import('../views/LandingPages.vue'),
+      meta: {
+        title: 'Landing Pages',
       },
     },
     {
@@ -77,7 +102,7 @@ const router = createRouter({
       name: 'Signin',
       component: () => import('../views/Auth/Signin.vue'),
       meta: {
-        title: 'Signin',
+        title: 'Iniciar sesión',
       },
     },
     {
@@ -85,7 +110,15 @@ const router = createRouter({
       name: 'Signup',
       component: () => import('../views/Auth/Signup.vue'),
       meta: {
-        title: 'Signup',
+        title: 'Registrarse',
+      },
+    },
+    {
+      path: '/reset',
+      name: 'Reset',
+      component: () => import('../views/Auth/Reset.vue'),
+      meta: {
+        title: 'Recuperar contraseña',
       },
     },
   ],
