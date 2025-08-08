@@ -7,7 +7,7 @@ export const useLandingPages = () => {
     const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
     const fetchLandingPages = async () => {
-        landingPagesStore.loading = true;
+        landingPagesStore.fetching = true;
         try {
             const response = await fetch(`${apiUrl}/landing-pages`);
             if (!response.ok) {
@@ -18,7 +18,7 @@ export const useLandingPages = () => {
         } catch (err) {
             landingPagesStore.error = 'Failed to fetch landing pages';
         } finally {
-            landingPagesStore.loading = false;
+            landingPagesStore.fetching = false;
         }
     };
 
@@ -56,6 +56,7 @@ export const useLandingPages = () => {
 
     return {
         ...landingPagesStore,
+        fetching: computed(() => landingPagesStore.fetching),
         landingPages: computed(() => landingPagesStore.landingPages),
         fetchLandingPages,
         createLandingPage,

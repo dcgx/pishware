@@ -11,7 +11,8 @@ export const useLandingPagesStore = defineStore('landingPages', () => {
     const editForm = ref({
         name: '',
     });
-
+    
+    const fetching = ref(false);
     const loading = ref(false);
     const error = ref('');
     const creating = ref(false);
@@ -20,6 +21,7 @@ export const useLandingPagesStore = defineStore('landingPages', () => {
     return {
         landingPages,
         loading,
+        fetching,
         error,
         creating,
         createForm,
