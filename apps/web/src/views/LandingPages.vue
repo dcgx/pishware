@@ -11,7 +11,7 @@
           </div>
         </div>
       </div>
-ƒ      <LandingPagesTable />
+      ƒ <LandingPagesTable />
     </div>
 
     <CreateLandingPageDialog
@@ -23,15 +23,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import Button from '@/components/ui/Button.vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import CreateLandingPageDialog from '@/components/landingPages/CreateLandingPageDialog.vue'
 import LandingPagesTable from '@/components/landingPages/LandingPagesTable.vue'
+// composables
+import { useLandingPages } from '@/composables/useLandingPages'
+
+const { fetchLandingPages } = useLandingPages()
 
 const openCreateLandingPageDialog = ref(false)
 
 const setOpenCreateLandingPageDialog = (value) => {
   openCreateLandingPageDialog.value = value
 }
+
+onMounted(async () => {
+  await fetchLandingPages()
+})
 </script>

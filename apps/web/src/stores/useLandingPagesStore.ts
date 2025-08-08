@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useLandingPagesStore = defineStore('landingPages', () => {
-    const landingPages = ref([]);
+    const landingPages = ref();
 
     const createForm = ref({
         name: '',
