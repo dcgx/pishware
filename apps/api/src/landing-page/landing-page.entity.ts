@@ -18,4 +18,10 @@ export class LandingPageEntity {
     @Column({ type: 'text', nullable: true })
     imported_url?: string;
 
+    @Column({ type: 'boolean', default: false })
+    capture_submitted_data: boolean;
+
+    @Column({ type: 'boolean', default: false })
+    capture_password: boolean;
+
 }
