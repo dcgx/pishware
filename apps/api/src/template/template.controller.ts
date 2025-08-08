@@ -1,15 +1,15 @@
 import { Controller, Get, Post } from "@nestjs/common";
 
 @Controller('templates')
-export class TemplatesController {
+export class TemplateController {
     constructor() { }
     @Get()
-    getTemplates() {
+    findAll() {
         return []
     }
 
     @Post('create')
-    createTemplate() {
+    create() {
         // Logic to create a template
         return { message: 'Template created successfully' };
     }
