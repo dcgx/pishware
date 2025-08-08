@@ -41,20 +41,11 @@ const router = createRouter({
     {
       path: '/templates',
       name: 'templates',
-      component: () => import('../views/Templates/Index.vue'),
+      component: () => import('../views/Templates.vue'),
       meta: {
         title: 'Plantillas',
       },
     },
-    {
-      path: '/templates/create',
-      name: 'templates-create',
-      component: () => import('../views/Templates/Create.vue'),
-      meta: {
-        title: 'Crear plantilla',
-      },
-    },
-
     {
       path: '/landing-pages',
       name: 'landing-pages',
