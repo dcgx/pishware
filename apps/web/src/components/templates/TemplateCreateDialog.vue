@@ -27,7 +27,10 @@
             <DialogPanel
               class="w-[700px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-800 dark:text-white"
             >
-              <DialogTitle as="h3" class="text-lg my-3 font-medium leading-6 text-gray-900 dark:text-gray-200">
+              <DialogTitle
+                as="h3"
+                class="text-lg my-3 font-medium leading-6 text-gray-900 dark:text-gray-200"
+              >
                 <div class="flex items-center justify-between">
                   Crear plantilla
 
@@ -63,6 +66,10 @@ import { ref, defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 // components
 import TemplateCreateForm from '@/components/templates/TemplateCreateForm.vue'
+// composables
+import { useTemplates } from '@/composables/useTemplates'
+
+const { createTemplate } = useTemplates()
 
 const emit = defineEmits(['close'])
 const props = defineProps({
@@ -76,8 +83,16 @@ const handleClose = () => {
   emit('close')
 }
 
-const handleCreateTemplate = (templateData) => {
-  console.log('Template created:', templateData)
-  emit('close')
+const handleCreateTemplate = async (templateData) => {
+  await createTemplate(templateData)
+    .then(() => {
+      emit('created', templateData)
+    })
+    .catch((error) => {
+      console.error('Error creating template:', error)
+    })
+    .finally(() => {
+      emit('close')
+    })
 }
 </script>

@@ -138,11 +138,9 @@ const handleSubmit = () => {
   const payload = {
     name: name.value,
     subject: subject.value,
-    contentType: tab.value,
-    content: tab.value === 'text' ? textContent.value : htmlContent.value,
+    type: tab.value,
+    body_content: tab.value === 'text' ? textContent.value : htmlContent.value,
   }
-
-  console.log('Form submitted:', payload)
   emit('submit', payload)
 }
 </script>

@@ -9,7 +9,7 @@
           </Button>
         </template>
       </PageHeader>
-      <TemplatesTable :templates="templatesStore.emailTemplates" />
+      <TemplatesTable :templates="emailTemplates" />
     </div>
 
     <TemplateCreateDialog
@@ -29,10 +29,10 @@ import Button from '@/components/ui/Button.vue'
 // components
 import TemplatesTable from '@/components/templates/TemplatesTable.vue'
 import TemplateCreateDialog from '@/components/templates/TemplateCreateDialog.vue'
-// stores
-import { useEmailTemplatesStore } from '@/stores/useEmailTemplatesStore'
+// composables
+import { useTemplates } from '@/composables/useTemplates'
 
-const templatesStore = useEmailTemplatesStore()
+const { fetchTemplates, emailTemplates } = useTemplates()
 
 const openCreateTemplateDialog = ref(false)
 
@@ -41,6 +41,6 @@ const setOpenCreateTemplateDialog = (value) => {
 }
 
 onMounted(async () => {
-  await templatesStore.fetchTemplates()
+  await fetchTemplates()
 })
 </script>
