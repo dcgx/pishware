@@ -25,9 +25,9 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-[700px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-[700px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-800 dark:text-white"
             >
-              <DialogTitle as="h3" class="text-lg my-2 font-medium leading-6 text-gray-900">
+              <DialogTitle as="h3" class="text-lg my-3 font-medium leading-6 text-gray-900 dark:text-gray-200">
                 <div class="flex items-center justify-between">
                   Crear plantilla
 
@@ -49,8 +49,7 @@
                   </button>
                 </div>
               </DialogTitle>
-
-              <CreateTemplateForm @submit="handleCreateTemplate" @cancel="() => {}" />
+              <TemplateCreateForm @submit="handleCreateTemplate" @cancel="() => {}" />
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -62,7 +61,8 @@
 <script setup>
 import { ref, defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
-import CreateTemplateForm from '@/components/templates/CreateTemplateForm.vue'
+// components
+import TemplateCreateForm from '@/components/templates/TemplateCreateForm.vue'
 
 const emit = defineEmits(['close'])
 const props = defineProps({
