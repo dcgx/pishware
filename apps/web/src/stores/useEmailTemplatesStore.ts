@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 export const useEmailTemplatesStore = defineStore('emailTemplates', () => {
-    const emailTemplates = ref([]);
+    const emailTemplates = ref();
 
     const createForm = ref({
         subject: '',
@@ -23,11 +23,13 @@ export const useEmailTemplatesStore = defineStore('emailTemplates', () => {
     const error = ref('');
     const creating = ref(false);
 
-
     return {
         emailTemplates,
         loading,
         error,
         creating,
+        createForm,
+        editForm,
+        showImportEmailDialog,
     };
 })

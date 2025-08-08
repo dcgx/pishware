@@ -39,6 +39,8 @@
     "axios": "^1.10.0",
     "dropzone": "^6.0.0-beta.2",
     "flatpickr": "^4.6.13",
+    "flowbite": "^3.1.2",
+    "flowbite-vue": "^0.2.1",
     "jsvectormap": "^1.6.0",
     "lucide-vue-next": "^0.474.0",
     "pinia": "^3.0.3",

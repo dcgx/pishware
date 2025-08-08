@@ -1,53 +1,21 @@
 <template>
   <admin-layout>
     <div class="grid">
-      <div>
-        <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-semibold mb-4">Landing pages</h2>
-          <div class="flex gap-2">
-            <Button size="sm" variant="primary" @click="() => setOpenCreateLandingPageDialog(true)">
-              Crear página de destino
-            </Button>
-          </div>
-        </div>
+      <PageHeader>
+        <template #title> Páginas de destino </template>
+        <template #actions>
+          <Button size="sm" variant="primary" @click="() => setOpenCreateLandingPageDialog(true)">
+            Crear página de destino
+          </Button>
+        </template>
+      </PageHeader>
+      <div v-if="fetching" class="flex items-center justify-center h-64">
+        <Spinner />
       </div>
-
-      <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                ID
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Nombre
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Descripción
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr>
-              <td class="px-6 py-4 text-sm text-gray-900">1</td>
-              <td class="px-6 py-4 text-sm text-gray-900">Google.com</td>
-              <td class="px-6 py-4 text-sm text-gray-500">Descripción de la plantilla de prueba</td>
-              <td class="px-6 py-4 text-sm text-gray-500">
-                <Button size="sm" variant="outline"> Editar </Button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <LandingPagesTable v-else :landingPages="landingPages" />
     </div>
 
-    <CreateLandingPageDialog
+    <LandingPageCreateDialog
       :show="openCreateLandingPageDialog"
       @create="handleCreateTemplate"
       @close="() => setOpenCreateLandingPageDialog(false)"
@@ -56,14 +24,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Button from '@/components/ui/Button.vue'
+import { onMounted, ref } from 'vue'
+// layouts
 import AdminLayout from '@/components/layout/AdminLayout.vue'
-import CreateLandingPageDialog from '@/components/landingPages/CreateLandingPageDialog.vue'
+import PageHeader from '@/components/page/PageHeader.vue'
+// ui components
+import Button from '@/components/ui/Button.vue'
+import Spinner from '@/components/ui/Spinner.vue'
+// components
+import LandingPageCreateDialog from '@/components/landingPages/LandingPageCreateDialog.vue'
+import LandingPagesTable from '@/components/landingPages/LandingPagesTable.vue'
+// composables
+import { useLandingPages } from '@/composables/useLandingPages'
+
+const { landingPages, fetchLandingPages, fetching } = useLandingPages()
 
 const openCreateLandingPageDialog = ref(false)
 
 const setOpenCreateLandingPageDialog = (value) => {
   openCreateLandingPageDialog.value = value
 }
+
+onMounted(async () => {
+  await fetchLandingPages()
+})
 </script>
