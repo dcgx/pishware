@@ -25,7 +25,7 @@
             leave-to="opacity-0 scale-95"
           >
             <DialogPanel
-              class="w-[700px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+              class="w-[700px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-800 dark:text-white"
             >
               <DialogTitle as="h3" class="text-lg my-2 font-medium leading-6 text-gray-900">
                 <div class="flex items-center justify-between">
@@ -50,7 +50,7 @@
                 </div>
               </DialogTitle>
 
-              <CreateLandingPageForm @submit="handleCreateTemplate" @cancel="() => {}" />
+              <LandingPageCreateForm @submit="handleCreateTemplate" @cancel="() => {}" />
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -62,7 +62,7 @@
 <script setup>
 import { ref, defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
-import CreateLandingPageForm from './CreateLandingPageForm.vue'
+import LandingPageCreateForm from './LandingPageCreateForm.vue'
 
 const emit = defineEmits(['close'])
 const props = defineProps({

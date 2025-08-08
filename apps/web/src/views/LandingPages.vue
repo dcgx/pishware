@@ -14,7 +14,7 @@
       ƒ <LandingPagesTable />
     </div>
 
-    <CreateLandingPageDialog
+    <LandingPageCreateDialog
       :show="openCreateLandingPageDialog"
       @create="handleCreateTemplate"
       @close="() => setOpenCreateLandingPageDialog(false)"
@@ -26,7 +26,7 @@
 import { onMounted, ref } from 'vue'
 import Button from '@/components/ui/Button.vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
-import CreateLandingPageDialog from '@/components/landingPages/CreateLandingPageDialog.vue'
+import LandingPageCreateDialog from '@/components/landingPages/LandingPageCreateDialog.vue'
 import LandingPagesTable from '@/components/landingPages/LandingPagesTable.vue'
 // composables
 import { useLandingPages } from '@/composables/useLandingPages'
