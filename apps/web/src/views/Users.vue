@@ -2,7 +2,7 @@
   <admin-layout>
     <div>
       <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-semibold mb-4">Usuarios y Grupos</h2>
+        <h2 class="text-2xl font-semibold mb-4 dark:text-gray-50">Usuarios y grupos</h2>
         <div class="flex gap-2">
           <Button size="sm" variant="primary" @click="setOpenCreateUserDialog(true)">
             Agregar usuario
@@ -13,13 +13,15 @@
           </Button>
         </div>
       </div>
-      <div class="w-full">
-        <div class="w-full rounded-2xl bg-white p-2">
+      <div class="w-full my-5">
+        <div class="w-full rounded-2xl bg-white p-2 dark:bg-white/[0.03]">
           <Disclosure v-slot="{ open }" v-if="usersWithoutGroups && usersWithoutGroups.length > 0">
             <DisclosureButton
               class="flex w-full justify-between rounded-lg  px-4 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span>Sin grupo ({{ usersWithoutGroups ? usersWithoutGroups.length : 0 }})</span>
+              <span
+              class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md"
+              >Sin grupo ({{ usersWithoutGroups ? usersWithoutGroups.length : 0 }})</span>
               <ChevronDownIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5"
@@ -106,7 +108,9 @@
             <DisclosureButton
               class="flex w-full justify-between rounded-lg px-4 py-4 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span>{{ group.name }}</span>
+              <span
+                class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md"
+              >{{ group.name }}</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 text-purple-500"
@@ -218,16 +222,16 @@
               leave-to="opacity-0 scale-95"
             >
               <DialogPanel
-                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-900"
               >
-                <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
+                <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
                   Crear nuevo usuario
                 </DialogTitle>
 
                 <form @submit.prevent="handleCreateUser" class="mt-4 space-y-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input v-model="newUser.nombre" required class="w-full border p-2 rounded" />
+                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Nombre</label>
+                    <input v-model="newUser.nombre" required class="w-full border p-2 rounded dark:bg-gray-800 dark:text-gray-100" />
                   </div>
                   <div>
                     <label class="block text-sm font-medium text-gray-700">Correo</label>

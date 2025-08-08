@@ -9,36 +9,7 @@
           </Button>
         </div>
       </div>
-      <div class="overflow-hidden rounded-xl border border-gray-200 bg-white">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                ID
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Nombre
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Descripción
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="role in roles" :key="role.id">
-              <td class="px-6 py-4 text-sm text-gray-900">{{ role.id }}</td>
-              <td class="px-6 py-4 text-sm text-gray-900">{{ role.name }}</td>
-              <td class="px-6 py-4 text-sm text-gray-500">{{ role.description }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <RolesTable />
     </div>
 
     <TransitionRoot appear :show="isOpenCreateUserDialog" as="template">
@@ -111,11 +82,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import Button from '@/components/ui/Button.vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
+import RolesTable from '@/components/roles/RolesTable.vue'
 import { useRoles } from '@/composables/useRoles'
 
 const { fetchRoles, createRole, roles, loading } = useRoles()
@@ -128,7 +99,6 @@ const isOpenCreateUserDialog = ref(false)
 const setOpenCreateRoleDialog = (value) => {
   isOpenCreateUserDialog.value = value
 }
-
 
 const handleCreateRole = async () => {
   if (newRole.value.name && newRole.value.description) {
