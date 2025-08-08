@@ -7,6 +7,7 @@ import { GroupsModule } from './modules/groups/groups.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TemplateModule } from './template/template.module.ts';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TemplateModule } from './template/template.module.ts';
     UsersModule,
     RolesModule,
     GroupsModule,
+    ProfileModule,
     TemplateModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
