@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate } from 'typeorm';
+import { ProfileEntity } from 'src/profile/profile.entity';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeUpdate, ManyToOne } from 'typeorm';
 
 @Entity('templates')
 export class TemplateEntity {
@@ -20,8 +21,8 @@ export class TemplateEntity {
     @Column('simple-array', { nullable: true })
     attachments?: string[];
 
-    @Column({ nullable: true })
-    created_by?: string;
+    @ManyToOne(() => ProfileEntity, { nullable: true })
+    created_by?: ProfileEntity;
 
     @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP" })
     created_at?: Date;
