@@ -25,8 +25,28 @@ export const useLandingPages = () => {
     const createLandingPage = async (landingPage) => {
         landingPagesStore.loading = true;
         try {
-            const response = await new Promise(resolve => setTimeout(() => resolve(landingPage), 1000));
-            landingPagesStore.landingPages.push(response);
+            const response = await fetch(`${apiUrl}/landing-pages`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(landingPage),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to create landing page");
+            }
+
+            const newLandingPage = await response.json();
+            landingPagesStore.landingPages.push(newLandingPage);
+            landingPagesStore.createForm = {
+                name: '',
+                htmlContent: '',
+                redirectUrl: '',
+                importedUrl: '',
+                captureSubmittedData: false,
+                capturePassword: false,
+            };
         } catch (err) {
             landingPagesStore.error = 'Failed to create landing page';
         } finally {

@@ -27,7 +27,10 @@
             <DialogPanel
               class="w-[700px] transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-800 dark:text-white"
             >
-              <DialogTitle as="h3" class="text-lg my-2 font-medium leading-6 text-gray-900">
+              <DialogTitle
+                as="h3"
+                class="text-lg my-2 font-medium leading-6 text-gray-900 dark:text-white"
+              >
                 <div class="flex items-center justify-between">
                   <h2>Crear página de destino</h2>
 
@@ -50,7 +53,10 @@
                 </div>
               </DialogTitle>
 
-              <LandingPageCreateForm @submit="handleCreateTemplate" @cancel="() => {}" />
+              <LandingPageCreateForm
+                @submit="handleCreateLandingPage"
+                @landingPageData="() => {}"
+              />
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -64,6 +70,9 @@ import { ref, defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 import LandingPageCreateForm from './LandingPageCreateForm.vue'
 
+import { useLandingPages } from '@/composables/useLandingPages'
+
+const { createLandingPage } = useLandingPages()
 const emit = defineEmits(['close'])
 const props = defineProps({
   show: {
@@ -76,8 +85,23 @@ const handleClose = () => {
   emit('close')
 }
 
-const handleCreateTemplate = (templateData) => {
-  console.log('Template created:', templateData)
-  emit('close')
+const handleCreateLandingPage = async (landingPageData) => {
+  console.log('Creating landing page with data:', landingPageData)
+  await createLandingPage({
+    name: landingPageData.name,
+    html_content: landingPageData.htmlContent,
+    redirect_url: landingPageData.redirectUrl,
+    capture_submitted_data: landingPageData.captureSubmittedData,
+    capture_password: landingPageData.capturePassword,
+  })
+    .then(() => {
+      emit('created', landingPageData)
+    })
+    .catch((error) => {
+      console.error('Error creating landing page:', error)
+    })
+    .finally(() => {
+      emit('close')
+    })
 }
 </script>

@@ -1,17 +1,15 @@
 <template>
   <admin-layout>
     <div class="grid">
-      <div>
-        <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-semibold mb-4">Landing pages</h2>
-          <div class="flex gap-2">
-            <Button size="sm" variant="primary" @click="() => setOpenCreateLandingPageDialog(true)">
-              Crear página de destino
-            </Button>
-          </div>
-        </div>
-      </div>
-      ƒ <LandingPagesTable />
+      <PageHeader>
+        <template #title> Páginas de destino </template>
+        <template #actions>
+          <Button size="sm" variant="primary" @click="() => setOpenCreateLandingPageDialog(true)">
+            Crear página de destino
+          </Button>
+        </template>
+      </PageHeader>
+      <LandingPagesTable :landingPages="landingPages" />
     </div>
 
     <LandingPageCreateDialog
@@ -24,14 +22,18 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import Button from '@/components/ui/Button.vue'
+// layouts
 import AdminLayout from '@/components/layout/AdminLayout.vue'
+import PageHeader from '@/components/page/PageHeader.vue'
+// ui components
+import Button from '@/components/ui/Button.vue'
+// components
 import LandingPageCreateDialog from '@/components/landingPages/LandingPageCreateDialog.vue'
 import LandingPagesTable from '@/components/landingPages/LandingPagesTable.vue'
 // composables
 import { useLandingPages } from '@/composables/useLandingPages'
 
-const { fetchLandingPages } = useLandingPages()
+const { landingPages, fetchLandingPages } = useLandingPages()
 
 const openCreateLandingPageDialog = ref(false)
 
