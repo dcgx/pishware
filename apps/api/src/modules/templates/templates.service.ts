@@ -11,7 +11,7 @@ const supabaseServiceRoleClient = createClient(supabaseUrl, "eyJhbGciOiJIUzI1NiI
 
 @Injectable()
 export class TemplatesService {
-    async createTemplate(dto: CreateTemplateDto) {
+    async create(dto: CreateTemplateDto) {
         const { data, error } = await supabase
             .from('templates')
             .insert([dto])
@@ -23,5 +23,17 @@ export class TemplatesService {
         }
 
         return data
+    }
+
+    getAll() {
+        return supabase
+            .from('templates')
+            .select('*')
+            .then(({ data, error }) => {
+                if (error) {
+                    throw new Error(`Error al obtener templates: ${error.message}`)
+                }
+                return data
+            })
     }
 }

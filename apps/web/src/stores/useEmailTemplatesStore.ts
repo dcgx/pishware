@@ -7,39 +7,11 @@ export const useEmailTemplatesStore = defineStore('emailTemplates', () => {
         {
             id: 1,
             name: 'Notificación canva',
-            subject: 'Notificaciones recientes de Canvas',
-            content: '',
-            contentType: 'text',
-            createdBy: {
-                id: 1,
-                name: 'Juan Perez',
-                email: 'tt@tt.tt'
-            }
-        },
-        {
-            id: 2,
-            name: 'Notificación de prueba',
+            type: 'html',
+            body_content: '<p>Hola, esta es una notificación de prueba.</p>',
             subject: 'Notificación de prueba',
-            content: '',
-            contentType: 'text',
-            createdBy: {
-                id: 1,
-                name: 'Juan Perez',
-                email: ''
-            }
+            attachments: [],
         },
-        {
-            id: 3,
-            name: 'Notificación de prueba HTML',
-            subject: 'Notificación de prueba HTML',
-            content: '',
-            contentType: 'html',
-            createdBy: {
-                id: 1,
-                name: 'Juan Perez',
-                email: ''
-            }
-        }
     ]);
 
     const createForm = ref({

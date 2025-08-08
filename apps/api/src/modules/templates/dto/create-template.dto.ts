@@ -13,6 +13,10 @@ export class CreateTemplateDto {
   @IsString()
   body_content: string
 
+  @IsNotEmpty()
+  @IsString()
+  subject: string
+
   @IsOptional()
   @IsArray()
   attachments?: string[]
