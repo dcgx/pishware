@@ -6,8 +6,11 @@ import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
 import { TemplateEntity } from './entities/template.entity';
 
+import { FileUploadModule } from 'src/file-upload/file-upload.module';
+import { TemplateAttachmentEntity } from './entities/template-attachment.entity';
+
 @Module({
-    imports: [TypeOrmModule.forFeature([TemplateEntity])],
+    imports: [TypeOrmModule.forFeature([TemplateEntity, TemplateAttachmentEntity]), FileUploadModule],
     controllers: [TemplateController],
     providers: [TemplateService],
 })

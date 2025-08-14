@@ -9,6 +9,7 @@ import { TemplateModule } from './template/template.module.ts';
 import { ProfileModule } from './profile/profile.module';
 import { LandingPageModule } from './landing-page/landing-page.module';
 import { RoleModule } from './role/role.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { RoleModule } from './role/role.module';
     ProfileModule,
     TemplateModule,
     LandingPageModule,
+    FileUploadModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
