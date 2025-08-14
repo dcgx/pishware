@@ -2,10 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
+import { SendTestEmailDto } from 'src/email/dto/send-test-email.dto';
+import { EmailService } from 'src/email/email.service';
 
 @Controller('campaign')
 export class CampaignController {
-  constructor(private readonly campaignService: CampaignService) {}
+  constructor(
+    private readonly campaignService: CampaignService,
+    private readonly emailService: EmailService
+  ) { }
 
   @Post()
   create(@Body() createCampaignDto: CreateCampaignDto) {
@@ -30,5 +35,11 @@ export class CampaignController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.campaignService.remove(+id);
+  }
+
+
+  @Post('send-test-email')
+  sendTest(@Body() dto: SendTestEmailDto) {
+    return this.emailService.sendTestEmail();
   }
 }

@@ -35,12 +35,18 @@ importers:
       '@supabase/supabase-js':
         specifier: ^2.50.5
         version: 2.50.5
+      '@types/nodemailer':
+        specifier: ^6.4.17
+        version: 6.4.17
       class-validator:
         specifier: ^0.14.2
         version: 0.14.2
       multer:
         specifier: ^2.0.2
         version: 2.0.2
+      nodemailer:
+        specifier: ^7.0.5
+        version: 7.0.5
       pg:
         specifier: ^8.16.3
         version: 8.16.3
@@ -1460,6 +1466,9 @@ packages:
 
   '@types/node@22.16.3':
     resolution: {integrity: sha512-sr4Xz74KOUeYadexo1r8imhRtlVXcs+j3XK3TcoiYk7B1t3YRVJgtaD3cwX73NYb71pmVuMLNRhJ9XKdoDB74g==}
+
+  '@types/nodemailer@6.4.17':
+    resolution: {integrity: sha512-I9CCaIp6DTldEg7vyUTZi8+9Vo0hi1/T8gv3C89yk1rSAAzoKQ8H8ki/jBYJSFoH/BisgLP8tkZMlQ91CIquww==}
 
   '@types/phoenix@1.6.6':
     resolution: {integrity: sha512-PIzZZlEppgrpoT2QgbnDU+MMzuR6BbCjllj0bM70lWoejMeNJAxCchxnv7J3XFkI8MpygtRpzXrIlmWUBclP5A==}
@@ -3127,6 +3136,10 @@ packages:
 
   node-releases@2.0.19:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
+
+  nodemailer@7.0.5:
+    resolution: {integrity: sha512-nsrh2lO3j4GkLLXoeEksAMgAOqxOv6QumNRVQTJwKH4nuiww6iC2y7GyANs9kRAxCexg3+lTWM3PZ91iLlVjfg==}
+    engines: {node: '>=6.0.0'}
 
   normalize-path@3.0.0:
     resolution: {integrity: sha512-6eZs5Ls3WtCisHWp9S2GUy8dqkpGi4BVSz3GaqiE6ezub0512ESztXUwUB6C6IKbQkY2Pnb/mD4WYojCRwcwLA==}
@@ -6018,6 +6031,10 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
+  '@types/nodemailer@6.4.17':
+    dependencies:
+      '@types/node': 22.16.3
+
   '@types/phoenix@1.6.6': {}
 
   '@types/qs@6.14.0': {}
@@ -7963,6 +7980,8 @@ snapshots:
   node-int64@0.4.0: {}
 
   node-releases@2.0.19: {}
+
+  nodemailer@7.0.5: {}
 
   normalize-path@3.0.0: {}
 
