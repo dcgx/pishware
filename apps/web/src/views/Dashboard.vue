@@ -15,17 +15,21 @@
     </div>
 
     <div class="grid grid-cols-4 gap-4 mt-6 border-t pt-6 dark:border-gray-700 border-gray-200">
-      <div>
+      <div class="space-y-5 sm:space-y-6 flex flex-col items-center">
         <h4 class="text-1xl font-medium text-gray-900 dark:text-gray-200">Correos enviados</h4>
+        <RadialBarChart />
       </div>
-      <div>
+      <div class="space-y-5 sm:space-y-6 flex flex-col items-center">
         <h4 class="text-1xl font-medium text-gray-900 dark:text-gray-200">Correos abiertos</h4>
+        <RadialBarChart />
       </div>
-      <div>
+      <div class="space-y-5 sm:space-y-6 flex flex-col items-center">
         <h4 class="text-1xl font-medium text-gray-900 dark:text-gray-200">Link clickeados</h4>
+        <RadialBarChart />
       </div>
-      <div>
+      <div class="space-y-5 sm:space-y-6 flex flex-col items-center">
         <h4 class="text-1xl font-medium text-gray-900 dark:text-gray-200">Datos enviados</h4>
+        <RadialBarChart />
       </div>
     </div>
 
@@ -40,6 +44,7 @@
 import AdminLayout from '../components/layout/AdminLayout.vue'
 import ComponentCard from '../components/common/ComponentCard.vue'
 import LineChartOne from '../components/charts/LineChart/LineChartOne.vue'
+import RadialBarChart from '@/components/charts/RadialBarChart/RadialBarChart.vue'
 import { FwbAlert } from 'flowbite-vue'
 
 // components
