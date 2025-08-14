@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
-import { TemplateEntity } from './template.entity';
+import { TemplateEntity } from './entities/template.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([TemplateEntity])],
