@@ -140,6 +140,7 @@ const handleSubmit = () => {
     subject: subject.value,
     type: tab.value,
     body_content: tab.value === 'text' ? textContent.value : htmlContent.value,
+    attachments: files.value,
   }
   emit('submit', payload)
 }

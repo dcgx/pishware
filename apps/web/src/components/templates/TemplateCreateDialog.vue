@@ -69,7 +69,7 @@ import TemplateCreateForm from '@/components/templates/TemplateCreateForm.vue'
 // composables
 import { useTemplates } from '@/composables/useTemplates'
 
-const { createTemplate } = useTemplates()
+const { createTemplate, uploadAttachment } = useTemplates()
 
 const emit = defineEmits(['close'])
 const props = defineProps({
@@ -85,7 +85,14 @@ const handleClose = () => {
 
 const handleCreateTemplate = async (templateData) => {
   await createTemplate(templateData)
-    .then(() => {
+    .then(async (response) => {
+      console.log('Template created successfully:', response)
+      let templateId = response.data.id
+      if (templateData.attachments && templateId) {
+        templateData.attachments.forEach((attachment) => {
+          uploadAttachment(templateId, attachment)
+        })
+      }
       emit('created', templateData)
     })
     .catch((error) => {
