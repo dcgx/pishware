@@ -10,6 +10,7 @@ import { ProfileModule } from './profile/profile.module';
 import { LandingPageModule } from './landing-page/landing-page.module';
 import { RoleModule } from './role/role.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { CampaignModule } from './campaign/campaign.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
         synchronize: true, // solo en desarrollo
       }),
     }),
+    CampaignModule,
   ],
   controllers: [AppController],
   providers: [AppService],
