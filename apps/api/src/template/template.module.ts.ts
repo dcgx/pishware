@@ -13,5 +13,6 @@ import { TemplateAttachmentEntity } from './entities/template-attachment.entity'
     imports: [TypeOrmModule.forFeature([TemplateEntity, TemplateAttachmentEntity]), FileUploadModule],
     controllers: [TemplateController],
     providers: [TemplateService],
+    exports: [TemplateService],
 })
 export class TemplateModule { }

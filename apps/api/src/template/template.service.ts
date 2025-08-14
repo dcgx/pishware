@@ -19,6 +19,10 @@ export class TemplateService {
         return this.templateRepository.find();
     }
 
+    async findOne(id: number): Promise<TemplateEntity | null> {
+        return this.templateRepository.findOne({ where: { id } });
+    }
+
     async create(dto: Partial<TemplateEntity>): Promise<TemplateEntity> {
         const template = this.templateRepository.create(dto);
         return this.templateRepository.save(template);

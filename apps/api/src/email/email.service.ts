@@ -2,12 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TemplateService } from 'src/template/template.service';
 
 @Injectable()
 export class EmailService {
     private transporter;
 
     constructor(
+        private readonly templateService: TemplateService,
 
     ) {
         this.transporter = nodemailer.createTransport({
@@ -24,7 +26,7 @@ export class EmailService {
     async sendTestEmail() {
         // const profile = await this.smtpRepo.findOne({ where: { id: profileId } });
         // if (!profile) throw new NotFoundException('SMTP profile not found');
-
+        const template = await this.templateService.findOne(23);
         this.transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
             port: 25,
@@ -34,11 +36,12 @@ export class EmailService {
                 pass: process.env.SMTP_PASS,
             },
         });
+
         const info = await this.transporter.sendMail({
             from: `Pishware <test>`,
             to: 'diegocastillo.dev@gmail.com',
-            subject: 'Test Email from Pishware',
-            html: '<h1>This is a test email</h1><p>If you received this, the SMTP settings are correct!</p>',
+            subject: template?.subject,
+            html: template?.body_content
         });
 
         return { messageId: info.messageId, accepted: info.accepted };

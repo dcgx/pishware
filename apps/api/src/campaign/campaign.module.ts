@@ -4,10 +4,12 @@ import { CampaignController } from './campaign.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CampaignEntity } from './entities/campaign.entity';
 import { EmailModule } from 'src/email/email.module';
+import { TemplateModule } from 'src/template/template.module.ts';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CampaignEntity]),
+    TemplateModule,
     EmailModule
   ],
   controllers: [CampaignController],
