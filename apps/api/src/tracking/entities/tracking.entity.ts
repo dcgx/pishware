@@ -17,6 +17,6 @@ export class Tracking {
     @Column({ type: 'json' })
     metadata: Record<string, any>;
 
-    @Column({ type: 'int' })
-    user_id: number; // Assuming tracking is associated with a user
+    @Column({ type: 'int', nullable: true })
+    user_id: number | null; // Assuming tracking is associated with a user
 }
