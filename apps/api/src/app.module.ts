@@ -1,26 +1,27 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './modules/users/users.module';
-import { RolesModule } from './modules/roles/roles.module';
-import { GroupsModule } from './modules/groups/groups.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TemplateModule } from './template/template.module.ts';
-import { ProfileModule } from './profile/profile.module';
-import { LandingPageModule } from './landing-page/landing-page.module';
+import { ProfileModule } from './iam/profile/profile.module';
+import { LandingModule } from './landing/landing.module';
+import { RoleModule } from './iam/role/role.module';
+import { FileUploadModule } from './storage/storage.module';
+import { CampaignModule } from './campaign/campaign.module';
+import { MailerModule } from './mailer/mailer.module';
+import { IamModule } from './iam/iam.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // para usar ConfigService en cualquier módulo
     }),
-    UsersModule,
-    RolesModule,
-    GroupsModule,
+    IamModule,
     ProfileModule,
     TemplateModule,
-    LandingPageModule,
+    LandingModule,
+    FileUploadModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -32,6 +33,8 @@ import { LandingPageModule } from './landing-page/landing-page.module';
         synchronize: true, // solo en desarrollo
       }),
     }),
+    CampaignModule,
+    MailerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

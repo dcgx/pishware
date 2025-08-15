@@ -17,7 +17,7 @@ export const useTemplates = () => {
         }
     };
 
-    const createTemplate = async (template) => {
+    const createTemplate = async (template: any) => {
         templatesStore.creating = true;
         templatesStore.error = '';
         try {
@@ -33,12 +33,31 @@ export const useTemplates = () => {
             }
             const data = await response.json();
             templatesStore.emailTemplates.push(data);
-            return { success: true };
+            return { success: true, data };
         } catch (err) {
             templatesStore.error = 'Error creating template';
             return { success: false, error: err.message };
         } finally {
             templatesStore.creating = false;
+        }
+    };
+
+
+    const uploadAttachment = async (templateId: number, file: any) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            const response = await fetch(`${apiUrl}/templates/${templateId}/attachment/upload`, {
+                method: 'POST',
+                body: formData,
+            });
+            if (!response.ok) {
+                throw new Error('Failed to upload attachment');
+            }
+            const data = await response.json();
+            return { success: true, data };
+        } catch (err) {
+            return { success: false, error: err.message };
         }
     };
 
@@ -52,5 +71,6 @@ export const useTemplates = () => {
         showImportEmailDialog: templatesStore.showImportEmailDialog,
         fetchTemplates,
         createTemplate,
+        uploadAttachment,
     };
 }

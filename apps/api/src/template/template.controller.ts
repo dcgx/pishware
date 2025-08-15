@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { TemplateService } from "./template.service";
 import { CreateTemplateDto } from "./dto/create-template.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('templates')
 export class TemplateController {
@@ -19,5 +20,14 @@ export class TemplateController {
     ) {
         console.log('Creating template with data:', dto);
         return this.templateService.create(dto);
+    }
+
+    @Post(':templateId/attachment/upload')
+    @UseInterceptors(FileInterceptor('file'))
+    uploadAttachment(
+        @Param('templateId') templateId: number,
+        @UploadedFile() file: Express.Multer.File
+    ) {
+        return this.templateService.uploadAttachment(templateId, file);
     }
 }

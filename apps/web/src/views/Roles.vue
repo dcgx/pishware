@@ -1,15 +1,15 @@
 <template>
   <admin-layout>
-    <div class="mt-6">
-      <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-semibold mb-4">Roles</h2>
-        <div class="flex gap-2">
+    <div class="grid">
+      <PageHeader>
+        <template #title>Roles</template>
+        <template #actions>
           <Button size="sm" variant="primary" @click="setOpenCreateRoleDialog(true)">
             Crear rol
           </Button>
-        </div>
-      </div>
-      <RolesTable />
+        </template>
+      </PageHeader>
+      <RolesTable :roles="roles" :loading="loading" />
     </div>
 
     <TransitionRoot appear :show="isOpenCreateUserDialog" as="template">
@@ -82,10 +82,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+// layout
+import AdminLayout from '@/components/layout/AdminLayout.vue'
+import PageHeader from '@/components/page/PageHeader.vue'
+
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import Button from '@/components/ui/Button.vue'
-import AdminLayout from '@/components/layout/AdminLayout.vue'
 import RolesTable from '@/components/roles/RolesTable.vue'
 import { useRoles } from '@/composables/useRoles'
 
