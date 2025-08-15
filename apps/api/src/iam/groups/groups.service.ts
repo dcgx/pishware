@@ -34,7 +34,17 @@ export class GroupsService {
   }
 
   async createGroup(body: { name: string; users: any[] }) {
-    const userIds = body.users?.map((u) => u.id) ?? [];
+    const userIds = Array.isArray(body.users)
+      ? body.users
+          .filter(
+            (u) =>
+              u &&
+              typeof u === 'object' &&
+              'id' in u &&
+              typeof u.id === 'string'
+          )
+          .map((u) => u.id)
+      : [];
     const profiles = userIds.length
       ? await this.profileRepository.findBy({ id: In(userIds) })
       : [];
