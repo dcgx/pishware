@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from "typeorm";
+import { GroupEntity } from "../groups/group.entity";
 
 
 @Entity('profiles')
@@ -23,4 +24,7 @@ export class ProfileEntity {
     
     @Column({ type: 'timestamptz', nullable: true })
     deleted_at?: Date;
+
+    @ManyToMany(() => GroupEntity, (group) => group.profiles)
+    groups: GroupEntity[];
 }
