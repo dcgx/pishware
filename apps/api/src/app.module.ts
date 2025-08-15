@@ -11,7 +11,7 @@ import { LandingPageModule } from './landing-page/landing-page.module';
 import { RoleModule } from './role/role.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
 import { CampaignModule } from './campaign/campaign.module';
-import { EmailModule } from './email/email.module';
+import { EmailModule } from './mailer/mailer.module';
 import { SmtpProfileModule } from './smtp-profile/smtp-profile.module';
 import { RedirectModule } from './redirect/redirect.module';
 

@@ -2,14 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
-import { SendTestEmailDto } from 'src/email/dto/send-test-email.dto';
-import { EmailService } from 'src/email/email.service';
+import { SendTestEmailDto } from 'src/mailer/dto/send-test-email.dto';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Controller('campaign')
 export class CampaignController {
   constructor(
     private readonly campaignService: CampaignService,
-    private readonly emailService: EmailService
+    private readonly mailerService: MailerService
   ) { }
 
   @Post()
@@ -40,6 +40,6 @@ export class CampaignController {
 
   @Post('send-test-email')
   sendTest(@Body() dto: SendTestEmailDto) {
-    return this.emailService.sendTestEmail();
+    return this.mailerService.sendTestEmail();
   }
 }

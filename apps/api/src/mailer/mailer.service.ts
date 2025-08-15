@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { TemplateService } from 'src/template/template.service';
 
 @Injectable()
-export class EmailService {
+export class MailerService {
     private transporter;
 
     constructor(
