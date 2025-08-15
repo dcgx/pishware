@@ -13,7 +13,6 @@ import { FileUploadModule } from './file-upload/file-upload.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { EmailModule } from './email/email.module';
 import { SmtpProfileModule } from './smtp-profile/smtp-profile.module';
-import { CaptureModule } from './capture/capture.module';
 import { RedirectModule } from './redirect/redirect.module';
 
 @Module({
@@ -43,7 +42,6 @@ import { RedirectModule } from './redirect/redirect.module';
     CampaignModule,
     EmailModule,
     SmtpProfileModule,
-    CaptureModule,
   ],
   controllers: [AppController],
   providers: [AppService],
