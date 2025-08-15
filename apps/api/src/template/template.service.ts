@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { TemplateEntity } from './entities/template.entity';
 import { TemplateAttachmentEntity } from './entities/template-attachment.entity';
 
-import { FileUploadService } from 'src/file-upload/file-upload.service';
+import { FileUploadService } from 'src/storage/storage.service';
 
 @Injectable()
 export class TemplateService {

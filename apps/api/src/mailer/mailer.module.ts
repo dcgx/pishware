@@ -9,4 +9,4 @@ import { TemplateModule } from 'src/template/template.module.ts';
   providers: [MailerService],
   exports: [MailerService],
 })
-export class EmailModule {}
+export class MailerModule {}

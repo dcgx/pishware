@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { LandingPageEntity } from "src/landing-page/landing-page.entity";
+import { LandingPageEntity } from "src/landing/landing-page.entity";
 import { TemplateEntity } from "src/template/entities/template.entity";
 
 @Entity('campaigns')

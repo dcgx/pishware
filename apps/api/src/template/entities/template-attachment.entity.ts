@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 
-import { ProfileEntity } from 'src/profile/profile.entity';
+import { ProfileEntity } from 'src/iam/profile/profile.entity';
 import { TemplateEntity } from './template.entity';
 
 @Entity('template_attachments')

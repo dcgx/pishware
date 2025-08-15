@@ -1,6 +1,6 @@
 import { Controller, Get, Query, Res, HttpStatus, Post, Body } from '@nestjs/common';
 import { Response } from 'express';
-import { LandingPageService } from 'src/landing-page/landing-page.service';
+import { LandingPageService } from 'src/landing/landing-page.service';
 
 @Controller('r')
 export class RedirectController {

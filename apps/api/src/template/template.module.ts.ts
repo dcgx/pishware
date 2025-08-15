@@ -6,7 +6,7 @@ import { TemplateController } from './template.controller';
 import { TemplateService } from './template.service';
 import { TemplateEntity } from './entities/template.entity';
 
-import { FileUploadModule } from 'src/file-upload/file-upload.module';
+import { FileUploadModule } from 'src/storage/storage.module';
 import { TemplateAttachmentEntity } from './entities/template-attachment.entity';
 
 @Module({
