@@ -37,6 +37,8 @@ export class UsersService {
   async deleteUser(id: string) {
     if (!id) throw new Error('ID de usuario no proporcionado.');
     await this.profileRepository.update(id, { deleted_at: new Date() });
+    // Also delete or deactivate the authentication user record
+    await this.userRepository.delete({ profile: { id } });
     return { message: 'Usuario eliminado correctamente.' };
   }
 }
