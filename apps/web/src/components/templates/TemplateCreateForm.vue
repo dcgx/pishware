@@ -132,7 +132,7 @@ const openImportEmailDialog = ref(false)
 
 const emit = defineEmits(['submit'])
 
-const tab = ref('text')
+const tab = ref('html')
 const name = ref('')
 const subject = ref('')
 const textContent = ref('')
