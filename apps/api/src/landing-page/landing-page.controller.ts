@@ -26,7 +26,7 @@ export class LandingPageController {
 
     @Post('import')
     async importFromUrl(@Body() dto: ImportUrlDto) {
-        const html = await this.landingPageService.importHtmlFromUrl(dto.url)
+        const html = await this.landingPageService.importWithInlineStyles(dto.url)
         return { html }
     }
 }

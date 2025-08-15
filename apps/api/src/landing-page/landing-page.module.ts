@@ -9,5 +9,6 @@ import { LandingPageService } from './landing-page.service';
     imports: [TypeOrmModule.forFeature([LandingPageEntity])],
     controllers: [LandingPageController],
     providers: [LandingPageService],
+    exports: [LandingPageService], 
 })
 export class LandingPageModule { }

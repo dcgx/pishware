@@ -14,6 +14,7 @@ import { CampaignModule } from './campaign/campaign.module';
 import { EmailModule } from './email/email.module';
 import { SmtpProfileModule } from './smtp-profile/smtp-profile.module';
 import { CaptureModule } from './capture/capture.module';
+import { RedirectModule } from './redirect/redirect.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { CaptureModule } from './capture/capture.module';
     TemplateModule,
     LandingPageModule,
     FileUploadModule,
+    RedirectModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
