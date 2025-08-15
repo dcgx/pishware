@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { LandingPageEntity } from "./landing-page.entity";
+import { LandingPageEntity } from "./entities/landing-page.entity";
 import axios from "axios";
 // import juice from "juice";
 import * as cheerio from 'cheerio'
@@ -12,7 +12,7 @@ const juice = require('juice') as typeof import('juice');
 const UA = 'Mozilla/5.0 (Pishware Importer)';
 
 @Injectable()
-export class LandingPageService {
+export class LandingAdminService {
     constructor(
         @InjectRepository(LandingPageEntity) private readonly landingPageRepository: Repository<LandingPageEntity>
     ) { }

@@ -1,10 +1,10 @@
 import { Controller, Get, Query, Res, HttpStatus, Post, Body } from '@nestjs/common';
 import { Response } from 'express';
-import { LandingPageService } from 'src/landing/landing-page.service';
+import { LandingAdminService } from 'src/landing/landing-admin.service';
 
 @Controller('r')
-export class RedirectController {
-    constructor(private readonly landingPageService: LandingPageService) { }
+export class LandingRuntimeController {
+    constructor(private readonly landingAdminService: LandingAdminService) { }
 
     @Get()
     async showRedirect(
@@ -16,7 +16,7 @@ export class RedirectController {
             return res.status(HttpStatus.BAD_REQUEST).send('Missing key');
         }
 
-        const landingPage = await this.landingPageService.findByPublicKey(key);
+        const landingPage = await this.landingAdminService.findByPublicKey(key);
         if (!landingPage) {
             return res.status(HttpStatus.NOT_FOUND).send('Landing page not found');
         }

@@ -5,13 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TemplateModule } from './template/template.module.ts';
 import { ProfileModule } from './iam/profile/profile.module';
-import { LandingPageModule } from './landing/landing-page.module';
+import { LandingModule } from './landing/landing.module';
 import { RoleModule } from './iam/role/role.module';
 import { FileUploadModule } from './storage/storage.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { MailerModule } from './mailer/mailer.module';
-import { SmtpProfileModule } from './smtp-profile/smtp-profile.module';
-import { RedirectModule } from './redirect/redirect.module';
 import { IamModule } from './iam/iam.module';
 
 @Module({
@@ -22,9 +20,8 @@ import { IamModule } from './iam/iam.module';
     IamModule,
     ProfileModule,
     TemplateModule,
-    LandingPageModule,
+    LandingModule,
     FileUploadModule,
-    RedirectModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -38,7 +35,6 @@ import { IamModule } from './iam/iam.module';
     }),
     CampaignModule,
     MailerModule,
-    SmtpProfileModule,
   ],
   controllers: [AppController],
   providers: [AppService],
