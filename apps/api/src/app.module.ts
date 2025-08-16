@@ -30,7 +30,7 @@ import { IamModule } from './iam/iam.module';
         url: config.get<string>('DATABASE_URL'),
         ssl: { rejectUnauthorized: false },
         autoLoadEntities: true,
-        synchronize: true, // solo en desarrollo
+        synchronize: true,
       }),
     }),
     CampaignModule,
