@@ -63,6 +63,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/sending-profiles',
+      name: 'sending-profiles',
+      component: () => import('../views/SendingProfiles.vue'),
+      meta: {
+        title: 'Perfiles de envío',
+      },
+    },
+    {
       path: '/configuration',
       name: 'configuration',
       component: () => import('../views/Configuration.vue'),

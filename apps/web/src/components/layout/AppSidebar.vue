@@ -232,6 +232,11 @@ const menuGroups = [
         path: '/landing-pages',
       },
       {
+        icon: TableIcon,
+        name: 'Perfiles de envío',
+        path: '/sending-profiles',
+      },
+      {
         icon: PaperclipIcon,
         name: 'Reportes',
         path: '/reports',
