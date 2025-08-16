@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MailerService } from './mailer.service';
 import { TemplateService } from '../template/template.service';
+import { TrackingService } from '../tracking/tracking.service';
 
 describe('MailerService', () => {
   let service: MailerService;
@@ -10,6 +11,7 @@ describe('MailerService', () => {
       providers: [
         MailerService,
         { provide: TemplateService, useValue: { findOne: jest.fn() } },
+        { provide: TrackingService, useValue: { logEvent: jest.fn() } },
       ],
     }).compile();
 

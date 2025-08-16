@@ -11,6 +11,7 @@ import { FileUploadModule } from './storage/storage.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { MailerModule } from './mailer/mailer.module';
 import { IamModule } from './iam/iam.module';
+import { TrackingModule } from './tracking/tracking.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { IamModule } from './iam/iam.module';
     }),
     CampaignModule,
     MailerModule,
+    TrackingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
