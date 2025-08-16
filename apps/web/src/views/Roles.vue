@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <admin-layout>
     <div class="grid">
@@ -12,7 +13,7 @@
       <RolesTable :roles="roles" :loading="loading" />
     </div>
 
-    <TransitionRoot appear :show="isOpenCreateUserDialog" as="template">
+    <TransitionRoot appear :show="isOpenCreateRoleDialog" as="template">
       <Dialog as="div" @close="setOpenCreateRoleDialog(false)" class="relative z-10">
         <TransitionChild
           as="template"
@@ -44,33 +45,10 @@
                   Crear nuevo rol
                 </DialogTitle>
 
-                <form @submit.prevent="handleCreateRole" class="mt-4 space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Nombre</label>
-                    <input v-model="newRole.name" required class="w-full border p-2 rounded" />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Descripción</label>
-                    <textarea
-                      v-model="newRole.description"
-                      rows="3"
-                      required
-                      class="w-full border p-2 rounded"
-                    ></textarea>
-                  </div>
-                  <div class="pt-4 flex justify-end gap-3">
-                    <button
-                      type="button"
-                      @click="setOpenCreateRoleDialog(false)"
-                      class="px-4 py-2 rounded bg-gray-100 text-gray-700"
-                    >
-                      Cancelar
-                    </button>
-                    <button type="submit" class="px-4 py-2 rounded bg-brand-500 text-white">
-                      Crear
-                    </button>
-                  </div>
-                </form>
+                <CreateRoleForm
+                  @submit="handleCreateRole"
+                  @cancel="() => setOpenCreateRoleDialog(false)"
+                />
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -80,34 +58,29 @@
   </admin-layout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 // layout
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import PageHeader from '@/components/page/PageHeader.vue'
 
 import { TransitionRoot, TransitionChild, Dialog, DialogPanel, DialogTitle } from '@headlessui/vue'
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
 import Button from '@/components/ui/Button.vue'
 import RolesTable from '@/components/roles/RolesTable.vue'
+import CreateRoleForm from '@/components/roles/CreateRoleForm.vue'
 import { useRoles } from '@/composables/useRoles'
 
 const { fetchRoles, createRole, roles, loading } = useRoles()
 
-const newRole = ref({
-  name: '',
-  description: '',
-})
-const isOpenCreateUserDialog = ref(false)
+const isOpenCreateRoleDialog = ref(false)
 const setOpenCreateRoleDialog = (value) => {
-  isOpenCreateUserDialog.value = value
+  isOpenCreateRoleDialog.value = value
 }
 
-const handleCreateRole = async () => {
-  if (newRole.value.name && newRole.value.description) {
-    await createRole(newRole.value)
+const handleCreateRole = async (roleData) => {
+  if (roleData.name && roleData.description) {
+    await createRole(roleData)
     await fetchRoles()
-    newRole.value = { name: '', description: '' }
     setOpenCreateRoleDialog(false)
   }
 }

@@ -10,14 +10,19 @@ export const useUsersStore = defineStore('users', () => {
 
   const setUsers = (data) => {
     users.value = data
-    usersWithoutGroup.value = data.filter((user: any) => {
+    usersWithoutGroup.value = data.filter((user) => {
       console.log(user.groups, 'user groups')
       return user.groups.length === 0
     })
     console.log(usersWithoutGroup.value, 'users without group')
   }
 
-  const addUser = (user) => { users.value.push(user) }
+  const addUser = (user) => {
+    users.value.push(user)
+    if (!user.groups || user.groups.length === 0) {
+      usersWithoutGroup.value.push(user)
+    }
+  }
 
   return {
     users,
