@@ -7,7 +7,7 @@ import { UpdateSendingProfileDto } from './dto/update-sending-profile.dto';
 export class SendingProfileController {
   constructor(private readonly service: SendingProfileService) {}
 
-  @Post()
+  @Post('create')
   create(@Body() dto: CreateSendingProfileDto) {
     return this.service.create(dto);
   }

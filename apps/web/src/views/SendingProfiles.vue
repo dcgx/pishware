@@ -19,7 +19,7 @@
   </admin-layout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import AdminLayout from '@/components/layout/AdminLayout.vue';
 import PageHeader from '@/components/page/PageHeader.vue';
@@ -29,16 +29,18 @@ import SendingProfilesTable from '@/components/sending-profiles/SendingProfilesT
 import SendingProfileCreateDialog from '@/components/sending-profiles/SendingProfileCreateDialog.vue';
 import SendingProfileEditDialog from '@/components/sending-profiles/SendingProfileEditDialog.vue';
 import SendingProfileDeleteDialog from '@/components/sending-profiles/SendingProfileDeleteDialog.vue';
+
 import { useSendingProfiles } from '@/composables/useSendingProfiles';
 
 const { sendingProfiles, fetchSendingProfiles, fetching, editForm } = useSendingProfiles();
+
+const selectedProfile = ref<any | null>(null);
+const selectedProfileId = ref<number | null>(null);
 
 const openCreate = ref(false);
 const openEditDialog = ref(false);
 const openDeleteDialog = ref(false);
 
-const selectedProfile = ref(null);
-const selectedProfileId = ref(null);
 
 const setOpenCreate = (val: boolean) => {
   openCreate.value = val;

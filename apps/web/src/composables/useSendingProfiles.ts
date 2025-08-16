@@ -22,7 +22,7 @@ export const useSendingProfiles = () => {
     store.creating = true;
     store.error = '';
     try {
-      const response = await fetch(`${apiUrl}/sending-profiles`, {
+      const response = await fetch(`${apiUrl}/sending-profiles/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profile),
