@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm';
 
-import { ProfileEntity } from 'src/iam/profile/profile.entity';
+import { Profile } from 'src/iam/profile/profile.entity';
 import { TemplateEntity } from './template.entity';
 
 @Entity('template_attachments')
@@ -26,6 +26,6 @@ export class TemplateAttachmentEntity {
     @CreateDateColumn()
     uploaded_at: Date;
 
-    @ManyToOne(() => ProfileEntity, { nullable: true })
-    created_by?: ProfileEntity;
+    @ManyToOne(() => Profile, { nullable: true })
+    created_by?: Profile;
 }

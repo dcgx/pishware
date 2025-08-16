@@ -3,6 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TemplateService } from 'src/template/template.service';
+import { TrackingService } from 'src/tracking/tracking.service';
 
 @Injectable()
 export class MailerService {
@@ -10,7 +11,7 @@ export class MailerService {
 
     constructor(
         private readonly templateService: TemplateService,
-
+        private readonly trackingService: TrackingService,
     ) {
         this.transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
@@ -43,6 +44,11 @@ export class MailerService {
             subject: template?.subject,
             html: template?.body_content
         });
+
+        await this.trackingService.logEvent('email_sent', { to: 'diegocastillo.dev@gmail.com', subject: template?.subject }, { messageId: info.messageId });
+        for (const recipient of info.accepted) {
+            await this.trackingService.logEvent('email_delivered', { to: recipient }, { messageId: info.messageId });
+        }
 
         return { messageId: info.messageId, accepted: info.accepted };
     }
