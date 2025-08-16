@@ -23,7 +23,7 @@ export const useRoles = () => {
         rolesStore.creating = true;
         rolesStore.error = '';
         try {
-            const response = await fetch(`${apiUrl}/roles`, {
+            const response = await fetch(`${apiUrl}/roles/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
