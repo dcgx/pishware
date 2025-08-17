@@ -1,10 +1,14 @@
 import { Controller, Get, Query, Res, HttpStatus, Post, Body } from '@nestjs/common';
 import { Response } from 'express';
 import { LandingAdminService } from 'src/landing/landing-admin.service';
+import { TrackingService } from 'src/tracking/tracking.service';
 
 @Controller('r')
 export class LandingRuntimeController {
-    constructor(private readonly landingAdminService: LandingAdminService) { }
+    constructor(
+        private readonly landingAdminService: LandingAdminService,
+        private readonly trackingService: TrackingService,
+    ) { }
 
     @Get()
     async showRedirect(
@@ -20,6 +24,8 @@ export class LandingRuntimeController {
         if (!landingPage) {
             return res.status(HttpStatus.NOT_FOUND).send('Landing page not found');
         }
+
+        await this.trackingService.logEvent('landing_viewed', null, { key, landingId: landingPage.id });
 
         const withAction = (landingPage.html_content || '')
             .replace(/<form[^>]*action="[^"]*"([^>]*)>/i, `<form action="http://localhost:3000/r/submit?k=${key}"$1>`)
@@ -45,8 +51,10 @@ export class LandingRuntimeController {
             return res.status(HttpStatus.BAD_REQUEST).send('Missing key');
         }
 
-        const redirectUrl = `https://google.com/`
-        console.log(`Event received key=${key} event=submitLanding`, body, res);
+        const landingPage = await this.landingAdminService.findByPublicKey(key);
+        await this.trackingService.logEvent('landing_submitted', body, { key, landingId: landingPage?.id });
+        const redirectUrl = landingPage?.redirect_url || `https://google.com/`;
+        console.log(`Event received key=${key} event=submitLanding`, body);
         return res.status(HttpStatus.FOUND).redirect(redirectUrl);
     }
 }

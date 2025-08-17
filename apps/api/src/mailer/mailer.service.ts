@@ -3,6 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TemplateService } from 'src/template/template.service';
+import { TrackingService } from 'src/tracking/tracking.service';
 
 @Injectable()
 export class MailerService {
@@ -10,7 +11,7 @@ export class MailerService {
 
     constructor(
         private readonly templateService: TemplateService,
-
+        private readonly trackingService: TrackingService,
     ) {
         this.transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
@@ -24,8 +25,8 @@ export class MailerService {
     }
 
     async sendTestEmail() {
-        // const profile = await this.smtpRepo.findOne({ where: { id: profileId } });
-        // if (!profile) throw new NotFoundException('SMTP profile not found');
+        // const profile = await this.sendingRepo.findOne({ where: { id: profileId } });
+        // if (!profile) throw new NotFoundException('Sending profile not found');
         const template = await this.templateService.findOne(23);
         this.transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
@@ -43,6 +44,11 @@ export class MailerService {
             subject: template?.subject,
             html: template?.body_content
         });
+
+        await this.trackingService.logEvent('email_sent', { to: 'diegocastillo.dev@gmail.com', subject: template?.subject }, { messageId: info.messageId });
+        for (const recipient of info.accepted) {
+            await this.trackingService.logEvent('email_delivered', { to: recipient }, { messageId: info.messageId });
+        }
 
         return { messageId: info.messageId, accepted: info.accepted };
     }
