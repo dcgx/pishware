@@ -12,7 +12,7 @@ export class UsersService {
     private readonly profileRepository: Repository<Profile>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
   async getUsers() {
     const users = await this.profileRepository.find({ relations: ['groups'] });
@@ -22,18 +22,36 @@ export class UsersService {
     }));
   }
 
-  async createUser(body: { name: string; email: string; username: string }) {
+  async createUser(body: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    username: string;
+  }) {
     const generatedPassword = crypto.randomBytes(8).toString('hex');
+
     const profile = this.profileRepository.create({
-      first_name: body.name,
+      first_name: body.first_name,
+      last_name: body.last_name,
       email: body.email,
       username: body.username,
     });
-    const saved = await this.profileRepository.save(profile);
-    return {
-      profile: saved,
+    const savedProfile = await this.profileRepository.save(profile);
+
+    const user = this.userRepository.create({
+      email: body.email,
       password: generatedPassword,
-      message: 'Usuario creado correctamente, correo enviado con instrucciones de acceso.',
+      first_name: body.first_name,
+      last_name: body.last_name,
+      profile: savedProfile,
+    });
+    await this.userRepository.save(user);
+
+    return {
+      profile: savedProfile,
+      password: generatedPassword,
+      message:
+        'Usuario creado correctamente, correo enviado con instrucciones de acceso.',
     };
   }
 

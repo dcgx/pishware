@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <admin-layout>
     <div>
@@ -17,15 +18,12 @@
         <div class="w-full rounded-2xl bg-white p-2 dark:bg-white/[0.03]">
           <Disclosure v-slot="{ open }" v-if="usersWithoutGroups && usersWithoutGroups.length > 0">
             <DisclosureButton
-              class="flex w-full justify-between rounded-lg  px-4 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
+              class="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span
-              class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md"
-              >Sin grupo ({{ usersWithoutGroups ? usersWithoutGroups.length : 0 }})</span>
-              <ChevronDownIcon
-                :class="open ? 'rotate-180 transform' : ''"
-                class="h-5 w-5"
-              />
+              <span class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md"
+                >Sin grupo ({{ usersWithoutGroups ? usersWithoutGroups.length : 0 }})</span
+              >
+              <ChevronDownIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5" />
             </DisclosureButton>
             <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500">
               <div
@@ -83,7 +81,7 @@
                             size="xs"
                             variant="danger"
                             @click="
-                              selectedUserForDeletion = user.id;
+                              selectedUserForDeletion = user.id
                               setOpenDeleteUserDialog(true)
                             "
                             class="mt-2"
@@ -108,9 +106,9 @@
             <DisclosureButton
               class="flex w-full justify-between rounded-lg px-4 py-4 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span
-                class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md"
-              >{{ group.name }}</span>
+              <span class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md">{{
+                group.name
+              }}</span>
               <ChevronUpIcon
                 :class="open ? 'rotate-180 transform' : ''"
                 class="h-5 w-5 text-purple-500"
@@ -178,7 +176,7 @@
                             size="xs"
                             variant="danger"
                             @click="
-                              selectedUserForDeletion = profile.profiles.id;
+                              selectedUserForDeletion = profile.profiles.id
                               setOpenDeleteUserDialog(true)
                             "
                             class="mt-2"
@@ -224,71 +222,17 @@
               <DialogPanel
                 class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all dark:bg-gray-900"
               >
-                <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">
+                <DialogTitle
+                  as="h3"
+                  class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100"
+                >
                   Crear nuevo usuario
                 </DialogTitle>
 
-                <form @submit.prevent="handleCreateUser" class="mt-4 space-y-4">
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">Nombre</label>
-                    <input v-model="newUser.nombre" required class="w-full border p-2 rounded dark:bg-gray-800 dark:text-gray-100" />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Correo</label>
-                    <input
-                      v-model="newUser.correo"
-                      type="email"
-                      required
-                      class="w-full border p-2 rounded"
-                    />
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Rol</label>
-                    <select v-model="newUser.roleId" required class="w-full border p-2 rounded">
-                      <option value="">Seleccione un rol</option>
-                      <option v-for="role in roles" :key="role.id" :value="role.name">
-                        {{ role.name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Grupo</label>
-                    <select v-model="newUser.grupo" required class="w-full border p-2 rounded">
-                      <option value="">Seleccione un grupo</option>
-                      <option v-for="group in groups" :key="group.id" :value="group.name">
-                        {{ group.name }}
-                      </option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Estado</label>
-                    <select v-model="newUser.estado" required class="w-full border p-2 rounded">
-                      <option>Activo</option>
-                      <option>Pendiente</option>
-                      <option>Inactivo</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-gray-700">Avatar (URL)</label>
-                    <input
-                      v-model="newUser.avatar"
-                      class="w-full border p-2 rounded"
-                      placeholder="https://..."
-                    />
-                  </div>
-                  <div class="pt-4 flex justify-end gap-3">
-                    <button
-                      type="button"
-                      @click="setOpenCreateUserDialog(false)"
-                      class="px-4 py-2 rounded bg-gray-100 text-gray-700"
-                    >
-                      Cancelar
-                    </button>
-                    <button type="submit" class="px-4 py-2 rounded bg-brand-500 text-white">
-                      Crear
-                    </button>
-                  </div>
-                </form>
+                <CreateUserForm
+                  @submit="handleCreateUser"
+                  @cancel="() => setOpenCreateUserDialog(false)"
+                />
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -337,7 +281,6 @@
     </TransitionRoot>
 
     <TransitionRoot appear :show="isOpenDeleteUserDialog" as="template">
-
       <Dialog as="div" @close="setOpenDeleteUserDialog(false)" class="relative z-10">
         <TransitionChild
           as="template"
@@ -368,7 +311,9 @@
                 <DialogTitle as="h3" class="text-lg font-medium leading-6 text-gray-900">
                   Eliminar usuario
                 </DialogTitle>
-                <p class="mt-2 text-sm text-gray-500">¿Estás seguro de que quieres eliminar este usuario?</p>
+                <p class="mt-2 text-sm text-gray-500">
+                  ¿Estás seguro de que quieres eliminar este usuario?
+                </p>
                 <div class="mt-4 flex justify-end gap-3">
                   <Button size="sm" variant="outline" @click="setOpenDeleteUserDialog(false)">
                     Cancelar
@@ -386,7 +331,7 @@
   </admin-layout>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { onMounted, ref } from 'vue'
 import {
   TransitionRoot,
@@ -405,21 +350,13 @@ import CreateGroupForm from '@/components/groups/CreateGroupForm.vue'
 
 import { useUsers } from '@/composables/useUsers'
 import { useGroups } from '@/composables/useGroups'
-import { useRoles } from '@/composables/useRoles'
+import CreateUserForm from '@/components/users/CreateUserForm.vue'
 
-const { users, usersWithoutGroups, fetchUsers, createUser, loading, deleteUser } = useUsers()
+const { usersWithoutGroups, fetchUsers, createUser, deleteUser } = useUsers()
 const { groups, fetchGroups, createGroup } = useGroups()
-const { fetchRoles, roles } = useRoles()
 
 onMounted(async () => {
-  await Promise.all([fetchUsers(), fetchGroups(), fetchRoles()])
-})
-
-const newUser = ref({
-  name: '',
-  email: '',
-  rol: '',
-  grupo: '',
+  await Promise.all([fetchUsers(), fetchGroups()])
 })
 
 const selectedUserForDeletion = ref(null)
@@ -440,20 +377,14 @@ const setOpenDeleteUserDialog = (value) => {
   isOpenDeleteUserDialog.value = value
 }
 
-const handleCreateUser = async () => {
-  if (!newUser.value.nombre || !newUser.value.correo) return alert('Completa los campos')
-
-  const { success, password } = await createUser(newUser.value)
-
+const handleCreateUser = async (userData) => {
+  const { success, password } = await createUser(userData)
   if (success) {
     alert(`Usuario creado correctamente, password temporal: ${password}`)
     setOpenCreateUserDialog(false)
   } else {
     alert('Error al crear usuario')
   }
-
-  // Reset form
-  newUser.value = { nombre: '', correo: '', rol: '', grupo: '', estado: 'Activo', avatar: '' }
 }
 
 const handleCreateGroup = async (groupData) => {

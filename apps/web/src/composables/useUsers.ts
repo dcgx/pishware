@@ -11,10 +11,10 @@ export const useUsers = () => {
     store.error = ''
     try {
       const { data } = await axios.get(`${apiUrl}/users`)
-      console.log(data,'data ')
+      console.log(data, 'data ')
       store.setUsers(data)
       console.log(store.users, 'store user')
-    } catch (err) {
+    } catch {
       store.error = 'Error al obtener usuarios'
     } finally {
       store.loading = false
@@ -25,21 +25,18 @@ export const useUsers = () => {
     store.creating = true
     store.error = ''
     try {
-      console.log(payload, 'payload')
       const { data } = await axios.post(`${apiUrl}/users`, {
-        name: payload.nombre,
-        email: payload.correo,
-        username: payload.correo.split('@')[0] // Ejemplo simple de username
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        email: payload.email,
+        username: payload.username || payload.email.split('@')[0],
       })
       store.addUser({
-        nombre: payload.nombre,
-        correo: payload.correo,
-        rol: payload.rol,
-        grupo: payload.grupo,
-        estado: payload.estado,
-        avatar: payload.avatar,
-        ultimo_acceso: 'Sin acceso',
         id: data.profile.id,
+        first_name: payload.first_name,
+        last_name: payload.last_name,
+        email: payload.email,
+        groups: [],
       })
       return { success: true, password: data.password }
     } catch (err) {
@@ -53,8 +50,8 @@ export const useUsers = () => {
   const deleteUser = async (id) => {
     try {
       await axios.delete(`${apiUrl}/users/${id}`)
-      store.users = store.users.filter(user => user.id !== id)
-      store.usersWithoutGroup = store.usersWithoutGroup.filter(user => user.id !== id)
+      store.users = store.users.filter((user) => user.id !== id)
+      store.usersWithoutGroup = store.usersWithoutGroup.filter((user) => user.id !== id)
       return { success: true }
     } catch (err) {
       store.error = 'Error eliminando usuario'
@@ -70,6 +67,6 @@ export const useUsers = () => {
     error: store.error,
     fetchUsers,
     createUser,
-    deleteUser
+    deleteUser,
   }
 }
