@@ -2,7 +2,7 @@
   <div class="space-y-6">
     <!-- Email Input -->
     <div>
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" for="email-input">
         Email
       </label>
       <div class="relative">
@@ -35,7 +35,7 @@
 
     <!-- Phone Input with Prepended Country Code -->
     <div>
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+      <label for="phone-input" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
         Phone
       </label>
       <div class="relative">
@@ -71,6 +71,7 @@
           </div>
         </div>
         <input
+          id="phone-input"
           v-model="phoneNumber"
           placeholder="+1 (555) 000-0000"
           type="tel"

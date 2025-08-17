@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { LandingPageEntity } from "./entities/landing-page.entity";
 import axios from "axios";
-// import juice from "juice";
 import * as cheerio from 'cheerio'
 
 const juice = require('juice') as typeof import('juice');
@@ -40,7 +39,7 @@ export class LandingAdminService {
             throw new BadRequestException('URL inválida')
         }
 
-        const { data, headers, status } = await axios.get<string>(rawUrl, {
+        const { data, status } = await axios.get<string>(rawUrl, {
             responseType: 'text',
             headers: { 'User-Agent': 'Mozilla/5.0 (Pishware Importer)' },
             timeout: 15000,
@@ -101,7 +100,7 @@ export class LandingAdminService {
             throw new BadRequestException('URL inválida');
         }
 
-        const { data, headers, status } = await axios.get<string>(rawUrl, {
+        const { data, status } = await axios.get<string>(rawUrl, {
             responseType: 'text',
             headers: { 'User-Agent': UA },
             timeout: 15000,

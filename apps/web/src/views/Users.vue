@@ -81,8 +81,8 @@
                             size="xs"
                             variant="danger"
                             @click="
-                              selectedUserForDeletion = user.id
-                              setOpenDeleteUserDialog(true)
+                              selectedUserForDeletion = user.id;
+                              setOpenDeleteUserDialog(true);
                             "
                             class="mt-2"
                           >
@@ -176,8 +176,8 @@
                             size="xs"
                             variant="danger"
                             @click="
-                              selectedUserForDeletion = profile.profiles.id
-                              setOpenDeleteUserDialog(true)
+                              selectedUserForDeletion = profile.profiles.id;
+                              setOpenDeleteUserDialog(true);
                             "
                             class="mt-2"
                           >

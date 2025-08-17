@@ -25,8 +25,6 @@ export class MailerService {
     }
 
     async sendTestEmail() {
-        // const profile = await this.sendingRepo.findOne({ where: { id: profileId } });
-        // if (!profile) throw new NotFoundException('Sending profile not found');
         const template = await this.templateService.findOne(23);
         this.transporter = nodemailer.createTransport({
             host: process.env.SMTP_HOST,
