@@ -48,7 +48,7 @@
                         class="border-t border-gray-100 dark:border-gray-800"
                       >
                         <td class="px-5 py-4 flex items-center gap-3">
-                          <img :src="user.avatar" class="w-10 h-10 rounded-full" />
+                          <img :src="user.avatar" class="w-10 h-10 rounded-full" alt="User Avatar" />
                           <span class="font-medium text-gray-800 dark:text-white">{{
                             user.first_name
                           }}</span>
@@ -137,7 +137,7 @@
                         class="border-t border-gray-100 dark:border-gray-800"
                       >
                         <td class="px-5 py-4 flex items-center gap-3">
-                          <img :src="profile.avatar" class="w-10 h-10 rounded-full" />
+                          <img :src="profile.avatar" class="w-10 h-10 rounded-full" alt="User Avatar" />
                           <span class="font-medium text-gray-800 dark:text-white">{{
                             profile.profiles.first_name
                           }}</span>

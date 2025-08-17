@@ -30,8 +30,11 @@
               >
                 <form>
                   <div>
-                    <label class="block text-sm font-medium text-gray-700">Contenido email:</label>
+                    <label class="block text-sm font-medium text-gray-700" for="emailContent"
+                      >Contenido email:</label
+                    >
                     <textarea
+                      id="emailContent"
                       v-model="rawEmail"
                       class="w-full mt-1 rounded-md border p-2"
                       rows="10"

@@ -103,11 +103,13 @@
                 <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div>
                     <label
+                      for="facebookLink"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       Facebook
                     </label>
                     <input
+                      id="facebookLink"
                       type="text"
                       value="https://www.facebook.com/PimjoHQ"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -116,11 +118,13 @@
 
                   <div>
                     <label
+                      for="xLink"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       X.com
                     </label>
                     <input
+                      id="xLink"
                       type="text"
                       value="https://x.com/PimjoHQ"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -129,11 +133,13 @@
 
                   <div>
                     <label
+                      for="linkedinLink"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       Linkedin
                     </label>
                     <input
+                      id="linkedinLink"
                       type="text"
                       value="https://www.linkedin.com/company/pimjo/posts/?feedView=all"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -142,11 +148,13 @@
 
                   <div>
                     <label
+                      for="instagramLink"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       Instagram
                     </label>
                     <input
+                      id="instagramLink"
                       type="text"
                       value="https://instagram.com/PimjoHQ"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -154,6 +162,7 @@
                   </div>
                 </div>
               </div>
+
               <div class="mt-7">
                 <h5 class="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
                   Personal Information
@@ -162,11 +171,13 @@
                 <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                   <div class="col-span-2 lg:col-span-1">
                     <label
+                      for="firstName"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       First Name
                     </label>
                     <input
+                      id="firstName"
                       type="text"
                       value="Diego"
                       class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -175,11 +186,13 @@
 
                   <div class="col-span-2 lg:col-span-1">
                     <label
+                      for="lastName"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       Last Name
                     </label>
                     <input
+                      id="lastName"
                       type="text"
                       value="Chowdhury"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -188,24 +201,28 @@
 
                   <div class="col-span-2 lg:col-span-1">
                     <label
+                      for="emailAddress"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       Email Address
                     </label>
                     <input
-                      type="text"
-                      value="emirhanboruch55@gmail.com"
+                      id="emailAddress"
+                      type="email"
+                      value="randomuser@pimjo.com"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
 
                   <div class="col-span-2 lg:col-span-1">
                     <label
+                      for="phone"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       Phone
                     </label>
                     <input
+                      id="phone"
                       type="text"
                       value="+09 363 398 46"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -214,11 +231,13 @@
 
                   <div class="col-span-2">
                     <label
+                      for="bio"
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
                       Bio
                     </label>
                     <input
+                      id="bio"
                       type="text"
                       value="Team Manager"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -227,6 +246,7 @@
                 </div>
               </div>
             </div>
+            <!-- footer botones -->
             <div class="flex items-center gap-3 px-2 mt-6 lg:justify-end">
               <button
                 @click="isProfileInfoModal = false"

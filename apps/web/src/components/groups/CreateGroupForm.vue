@@ -1,8 +1,12 @@
 <template>
   <form @submit.prevent="handleSubmit" class="space-y-6">
     <div>
-      <label class="block text-sm font-medium text-gray-700">Nombre del grupo</label>
+      <label class="block text-sm font-medium text-gray-700" for="groupName"
+        >Nombre del grupo</label
+      >
       <input
+        type="text"
+        id="groupName"
         v-model="groupName"
         required
         class="w-full mt-1 rounded-md border p-2"
@@ -11,7 +15,9 @@
     </div>
 
     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Seleccionar usuarios</label>
+      <label class="block text-sm font-medium text-gray-700 mb-1" for="userSelect"
+        >Seleccionar usuarios</label
+      >
       <Listbox v-model="selectedUsers" multiple>
         <div class="relative mt-1">
           <ListboxButton

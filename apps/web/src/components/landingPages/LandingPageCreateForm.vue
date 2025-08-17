@@ -94,8 +94,12 @@
 
     <!-- Redirect -->
     <div class="mt-6">
-      <label class="block text-sm font-medium text-gray-700">Redireccionar a:</label>
+      <label class="block text-sm font-medium text-gray-700"
+      for="redirectUrl"
+      >Redireccionar a:</label>
       <input
+        type="url"
+        id="redirectUrl"
         v-model="landingPagesStore.createForm.redirectUrl"
         required
         class="w-full mt-1 rounded-md border p-2"
