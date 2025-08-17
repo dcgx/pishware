@@ -6,7 +6,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TemplateModule } from './template/template.module.ts';
 import { ProfileModule } from './iam/profile/profile.module';
 import { LandingModule } from './landing/landing.module';
-import { RoleModule } from './iam/role/role.module';
 import { FileUploadModule } from './storage/storage.module';
 import { CampaignModule } from './campaign/campaign.module';
 import { MailerModule } from './mailer/mailer.module';

@@ -36,13 +36,6 @@
 
     <div class="mt-4">
       <div class="flex border-b">
-        <!-- <button
-          type="button"
-          :class="tab === 'text' ? activeTabClass : inactiveTabClass"
-          @click="tab = 'text'"
-        >
-          Text
-        </button> -->
         <button
           type="button"
           :class="tab === 'html' ? activeTabClass : inactiveTabClass"
@@ -53,13 +46,6 @@
       </div>
 
       <div class="mt-2">
-        <!-- <QuillEditor
-          v-if="tab === 'text'"
-          theme="snow"
-          toolbar="minimal"
-          class="w-full h-64"
-          v-model:content="textContent"
-        /> -->
         <Editor
           v-if="tab === 'html'"
           api-key="fx8ezyvqnb64cvko8dke5zjs8zlr2874nk8cr0e1ctwowlyw"
@@ -75,25 +61,7 @@
             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           }"
         />
-
-        <!-- <textarea
-          v-if="tab === 'html'"
-          class="w-full mt-1 rounded-md border p-2 dark:bg-gray-700 dark:text-white"
-          placeholder="Escribe tu HTML aquí"
-          rows="10"
-          v-model="htmlContent"
-        /> -->
       </div>
-
-      <!-- <div class="mt-8">
-        <h3 class="text-lg font-semibold mb-2">📄 Previsualización</h3>
-        <div class="border rounded p-4 bg-white">
-          <div v-if="tab === 'text'" class="whitespace-pre-wrap text-gray-800">
-            {{ textContent }}
-          </div>
-          <div v-else v-html="htmlContent" class="text-gray-800" />
-        </div>
-      </div> -->
     </div>
 
     <div>

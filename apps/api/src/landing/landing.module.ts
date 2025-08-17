@@ -1,4 +1,3 @@
-// src/template/template.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LandingPageEntity } from './entities/landing-page.entity';

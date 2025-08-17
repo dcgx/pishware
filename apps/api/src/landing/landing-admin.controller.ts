@@ -1,5 +1,4 @@
-import { Body, Controller, Get, Post, Res } from "@nestjs/common";
-import { Response } from 'express';
+import { Body, Controller, Get, Post } from "@nestjs/common";
 
 import { LandingAdminService } from "./landing-admin.service";
 import { CreateLandingPageRequestDto } from "./dto/request/create-landing-page-request.dto";
