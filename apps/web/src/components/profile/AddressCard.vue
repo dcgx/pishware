@@ -93,10 +93,14 @@
             <div class="px-2 overflow-y-auto custom-scrollbar">
               <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    for="country"
+                  >
                     Country
                   </label>
                   <input
+                    id="country"
                     type="text"
                     value="United States"
                     class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
@@ -104,7 +108,10 @@
                 </div>
 
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    for="city-state"
+                  >
                     City/State
                   </label>
                   <input
@@ -115,7 +122,10 @@
                 </div>
 
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    for="postal-code"
+                  >
                     Postal Code
                   </label>
                   <input
@@ -126,10 +136,14 @@
                 </div>
 
                 <div>
-                  <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                  <label
+                    class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    for="tax-id"
+                  >
                     TAX ID
                   </label>
                   <input
+                    id="tax-id"
                     type="text"
                     value="AS4568384"
                     class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"

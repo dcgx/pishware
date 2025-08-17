@@ -2,7 +2,10 @@
   <div class="space-y-6">
     <!-- Single Select Input -->
     <div>
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+      <label
+        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+        for="single-select"
+      >
         Select Input
       </label>
       <div class="relative z-20 bg-transparent">

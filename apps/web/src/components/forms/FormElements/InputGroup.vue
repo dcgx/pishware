@@ -2,7 +2,10 @@
   <div class="space-y-6">
     <!-- Email Input -->
     <div>
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" for="email-input">
+      <label
+        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+        for="email-input"
+      >
         Email
       </label>
       <div class="relative">
@@ -35,7 +38,10 @@
 
     <!-- Phone Input with Prepended Country Code -->
     <div>
-      <label for="phone-input" class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+      <label
+        for="phone-input"
+        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+      >
         Phone
       </label>
       <div class="relative">
@@ -82,12 +88,16 @@
 
     <!-- Phone Input with Appended Country Code -->
     <div>
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+      <label
+        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+        for="phone-input-2"
+      >
         Phone
       </label>
       <div class="relative">
         <div class="absolute right-0">
           <select
+            id="phone-input-2"
             v-model="selectedCountry2"
             @change="updatePhoneNumber2"
             class="appearance-none rounded-r-lg border-0 border-l border-gray-200 bg-transparent bg-none py-3 pl-3.5 pr-8 leading-tight text-gray-700 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-800 dark:text-gray-400"
@@ -128,7 +138,9 @@
 
     <!-- URL Input -->
     <div>
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"> URL </label>
+      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400" for="url">
+        URL
+      </label>
       <div class="relative">
         <span
           class="absolute left-0 top-1/2 inline-flex h-11 -translate-y-1/2 items-center justify-center border-r border-gray-200 py-3 pl-3.5 pr-3 text-gray-500 dark:border-gray-800 dark:text-gray-400"
@@ -145,11 +157,15 @@
 
     <!-- Website Input with Copy Button -->
     <div>
-      <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+      <label
+        class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+        for="website"
+      >
         Website
       </label>
       <div class="relative">
         <button
+          type="button"
           @click="copyWebsite"
           class="absolute right-0 top-1/2 inline-flex -translate-y-1/2 cursor-pointer items-center gap-1 border-l border-gray-200 py-3 pl-3.5 pr-3 text-sm font-medium text-gray-700 dark:border-gray-800 dark:text-gray-400"
         >
@@ -171,6 +187,7 @@
           <div>{{ copyText }}</div>
         </button>
         <input
+          id="website"
           v-model="website"
           type="url"
           class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-3 pl-4 pr-[90px] text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
