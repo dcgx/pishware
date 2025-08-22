@@ -23,16 +23,18 @@ export class CampaignService {
       landing_page: { id: dto.landing_page_id } as any,
       scheduled_start_at: dto.scheduled_start_at ?? null,
       status: dto.status ?? CampaignStatus.DRAFT,
+      groups: dto.group_ids?.map((id) => ({ id } as any)) || [],
+      profiles: dto.profile_ids?.map((id) => ({ id } as any)) || [],
     });
     return this.campaignRepository.save(campaign);
   }
 
   async findAll(): Promise<CampaignEntity[]> {
-    return this.campaignRepository.find({ relations: ['template', 'landing_page'] });
+    return this.campaignRepository.find({ relations: ['template', 'landing_page', 'groups', 'profiles'] });
   }
 
   async findOne(id: number): Promise<CampaignEntity | null> {
-    return this.campaignRepository.findOne({ where: { id }, relations: ['template', 'landing_page'] });
+    return this.campaignRepository.findOne({ where: { id }, relations: ['template', 'landing_page', 'groups', 'profiles'] });
   }
 
   async update(id: number, dto: UpdateCampaignDto): Promise<CampaignEntity | null> {
@@ -44,6 +46,8 @@ export class CampaignService {
     if (dto.landing_page_id !== undefined) campaign.landing_page = { id: dto.landing_page_id } as any;
     if (dto.scheduled_start_at !== undefined) campaign.scheduled_start_at = dto.scheduled_start_at;
     if (dto.status !== undefined) campaign.status = dto.status;
+    if (dto.group_ids !== undefined) campaign.groups = dto.group_ids.map((id) => ({ id } as any));
+    if (dto.profile_ids !== undefined) campaign.profiles = dto.profile_ids.map((id) => ({ id } as any));
     return this.campaignRepository.save(campaign);
   }
 

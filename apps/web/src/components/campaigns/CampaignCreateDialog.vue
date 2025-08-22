@@ -56,6 +56,8 @@
                 v-model="form"
                 :templates="templates"
                 :landing-pages="landingPages"
+                :users="users"
+                :groups="groups"
                 @submit="handleCreateCampaign"
                 @cancel="handleClose"
               />
@@ -79,6 +81,8 @@ const props = defineProps({
   show: { type: Boolean, required: true },
   templates: { type: Array, default: () => [] },
   landingPages: { type: Array, default: () => [] },
+  users: { type: Array, default: () => [] },
+  groups: { type: Array, default: () => [] },
 })
 
 const emit = defineEmits(['close'])
@@ -90,6 +94,8 @@ const form = reactive({
   landingPageId: null,
   scheduledStartAt: '',
   status: 'draft',
+  userIds: [],
+  groupIds: [],
 })
 
 const handleClose = () => {

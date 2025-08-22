@@ -11,6 +11,8 @@ export const useCampaignsStore = defineStore('campaigns', () => {
     landingPageId: null,
     scheduledStartAt: '',
     status: 'draft',
+    userIds: [],
+    groupIds: [],
   });
 
   const editForm = ref({
@@ -21,6 +23,8 @@ export const useCampaignsStore = defineStore('campaigns', () => {
     landingPageId: null,
     scheduledStartAt: '',
     status: 'draft',
+    userIds: [],
+    groupIds: [],
   });
 
   const fetching = ref(false);

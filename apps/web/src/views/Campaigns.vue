@@ -24,6 +24,8 @@
       :show="openCreateDialog"
       :templates="emailTemplates"
       :landing-pages="landingPages"
+      :groups="groups"
+      :users="users"
       @close="() => setOpenCreateDialog(false)"
     />
     <CampaignEditDialog
@@ -32,6 +34,8 @@
       :campaign="selectedCampaign"
       :templates="emailTemplates"
       :landing-pages="landingPages"
+      :groups="groups"
+      :users="users"
       @close="() => setOpenEditDialog(false)"
     />
     <CampaignDeleteDialog
@@ -55,10 +59,14 @@ import CampaignDeleteDialog from '@/components/campaigns/CampaignDeleteDialog.vu
 import { useCampaigns } from '@/composables/useCampaigns'
 import { useTemplates } from '@/composables/useTemplates'
 import { useLandingPages } from '@/composables/useLandingPages'
+import { useGroups } from '@/composables/useGroups'
+import { useUsers } from '@/composables/useUsers'
 
 const { campaigns, fetchCampaigns, fetching } = useCampaigns()
 const { emailTemplates, fetchTemplates } = useTemplates()
 const { landingPages, fetchLandingPages } = useLandingPages()
+const { groups, fetchGroups } = useGroups()
+const { users, fetchUsers } = useUsers()
 
 const openCreateDialog = ref(false)
 const openEditDialog = ref(false)
@@ -80,7 +88,11 @@ const setOpenDeleteDialog = (value) => {
 }
 
 const openEdit = (campaign) => {
-  selectedCampaign.value = { ...campaign }
+  selectedCampaign.value = {
+    ...campaign,
+    userIds: campaign.profiles ? campaign.profiles.map((p) => p.id) : [],
+    groupIds: campaign.groups ? campaign.groups.map((g) => g.id) : [],
+  }
   setOpenEditDialog(true)
 }
 
@@ -90,6 +102,12 @@ const openDelete = (id) => {
 }
 
 onMounted(async () => {
-  await Promise.all([fetchCampaigns(), fetchTemplates(), fetchLandingPages()])
+  await Promise.all([
+    fetchCampaigns(),
+    fetchTemplates(),
+    fetchLandingPages(),
+    fetchGroups(),
+    fetchUsers(),
+  ])
 })
 </script>

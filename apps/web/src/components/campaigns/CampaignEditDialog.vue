@@ -56,6 +56,8 @@
                 v-model="form"
                 :templates="templates"
                 :landing-pages="landingPages"
+                :users="users"
+                :groups="groups"
                 @submit="handleUpdateCampaign"
                 @cancel="handleClose"
               />
@@ -80,6 +82,8 @@ const props = defineProps({
   campaign: { type: Object, required: true },
   templates: { type: Array, default: () => [] },
   landingPages: { type: Array, default: () => [] },
+  users: { type: Array, default: () => [] },
+  groups: { type: Array, default: () => [] },
 })
 
 const emit = defineEmits(['close'])
