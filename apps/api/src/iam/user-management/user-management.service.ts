@@ -28,8 +28,8 @@ export class UsersService {
       .select('id, first_name, last_name, email, role, group, status');
 
     const { data: userList } = await this.supabase.auth.admin.listUsers();
-    const lastAccessMap = new Map(
-      userList.users.map((u) => [u.id, u.last_sign_in_at]),
+    const lastAccessMap = new Map<string, any>(
+      userList.users.map((u) => [u.id, u.last_sign_in_at] as [string, any]),
     );
 
     return (
