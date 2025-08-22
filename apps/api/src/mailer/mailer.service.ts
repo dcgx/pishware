@@ -57,6 +57,31 @@ export class MailerService {
       );
     }
 
+    async sendUserCredentialsEmail(to: string, password: string) {
+        const html = `<p>Su usuario ha sido creado correctamente.</p><p>Contraseña temporal: <b>${password}</b></p>`;
+
+        const info = await this.transporter.sendMail({
+            from: `Pishware <${process.env.SMTP_USER}>`,
+            to,
+            subject: 'Credenciales de acceso',
+            html,
+        });
+
+        await this.trackingService.logEvent(
+            'email_sent',
+            { to, subject: 'Credenciales de acceso' },
+            { messageId: info.messageId },
+        );
+        for (const recipient of info.accepted) {
+            await this.trackingService.logEvent(
+                'email_delivered',
+                { to: recipient },
+                { messageId: info.messageId },
+            );
+        }
+
+        return { messageId: info.messageId, accepted: info.accepted };
+    }
     return { messageId: info.messageId, accepted: info.accepted };
   }
 
