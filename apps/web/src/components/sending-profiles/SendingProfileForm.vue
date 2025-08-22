@@ -149,6 +149,7 @@ const removeHeader = (index: number) => {
 }
 
 const handleSubmit = () => {
+  console.log('Submitting form:', form)
   emit('submit', { ...form })
 }
 </script>

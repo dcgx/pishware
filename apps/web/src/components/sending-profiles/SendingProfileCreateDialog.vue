@@ -56,8 +56,9 @@ defineProps({ show: { type: Boolean, required: true } })
 
 const handleClose = () => emit('close')
 
-const handleCreate = async () => {
-  await createSendingProfile(createForm.value)
+const handleCreate = async (body) => {
+  console.log('Creating sending profile with data:', body)
+  await createSendingProfile(body)
   handleClose()
 }
 </script>

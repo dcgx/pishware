@@ -10,10 +10,14 @@
     <fwb-table-body>
       <fwb-table-row v-for="campaign in campaigns" :key="campaign.id">
         <fwb-table-cell>{{ campaign.name }}</fwb-table-cell>
-        <fwb-table-cell>{{ campaign.status }}</fwb-table-cell>
         <fwb-table-cell>
-          <Button size="xs" variant="outline" class="mr-2" @click="$emit('edit', campaign)">Editar</Button>
-          <Button size="xs" variant="danger" @click="$emit('delete', campaign.id)">Eliminar</Button>
+          <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-full text-center px-3 py-1 text-xs font-medium text-gray-800 dark:text-gray-200">
+            {{ campaign.status === 'draft' ? 'Borrador' : campaign.status === 'sent' ? 'Enviado' : 'Programado' }}
+          </div>
+        </fwb-table-cell>
+        <fwb-table-cell>
+          <Button size="sm" variant="outline" class="mr-2" @click="$emit('edit', campaign)">Editar</Button>
+          <Button size="sm" variant="danger" @click="$emit('delete', campaign.id)">Eliminar</Button>
         </fwb-table-cell>
       </fwb-table-row>
     </fwb-table-body>
