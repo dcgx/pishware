@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { TrackingEmail } from './entities/tracking-email.entity';
 
 interface LogEmailParams {
@@ -18,7 +18,7 @@ export class TrackingEmailService {
   constructor(
     @InjectRepository(TrackingEmail)
     private readonly trackingEmailRepository: Repository<TrackingEmail>,
-  ) {}
+  ) { }
 
   async logEmail(params: LogEmailParams) {
     const record = this.trackingEmailRepository.create({
@@ -29,7 +29,7 @@ export class TrackingEmailService {
       subject: params.subject ?? null,
       message_id: params.messageId ?? null,
       metadata: params.metadata ?? {},
-    });
+    } as DeepPartial<TrackingEmail>);
     return this.trackingEmailRepository.save(record);
   }
 }

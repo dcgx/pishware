@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { LandingPageEntity } from 'src/landing/entities/landing-page.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity('tracking_email')
 export class TrackingEmail {
@@ -7,7 +8,7 @@ export class TrackingEmail {
 
   @Column({ type: 'uuid', nullable: true })
   landing_id: string | null;
-
+  
   @Column({ type: 'int' })
   user_id: number;
 
@@ -17,15 +18,15 @@ export class TrackingEmail {
   @Column()
   email: string;
 
-  @Column({ nullable: true })
-  subject: string | null;
+  @Column({ type: 'text', nullable: true })
+  subject: string;
 
-  @Column({ nullable: true })
-  message_id: string | null;
+  @Column({ type: 'text', nullable: true })
+  message_id: string;
 
   @Column({ type: 'json', nullable: true })
   metadata: Record<string, any> | null;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
-  created_at: Date;
+  created_at?: Date;
 }
