@@ -11,9 +11,7 @@ export const useUsers = () => {
     store.error = ''
     try {
       const { data } = await axios.get(`${apiUrl}/users`)
-      console.log(data, 'data ')
       store.setUsers(data)
-      console.log(store.users, 'store user')
     } catch {
       store.error = 'Error al obtener usuarios'
     } finally {
@@ -36,6 +34,7 @@ export const useUsers = () => {
         first_name: payload.first_name,
         last_name: payload.last_name,
         email: payload.email,
+        group: null,
         groups: [],
       })
       return { success: true }

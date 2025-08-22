@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import * as crypto from 'crypto';
+import { createClient } from '@supabase/supabase-js';
 import { Profile } from '../profile/profile.entity';
 import { User } from './entities/user.entity';
 import { MailerService } from 'src/mailer/mailer.service';
@@ -16,17 +17,34 @@ export class UsersService {
     private readonly mailerService: MailerService,
   ) { }
 
+  private supabase = createClient(
+    process.env.SUPABASE_URL as string,
+    process.env.SUPABASE_SERVICE_ROLE_KEY as string,
+  );
+
   async getUsers() {
-    const profiles = await this.profileRepository.find({ relations: ['groups'] });
-    const users = await this.userRepository.find({ relations: ['profile'] });
-    return users.map((user) => {
-      const profile = profiles.find((p) => p.id === user.profile.id);
-      return {
-        ...user,
-        profile: profile,
-        groups: profile?.groups?.map((g) => g.id) || [],
-      };
-    });
+    const { data: profiles } = await this.supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email, role, group, status');
+
+    const { data: userList } = await this.supabase.auth.admin.listUsers();
+    const lastAccessMap = new Map(
+      userList.users.map((u) => [u.id, u.last_sign_in_at]),
+    );
+
+    return (
+      profiles?.map((profile: any) => ({
+        id: profile.id,
+        first_name: profile.first_name,
+        last_name: profile.last_name,
+        email: profile.email,
+        role: profile.role,
+        group: profile.group,
+        status: profile.status,
+        ultimo_acceso: lastAccessMap.get(profile.id) || null,
+        groups: profile.group ? [profile.group] : [],
+      })) || []
+    );
   }
 
   async findUsersByIds(ids: string[]): Promise<User[]> {
