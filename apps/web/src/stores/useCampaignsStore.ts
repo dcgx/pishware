@@ -10,6 +10,7 @@ export const useCampaignsStore = defineStore('campaigns', () => {
     templateId: null,
     landingPageId: null,
     scheduledStartAt: '',
+    isScheduled: false,
     status: 'draft',
   });
 
@@ -20,6 +21,7 @@ export const useCampaignsStore = defineStore('campaigns', () => {
     templateId: null,
     landingPageId: null,
     scheduledStartAt: '',
+    isScheduled: false,
     status: 'draft',
   });
 

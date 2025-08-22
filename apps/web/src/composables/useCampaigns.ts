@@ -51,6 +51,37 @@ export const useCampaigns = () => {
     }
   };
 
+  const sendCampaign = async (campaign: any) => {
+    campaignStore.creating = true;
+    campaignStore.error = '';
+    try {
+      const response = await fetch(`${apiUrl}/campaign/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: campaign.name,
+          description: campaign.description,
+          template_id: campaign.templateId,
+          landing_page_id: campaign.landingPageId,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send campaign');
+      }
+      const data = await response.json();
+      if (!campaignStore.campaigns) campaignStore.campaigns = [];
+      campaignStore.campaigns.push(data);
+      return { success: true, data };
+    } catch (err: any) {
+      campaignStore.error = 'Error sending campaign';
+      return { success: false, error: err.message };
+    } finally {
+      campaignStore.creating = false;
+    }
+  };
+
   const updateCampaign = async (id: number, campaign: any) => {
     campaignStore.updating = true;
     try {
@@ -77,6 +108,36 @@ export const useCampaigns = () => {
       return { success: true, data };
     } catch (err: any) {
       campaignStore.error = 'Error updating campaign';
+      return { success: false, error: err.message };
+    } finally {
+      campaignStore.updating = false;
+    }
+  };
+
+  const sendExistingCampaign = async (id: number, campaign: any) => {
+    campaignStore.updating = true;
+    try {
+      const response = await fetch(`${apiUrl}/campaign/${id}/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: campaign.name,
+          description: campaign.description,
+          template_id: campaign.templateId,
+          landing_page_id: campaign.landingPageId,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send campaign');
+      }
+      const data = await response.json();
+      const index = campaignStore.campaigns.findIndex((c: any) => c.id === id);
+      if (index !== -1) campaignStore.campaigns[index] = data;
+      return { success: true, data };
+    } catch (err: any) {
+      campaignStore.error = 'Error sending campaign';
       return { success: false, error: err.message };
     } finally {
       campaignStore.updating = false;
@@ -110,7 +171,9 @@ export const useCampaigns = () => {
     editForm: campaignStore.editForm,
     fetchCampaigns,
     createCampaign,
+    sendCampaign,
     updateCampaign,
+    sendExistingCampaign,
     deleteCampaign,
   };
 };

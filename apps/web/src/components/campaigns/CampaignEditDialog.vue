@@ -57,6 +57,8 @@
                 :templates="templates"
                 :landing-pages="landingPages"
                 @submit="handleUpdateCampaign"
+                @send="handleSendCampaign"
+                @schedule="handleScheduleCampaign"
                 @cancel="handleClose"
               />
             </DialogPanel>
@@ -73,7 +75,7 @@ import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } fro
 import CampaignForm from './CampaignForm.vue'
 import { useCampaigns } from '@/composables/useCampaigns'
 
-const { updateCampaign } = useCampaigns()
+const { updateCampaign, sendExistingCampaign } = useCampaigns()
 
 const props = defineProps({
   show: { type: Boolean, required: true },
@@ -84,12 +86,12 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 
-const form = reactive({ ...props.campaign })
+const form = reactive({ ...props.campaign, isScheduled: !!props.campaign.scheduledStartAt })
 
 watch(
   () => props.campaign,
   (val) => {
-    Object.assign(form, val)
+    Object.assign(form, { ...val, isScheduled: !!val.scheduledStartAt })
   }
 )
 
@@ -98,6 +100,16 @@ const handleClose = () => {
 }
 
 const handleUpdateCampaign = async (payload) => {
+  await updateCampaign(payload.id, payload)
+  handleClose()
+}
+
+const handleSendCampaign = async (payload) => {
+  await sendExistingCampaign(payload.id, payload)
+  handleClose()
+}
+
+const handleScheduleCampaign = async (payload) => {
   await updateCampaign(payload.id, payload)
   handleClose()
 }

@@ -28,6 +28,33 @@ export class CampaignService {
     return this.campaignRepository.save(campaign);
   }
 
+  async send(dto: CreateCampaignDto): Promise<CampaignEntity> {
+    const campaign = this.campaignRepository.create({
+      name: dto.name,
+      description: dto.description ?? null,
+      template: { id: dto.template_id } as any,
+      landing_page: { id: dto.landing_page_id } as any,
+      scheduled_start_at: null,
+      status: CampaignStatus.SENT,
+    });
+    const saved = await this.campaignRepository.save(campaign);
+    await this.mailerService.sendTestEmail();
+    return saved;
+  }
+
+  async sendExisting(id: number, dto: UpdateCampaignDto): Promise<CampaignEntity | null> {
+    const campaign = await this.campaignRepository.findOne({ where: { id } });
+    if (!campaign) return null;
+    if (dto.name !== undefined) campaign.name = dto.name;
+    if (dto.description !== undefined) campaign.description = dto.description;
+    if (dto.template_id !== undefined) campaign.template = { id: dto.template_id } as any;
+    if (dto.landing_page_id !== undefined) campaign.landing_page = { id: dto.landing_page_id } as any;
+    campaign.scheduled_start_at = null;
+    campaign.status = CampaignStatus.SENT;
+    await this.mailerService.sendTestEmail();
+    return this.campaignRepository.save(campaign);
+  }
+
   async findAll(): Promise<CampaignEntity[]> {
     return this.campaignRepository.find({ relations: ['template', 'landing_page'] });
   }

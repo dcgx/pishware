@@ -17,6 +17,11 @@ export class CampaignController {
     return this.campaignService.create(createCampaignDto);
   }
 
+  @Post('send')
+  send(@Body() createCampaignDto: CreateCampaignDto) {
+    return this.campaignService.send(createCampaignDto);
+  }
+
   @Get()
   findAll() {
     return this.campaignService.findAll();
@@ -30,6 +35,11 @@ export class CampaignController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCampaignDto: UpdateCampaignDto) {
     return this.campaignService.update(+id, updateCampaignDto);
+  }
+
+  @Post(':id/send')
+  sendExisting(@Param('id') id: string, @Body() updateCampaignDto: UpdateCampaignDto) {
+    return this.campaignService.sendExisting(+id, updateCampaignDto);
   }
 
   @Delete(':id')

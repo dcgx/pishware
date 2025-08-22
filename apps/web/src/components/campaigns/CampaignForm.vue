@@ -44,38 +44,32 @@
       </select>
     </div>
 
-    <!-- Datepicker reemplazando el input nativo -->
-    <div class="mt-4">
-      <label for="scheduled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Programar envío</label>
+    <div class="mt-4 flex items-center">
+      <input
+        id="schedule"
+        type="checkbox"
+        v-model="form.isScheduled"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label for="schedule" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Programar campaña</label>
+    </div>
+
+    <div v-if="form.isScheduled" class="mt-4">
+      <label for="scheduled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de envío</label>
       <VueTailwindDatepicker
         id="scheduled"
         v-model="form.scheduledStartAt"
         as-single
         use-range={false}
         :formatter="formatter"
-        input-classes="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                       focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
-                       dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
-                       dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        input-classes="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
-    </div>
-
-    <div class="mt-4">
-      <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
-      <select
-        id="status"
-        v-model="form.status"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-      >
-        <option value="draft">Borrador</option>
-        <option value="scheduled">Programada</option>
-        <option value="sent">Enviada</option>
-        <option value="completed">Finalizada</option>
-      </select>
     </div>
 
     <div class="mt-6 flex justify-end gap-3">
       <Button variant="outline" type="button" @click="emit('cancel')">Cancelar</Button>
+      <Button variant="outline" type="button" @click="handleSend">Enviar campaña</Button>
+      <Button variant="outline" type="button" :disabled="!form.isScheduled" @click="handleSchedule">Programar campaña</Button>
       <Button type="submit">Guardar</Button>
     </div>
   </form>
@@ -91,7 +85,7 @@ const props = defineProps({
   templates: { type: Array, default: () => [] },
   landingPages: { type: Array, default: () => [] },
 })
-const emit = defineEmits(['update:modelValue', 'submit', 'cancel'])
+const emit = defineEmits(['update:modelValue', 'submit', 'cancel', 'send', 'schedule'])
 
 const form = reactive({
   id: props.modelValue.id || null,
@@ -100,6 +94,7 @@ const form = reactive({
   templateId: props.modelValue.templateId || null,
   landingPageId: props.modelValue.landingPageId || null,
   scheduledStartAt: props.modelValue.scheduledStartAt || '',
+  isScheduled: !!props.modelValue.scheduledStartAt,
   status: props.modelValue.status || 'draft',
 })
 
@@ -107,6 +102,14 @@ watch(form, (val) => emit('update:modelValue', val), { deep: true })
 
 const handleSubmit = () => {
   emit('submit', { ...form })
+}
+
+const handleSend = () => {
+  emit('send', { ...form, scheduledStartAt: null, status: 'sent' })
+}
+
+const handleSchedule = () => {
+  emit('schedule', { ...form, status: 'scheduled' })
 }
 
 // Formateador de fecha

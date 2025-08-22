@@ -57,6 +57,8 @@
                 :templates="templates"
                 :landing-pages="landingPages"
                 @submit="handleCreateCampaign"
+                @send="handleSendCampaign"
+                @schedule="handleScheduleCampaign"
                 @cancel="handleClose"
               />
             </DialogPanel>
@@ -73,7 +75,7 @@ import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } fro
 import CampaignForm from './CampaignForm.vue'
 import { useCampaigns } from '@/composables/useCampaigns'
 
-const { createCampaign } = useCampaigns()
+const { createCampaign, sendCampaign } = useCampaigns()
 
 const props = defineProps({
   show: { type: Boolean, required: true },
@@ -89,6 +91,7 @@ const form = reactive({
   templateId: null,
   landingPageId: null,
   scheduledStartAt: '',
+  isScheduled: false,
   status: 'draft',
 })
 
@@ -97,6 +100,16 @@ const handleClose = () => {
 }
 
 const handleCreateCampaign = async (payload) => {
+  await createCampaign(payload)
+  handleClose()
+}
+
+const handleSendCampaign = async (payload) => {
+  await sendCampaign(payload)
+  handleClose()
+}
+
+const handleScheduleCampaign = async (payload) => {
   await createCampaign(payload)
   handleClose()
 }
