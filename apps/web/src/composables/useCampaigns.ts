@@ -34,6 +34,8 @@ export const useCampaigns = () => {
           landing_page_id: campaign.landingPageId,
           scheduled_start_at: campaign.scheduledStartAt,
           status: campaign.status,
+          profile_ids: campaign.userIds,
+          group_ids: campaign.groupIds,
         }),
       });
       if (!response.ok) {
@@ -66,6 +68,8 @@ export const useCampaigns = () => {
           landing_page_id: campaign.landingPageId,
           scheduled_start_at: campaign.scheduledStartAt,
           status: campaign.status,
+          profile_ids: campaign.userIds,
+          group_ids: campaign.groupIds,
         }),
       });
       if (!response.ok) {
