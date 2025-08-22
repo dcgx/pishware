@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import { TemplateModule } from './template/template.module.ts';
 import { ProfileModule } from './iam/profile/profile.module';
 import { LandingModule } from './landing/landing.module';
@@ -17,6 +18,7 @@ import { TrackingModule } from './tracking/tracking.module';
     ConfigModule.forRoot({
       isGlobal: true, // para usar ConfigService en cualquier módulo
     }),
+    ScheduleModule.forRoot(),
     IamModule,
     ProfileModule,
     TemplateModule,

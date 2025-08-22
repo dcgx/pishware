@@ -5,6 +5,7 @@ import { CampaignEntity, CampaignStatus } from './entities/campaign.entity';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
 import { MailerService } from 'src/mailer/mailer.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class CampaignService {
@@ -12,9 +13,7 @@ export class CampaignService {
     @InjectRepository(CampaignEntity)
     private readonly campaignRepository: Repository<CampaignEntity>,
     private readonly mailerService: MailerService,
-  ) {
-    setInterval(() => this.processScheduledCampaigns(), 60 * 1000).unref();
-  }
+  ) { }
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
     const campaign = this.campaignRepository.create({
@@ -52,7 +51,8 @@ export class CampaignService {
     await this.campaignRepository.delete(id);
   }
 
-  private async processScheduledCampaigns() {
+  @Cron('*/5 * * * * *')
+  async processScheduledCampaigns() {
     const now = new Date();
     const campaigns = await this.campaignRepository.find({
       where: {
