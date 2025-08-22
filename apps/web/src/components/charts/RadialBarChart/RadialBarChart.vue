@@ -6,11 +6,19 @@
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, watch } from 'vue'
 import VueApexCharts from 'vue3-apexcharts'
 
-const series = ref([44])
+const props = defineProps<{ value: number }>()
+const series = ref([props.value || 0])
+
+watch(
+  () => props.value,
+  (val) => {
+    series.value = [val || 0]
+  },
+)
 
 const chartOptions = ref({
   colors: ['#465fff'],

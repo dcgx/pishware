@@ -11,7 +11,7 @@
       </fwb-table-head-cell>
     </fwb-table-head>
     <fwb-table-body>
-      <fwb-table-row v-for="(metric, index) in metrics" :key="index">
+      <fwb-table-row v-for="(metric, index) in props.metrics" :key="index">
         <fwb-table-cell>{{ metric.firstName }}</fwb-table-cell>
         <fwb-table-cell>{{ metric.lastName }}</fwb-table-cell>
         <fwb-table-cell>
@@ -51,10 +51,8 @@
   </fwb-table>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
 import {
-  FwbA,
   FwbTable,
   FwbTableBody,
   FwbTableCell,
@@ -63,46 +61,13 @@ import {
   FwbTableRow,
 } from 'flowbite-vue'
 
-const metrics = ref([
-  {
-    firstName: 'Juan',
-    lastName: 'Soto',
-    email: 'juan.soto@ntt.com',
-    position: 'Desarrollador',
-    event: 'Email abierto',
-    event_type: 'email_opened',
-  },
-  {
-    firstName: 'Maria',
-    lastName: 'Gomez',
-    email: 'maria.gomez@ntt.com',
-    position: 'Gerente de Proyectos',
-    event: 'Email enviado',
-    event_type: 'email_sent',
-  },
-  {
-    firstName: 'Carlos',
-    lastName: 'Lopez',
-    email: 'carlos.lopez@ntt.com',
-    position: 'Analista de Datos',
-    event: 'Click en enlace',
-    event_type: 'link_clicked',
-  },
-  {
-    firstName: 'Laura',
-    lastName: 'Perez',
-    email: 'laura.lopez@ntt.com',
-    position: 'Especialista en Marketing',
-    event: 'Click en enlace',
-    event_type: 'link_clicked',
-  },
-  {
-    firstName: 'Ana',
-    lastName: 'Martinez',
-    email: 'ana.martinez@ntt.com',
-    position: 'Diseñadora',
-    event: 'Datos enviados',
-    event_type: 'data_sent',
-  },
-])
+interface MetricDetail {
+  firstName: string
+  lastName: string
+  email: string
+  position: string
+  event_type: string
+}
+
+const props = defineProps<{ metrics: MetricDetail[] }>()
 </script>
