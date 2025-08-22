@@ -11,6 +11,7 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 import VueApexCharts from 'vue3-apexcharts'
+import VueTailwindDatepicker from "vue-tailwind-datepicker";
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
@@ -20,6 +21,7 @@ const pinia = createPinia()
 app.use(router)
 app.use(pinia)
 app.use(VueApexCharts)
+app.use(VueTailwindDatepicker)
 
 app.component('QuillEditor', QuillEditor)
 

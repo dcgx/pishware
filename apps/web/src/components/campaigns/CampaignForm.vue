@@ -44,13 +44,19 @@
       </select>
     </div>
 
+    <!-- Datepicker reemplazando el input nativo -->
     <div class="mt-4">
       <label for="scheduled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Programar envío</label>
-      <input
+      <VueTailwindDatepicker
         id="scheduled"
-        type="datetime-local"
         v-model="form.scheduledStartAt"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        as-single
+        use-range={false}
+        :formatter="formatter"
+        input-classes="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
+                       focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
+                       dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+                       dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
     </div>
 
@@ -78,6 +84,7 @@
 <script setup>
 import Button from '@/components/ui/Button.vue'
 import { reactive, watch, defineProps, defineEmits } from 'vue'
+import VueTailwindDatepicker from "vue-tailwind-datepicker"
 
 const props = defineProps({
   modelValue: { type: Object, default: () => ({}) },
@@ -100,5 +107,11 @@ watch(form, (val) => emit('update:modelValue', val), { deep: true })
 
 const handleSubmit = () => {
   emit('submit', { ...form })
+}
+
+// Formateador de fecha
+const formatter = {
+  date: 'YYYY-MM-DD HH:mm',
+  month: 'MMM'
 }
 </script>
