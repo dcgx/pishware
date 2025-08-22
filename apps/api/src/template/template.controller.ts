@@ -14,6 +14,11 @@ export class TemplateController {
         return this.templateService.findAll();
     }
 
+    @Get(':id')
+    findOne(@Param('id') id: number) {
+        return this.templateService.findOne(Number(id));
+    }
+
     @Post('create')
     create(
         @Body() dto: CreateTemplateDto
