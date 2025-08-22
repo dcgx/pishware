@@ -17,6 +17,20 @@ export const useTemplates = () => {
         }
     };
 
+    const getTemplate = async (id: number) => {
+        templatesStore.loading = true;
+        try {
+            const response = await fetch(`${apiUrl}/templates/${id}`);
+            const data = await response.json();
+            return data;
+        } catch (err) {
+            templatesStore.error = 'Failed to fetch template';
+            return null;
+        } finally {
+            templatesStore.loading = false;
+        }
+    };
+
     const createTemplate = async (template: any) => {
         templatesStore.creating = true;
         templatesStore.error = '';
@@ -70,6 +84,7 @@ export const useTemplates = () => {
         editForm: templatesStore.editForm,
         showImportEmailDialog: templatesStore.showImportEmailDialog,
         fetchTemplates,
+        getTemplate,
         createTemplate,
         uploadAttachment,
     };
