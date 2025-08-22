@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { User } from "src/iam/user-management/entities/user.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
 
 @Entity('tracking')
 export class Tracking {
@@ -17,8 +18,12 @@ export class Tracking {
     @Column({ type: 'json' })
     metadata: Record<string, any>;
 
+    // @Column({ type: 'uuid', nullable: true })
+    // user_id: string | null; 
+
+    @OneToMany(() => User, (user) => user.trackings, { nullable: true })
     @Column({ type: 'uuid', nullable: true })
-    user_id: string | null; 
+    user: User | null;
 
     @Column({ type: 'int', nullable: true })
     tracking_email_id: number;

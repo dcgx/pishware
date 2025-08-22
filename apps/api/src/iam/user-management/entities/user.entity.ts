@@ -1,8 +1,10 @@
 import { Profile } from 'src/iam/profile/profile.entity';
+import { Tracking } from 'src/tracking/entities/tracking.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -37,4 +39,8 @@ export class User {
   @OneToOne(() => Profile, (profile) => profile.user)
   @JoinColumn()
   profile: Profile;
+
+  @ManyToOne(() => Tracking, (tracking) => tracking.user,  { nullable: true })
+  @Column({ type: 'text', nullable: true })
+  trackings?: Tracking[];
 }

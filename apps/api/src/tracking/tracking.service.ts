@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tracking } from './entities/tracking.entity';
+import { User } from 'src/iam/user-management/entities/user.entity';
 
 @Injectable()
 export class TrackingService {
   constructor(
     @InjectRepository(Tracking)
     private readonly trackingRepository: Repository<Tracking>,
-  ) {}
+
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) { }
 
   async logEvent(
     eventType: string,
@@ -21,7 +25,9 @@ export class TrackingService {
       payload: JSON.stringify(payload ?? {}),
       metadata,
       submitted_at: new Date(),
-      user_id: userId ?? null,
+      user: {
+        id: userId,
+      }
     });
     return this.trackingRepository.save(tracking);
   }
@@ -39,23 +45,17 @@ export class TrackingService {
       data_sent: 0,
     };
 
-    const details = events.map(async (e) => {
-      // const  user = await this.userManagementService.findUserById(e.user_id ?? '');
-      const user = {
-        first_name: '',
-        last_name: '',
-        email: '',
-      }
+    const details = await events.map(async (e) => {
       const detail = {
-        firstName: user?.first_name ?? '',
-        lastName: user?.last_name ?? '',
-        email: user?.email ?? '',
+        firstName: e.user?.first_name ?? '',
+        lastName: e.user?.last_name ?? '',
+        email: e.user?.email ?? '',
         position: '',
         submittedAt: e.submitted_at,
         payload: JSON.parse(e.payload),
         event_type: e.event_type,
       };
-
+      console.log('detail', detail);
       if (Object.prototype.hasOwnProperty.call(counts, e.event_type)) {
         counts[e.event_type as keyof typeof counts]++;
       }
@@ -66,9 +66,9 @@ export class TrackingService {
     const riskIndex = Math.min(
       100,
       counts.email_sent +
-        counts.email_opened +
-        counts.link_clicked * 2 +
-        counts.data_sent * 3,
+      counts.email_opened +
+      counts.link_clicked * 2 +
+      counts.data_sent * 3,
     );
 
     return {
