@@ -38,7 +38,7 @@ export const useUsers = () => {
         email: payload.email,
         groups: [],
       })
-      return { success: true, password: data.password }
+      return { success: true }
     } catch (err) {
       store.error = 'Error creando usuario'
       return { success: false, error: err }

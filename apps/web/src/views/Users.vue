@@ -1,6 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <admin-layout>
+    <Toast v-model="showToast" :variant="toastVariant" title="Aviso" :message="toastMessage" />
     <div>
       <div class="flex items-center justify-between">
         <h2 class="text-2xl font-semibold mb-4 dark:text-gray-50">Usuarios y grupos</h2>
@@ -368,9 +369,14 @@ import CreateGroupForm from '@/components/groups/CreateGroupForm.vue'
 import { useUsers } from '@/composables/useUsers'
 import { useGroups } from '@/composables/useGroups'
 import CreateUserForm from '@/components/users/CreateUserForm.vue'
+import Toast from '@/components/ui/Toast.vue'
 
 const { usersWithoutGroups, fetchUsers, createUser, deleteUser } = useUsers()
 const { groups, fetchGroups, createGroup } = useGroups()
+
+const showToast = ref(false)
+const toastMessage = ref('')
+const toastVariant = ref<'success' | 'error'>('success')
 
 onMounted(async () => {
   await Promise.all([fetchUsers(), fetchGroups()])
@@ -395,12 +401,16 @@ const setOpenDeleteUserDialog = (value) => {
 }
 
 const handleCreateUser = async (userData) => {
-  const { success, password } = await createUser(userData)
+  const { success } = await createUser(userData)
   if (success) {
-    alert(`Usuario creado correctamente, password temporal: ${password}`)
+    toastMessage.value = 'Usuario creado correctamente. Se envió una contraseña al correo.'
+    toastVariant.value = 'success'
+    showToast.value = true
     setOpenCreateUserDialog(false)
   } else {
-    alert('Error al crear usuario')
+    toastMessage.value = 'Error al crear usuario'
+    toastVariant.value = 'error'
+    showToast.value = true
   }
 }
 

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { Profile } from '../profile/profile.entity';
 import { User } from './entities/user.entity';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +13,7 @@ export class UsersService {
     private readonly profileRepository: Repository<Profile>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly mailerService: MailerService,
   ) {}
 
   async getUsers() {
@@ -52,11 +54,12 @@ export class UsersService {
     });
     await this.userRepository.save(user);
 
+    await this.mailerService.sendUserCredentialsEmail(body.email, generatedPassword);
+
     return {
       profile: savedProfile,
-      password: generatedPassword,
       message:
-        'Usuario creado correctamente, correo enviado con instrucciones de acceso.',
+        'Usuario creado correctamente, se envió una contraseña temporal al correo.',
     };
   }
 
