@@ -7,18 +7,18 @@ import { ref, provide, onMounted, watch, computed } from 'vue'
 
 type Theme = 'light' | 'dark'
 
-const theme = ref<Theme>('dark')
+const theme = ref<Theme>('light')
 const isInitialized = ref(false)
 
 const isDarkMode = computed(() => theme.value === 'dark')
 
 const toggleTheme = () => {
-  theme.value = theme.value === 'light' ? 'dark' : 'light'
+  theme.value = theme.value === 'light' ? 'light' : 'dark'
 }
 
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme') as Theme | null
-  const initialTheme = savedTheme || 'dark' // Default to light theme
+  const initialTheme = savedTheme || 'light' // Default to light theme
 
   theme.value = initialTheme
   isInitialized.value = true
