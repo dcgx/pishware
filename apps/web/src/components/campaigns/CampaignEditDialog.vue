@@ -59,6 +59,8 @@
                 :users="users"
                 :groups="groups"
                 @submit="handleUpdateCampaign"
+                @send="handleSendCampaign"
+                @schedule="handleScheduleCampaign"
                 @cancel="handleClose"
               />
             </DialogPanel>
@@ -88,12 +90,12 @@ const props = defineProps({
 
 const emit = defineEmits(['close'])
 
-const form = reactive({ ...props.campaign })
+const form = reactive({ ...props.campaign, schedule: !!props.campaign.scheduledStartAt })
 
 watch(
   () => props.campaign,
   (val) => {
-    Object.assign(form, val)
+    Object.assign(form, { ...val, schedule: !!val.scheduledStartAt })
   }
 )
 
@@ -103,6 +105,16 @@ const handleClose = () => {
 
 const handleUpdateCampaign = async (payload) => {
   await updateCampaign(payload.id, payload)
+  handleClose()
+}
+
+const handleSendCampaign = async (payload) => {
+  await updateCampaign(payload.id, { ...payload, sendNow: true })
+  handleClose()
+}
+
+const handleScheduleCampaign = async (payload) => {
+  await updateCampaign(payload.id, { ...payload, status: 'scheduled' })
   handleClose()
 }
 </script>

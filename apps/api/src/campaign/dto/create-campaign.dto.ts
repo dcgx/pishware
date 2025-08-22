@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsOptional, IsNumber, IsEnum, IsDateString, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsNumber, IsEnum, IsDateString, IsArray, IsBoolean } from 'class-validator';
 import { CampaignStatus } from '../entities/campaign.entity';
 
 export class CreateCampaignDto {
@@ -35,4 +35,8 @@ export class CreateCampaignDto {
   @IsArray()
   @IsString({ each: true })
   profile_ids?: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  send_now?: boolean;
 }

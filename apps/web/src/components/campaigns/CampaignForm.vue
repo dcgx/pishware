@@ -68,18 +68,27 @@
       </select>
     </div>
 
-    <!-- Datepicker reemplazando el input nativo -->
-    <div class="mt-4">
-      <label for="scheduled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Programar envío</label>
+    <div class="mt-4 flex items-center">
+      <input
+        id="schedule"
+        type="checkbox"
+        v-model="form.schedule"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+      />
+      <label for="schedule" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Programar campaña</label>
+    </div>
+
+    <div v-if="form.schedule" class="mt-4">
+      <label for="scheduled" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha de programación</label>
       <VueTailwindDatepicker
         id="scheduled"
         v-model="form.scheduledStartAt"
         as-single
         use-range={false}
         :formatter="formatter"
-        input-classes="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                       focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 
-                       dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+        input-classes="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                       focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+                       dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                        dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
     </div>
@@ -100,6 +109,8 @@
 
     <div class="mt-6 flex justify-end gap-3">
       <Button variant="outline" type="button" @click="emit('cancel')">Cancelar</Button>
+      <Button type="button" @click="handleSendNow">Enviar campaña</Button>
+      <Button type="button" :disabled="!form.schedule" @click="handleScheduleCampaign">Programar campaña</Button>
       <Button type="submit">Guardar</Button>
     </div>
   </form>
@@ -118,7 +129,7 @@ const props = defineProps({
   groups: { type: Array, default: () => [] },
 })
 const { users, groups } = toRefs(props)
-const emit = defineEmits(['update:modelValue', 'submit', 'cancel'])
+const emit = defineEmits(['update:modelValue', 'submit', 'cancel', 'send', 'schedule'])
 
 const form = reactive({
   id: props.modelValue.id || null,
@@ -130,12 +141,21 @@ const form = reactive({
   status: props.modelValue.status || 'draft',
   userIds: props.modelValue.userIds || [],
   groupIds: props.modelValue.groupIds || [],
+  schedule: props.modelValue.schedule || false,
 })
 
 watch(form, (val) => emit('update:modelValue', val), { deep: true })
 
 const handleSubmit = () => {
   emit('submit', { ...form })
+}
+
+const handleSendNow = () => {
+  emit('send', { ...form, sendNow: true })
+}
+
+const handleScheduleCampaign = () => {
+  emit('schedule', { ...form, status: 'scheduled' })
 }
 
 // Formateador de fecha

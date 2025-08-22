@@ -26,7 +26,14 @@ export class CampaignService {
       groups: dto.group_ids?.map((id) => ({ id } as any)) || [],
       profiles: dto.profile_ids?.map((id) => ({ id } as any)) || [],
     });
-    return this.campaignRepository.save(campaign);
+    const saved = await this.campaignRepository.save(campaign);
+    if (dto.send_now) {
+      await this.mailerService.sendTestEmail();
+      saved.status = CampaignStatus.SENT;
+      saved.scheduled_start_at = null;
+      await this.campaignRepository.save(saved);
+    }
+    return saved;
   }
 
   async findAll(): Promise<CampaignEntity[]> {
@@ -48,6 +55,11 @@ export class CampaignService {
     if (dto.status !== undefined) campaign.status = dto.status;
     if (dto.group_ids !== undefined) campaign.groups = dto.group_ids.map((id) => ({ id } as any));
     if (dto.profile_ids !== undefined) campaign.profiles = dto.profile_ids.map((id) => ({ id } as any));
+    if (dto.send_now) {
+      await this.mailerService.sendTestEmail();
+      campaign.status = CampaignStatus.SENT;
+      campaign.scheduled_start_at = null;
+    }
     return this.campaignRepository.save(campaign);
   }
 
