@@ -60,10 +60,24 @@
         id="scheduled"
         v-model="form.scheduledStartAt"
         as-single
-        use-range={false}
+        :use-range="false"
         :formatter="formatter"
         input-classes="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
+    </div>
+
+    <div class="mt-4">
+      <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estado</label>
+      <select
+        id="status"
+        v-model="form.status"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+      >
+        <option value="draft">Borrador</option>
+        <option value="scheduled">Programada</option>
+        <option value="sent">Enviada</option>
+        <option value="completed">Finalizada</option>
+      </select>
     </div>
 
     <div class="mt-6 flex justify-end gap-3">
@@ -99,6 +113,15 @@ const form = reactive({
 })
 
 watch(form, (val) => emit('update:modelValue', val), { deep: true })
+
+watch(
+  () => form.isScheduled,
+  (isScheduled) => {
+    if (!isScheduled) {
+      form.scheduledStartAt = ''
+    }
+  }
+)
 
 const handleSubmit = () => {
   emit('submit', { ...form })
