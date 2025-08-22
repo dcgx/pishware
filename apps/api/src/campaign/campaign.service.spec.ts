@@ -21,7 +21,7 @@ describe('CampaignService', () => {
             delete: jest.fn(),
           },
         },
-        { provide: MailerService, useValue: { sendTestEmail: jest.fn() } },
+        { provide: MailerService, useValue: { sendEmail: jest.fn() } },
       ],
     }).compile();
 

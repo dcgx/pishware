@@ -1,16 +1,24 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { CampaignService } from './campaign.service';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
-import { SendTestEmailDto } from 'src/mailer/dto/send-test-email.dto';
+import { SendEmailDto } from 'src/mailer/dto/send-email.dto';
 import { MailerService } from 'src/mailer/mailer.service';
 
 @Controller('campaign')
 export class CampaignController {
   constructor(
     private readonly campaignService: CampaignService,
-    private readonly mailerService: MailerService
-  ) { }
+    private readonly mailerService: MailerService,
+  ) {}
 
   @Post()
   create(@Body() createCampaignDto: CreateCampaignDto) {
@@ -28,7 +36,10 @@ export class CampaignController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCampaignDto: UpdateCampaignDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateCampaignDto: UpdateCampaignDto,
+  ) {
     return this.campaignService.update(+id, updateCampaignDto);
   }
 
@@ -37,9 +48,8 @@ export class CampaignController {
     return this.campaignService.remove(+id);
   }
 
-
-  @Post('send-test-email')
-  sendTest(@Body() dto: SendTestEmailDto) {
-    return this.mailerService.sendTestEmail();
+  @Post('send-email')
+  sendEmail(@Body() dto: SendEmailDto) {
+    return this.mailerService.sendEmail(dto);
   }
 }

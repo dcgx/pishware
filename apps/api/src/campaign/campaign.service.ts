@@ -5,6 +5,7 @@ import { CampaignEntity, CampaignStatus } from './entities/campaign.entity';
 import { CreateCampaignDto } from './dto/create-campaign.dto';
 import { UpdateCampaignDto } from './dto/update-campaign.dto';
 import { MailerService } from 'src/mailer/mailer.service';
+import { SendEmailDto } from 'src/mailer/dto/send-email.dto';
 import { Cron } from '@nestjs/schedule';
 
 @Injectable()
@@ -13,7 +14,7 @@ export class CampaignService {
     @InjectRepository(CampaignEntity)
     private readonly campaignRepository: Repository<CampaignEntity>,
     private readonly mailerService: MailerService,
-  ) { }
+  ) {}
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
     const campaign = this.campaignRepository.create({
@@ -23,12 +24,20 @@ export class CampaignService {
       landing_page: { id: dto.landing_page_id } as any,
       scheduled_start_at: dto.scheduled_start_at ?? null,
       status: dto.status ?? CampaignStatus.DRAFT,
-      groups: dto.group_ids?.map((id) => ({ id } as any)) || [],
-      profiles: dto.profile_ids?.map((id) => ({ id } as any)) || [],
+      groups: dto.group_ids?.map((id) => ({ id }) as any) || [],
+      profiles: dto.profile_ids?.map((id) => ({ id }) as any) || [],
     });
     const saved = await this.campaignRepository.save(campaign);
     if (dto.send_now) {
-      await this.mailerService.sendTestEmail();
+      const emailDto: SendEmailDto = {
+        to: 'test@example.com',
+        subject: 'Test email',
+        html: '<p>Test</p>',
+        user_id: 0,
+        profile_id: 0,
+        landing_id: dto.landing_page_id?.toString(),
+      };
+      await this.mailerService.sendEmail(emailDto);
       saved.status = CampaignStatus.SENT;
       saved.scheduled_start_at = null;
       await this.campaignRepository.save(saved);
@@ -37,26 +46,47 @@ export class CampaignService {
   }
 
   async findAll(): Promise<CampaignEntity[]> {
-    return this.campaignRepository.find({ relations: ['template', 'landing_page', 'groups', 'profiles'] });
+    return this.campaignRepository.find({
+      relations: ['template', 'landing_page', 'groups', 'profiles'],
+    });
   }
 
   async findOne(id: number): Promise<CampaignEntity | null> {
-    return this.campaignRepository.findOne({ where: { id }, relations: ['template', 'landing_page', 'groups', 'profiles'] });
+    return this.campaignRepository.findOne({
+      where: { id },
+      relations: ['template', 'landing_page', 'groups', 'profiles'],
+    });
   }
 
-  async update(id: number, dto: UpdateCampaignDto): Promise<CampaignEntity | null> {
+  async update(
+    id: number,
+    dto: UpdateCampaignDto,
+  ): Promise<CampaignEntity | null> {
     const campaign = await this.campaignRepository.findOne({ where: { id } });
     if (!campaign) return null;
     if (dto.name !== undefined) campaign.name = dto.name;
     if (dto.description !== undefined) campaign.description = dto.description;
-    if (dto.template_id !== undefined) campaign.template = { id: dto.template_id } as any;
-    if (dto.landing_page_id !== undefined) campaign.landing_page = { id: dto.landing_page_id } as any;
-    if (dto.scheduled_start_at !== undefined) campaign.scheduled_start_at = dto.scheduled_start_at;
+    if (dto.template_id !== undefined)
+      campaign.template = { id: dto.template_id } as any;
+    if (dto.landing_page_id !== undefined)
+      campaign.landing_page = { id: dto.landing_page_id } as any;
+    if (dto.scheduled_start_at !== undefined)
+      campaign.scheduled_start_at = dto.scheduled_start_at;
     if (dto.status !== undefined) campaign.status = dto.status;
-    if (dto.group_ids !== undefined) campaign.groups = dto.group_ids.map((id) => ({ id } as any));
-    if (dto.profile_ids !== undefined) campaign.profiles = dto.profile_ids.map((id) => ({ id } as any));
+    if (dto.group_ids !== undefined)
+      campaign.groups = dto.group_ids.map((id) => ({ id }) as any);
+    if (dto.profile_ids !== undefined)
+      campaign.profiles = dto.profile_ids.map((id) => ({ id }) as any);
     if (dto.send_now) {
-      await this.mailerService.sendTestEmail();
+      const emailDto: SendEmailDto = {
+        to: 'test@example.com',
+        subject: 'Test email',
+        html: '<p>Test</p>',
+        user_id: 0,
+        profile_id: 0,
+        landing_id: dto.landing_page_id?.toString(),
+      };
+      await this.mailerService.sendEmail(emailDto);
       campaign.status = CampaignStatus.SENT;
       campaign.scheduled_start_at = null;
     }
@@ -79,7 +109,15 @@ export class CampaignService {
     });
 
     for (const campaign of campaigns) {
-      await this.mailerService.sendTestEmail();
+      const emailDto: SendEmailDto = {
+        to: 'test@example.com',
+        subject: 'Test email',
+        html: '<p>Test</p>',
+        user_id: 0,
+        profile_id: 0,
+        landing_id: campaign.landing_page?.id,
+      };
+      await this.mailerService.sendEmail(emailDto);
       campaign.status = CampaignStatus.SENT;
       await this.campaignRepository.save(campaign);
     }
