@@ -48,7 +48,16 @@
                         class="border-t border-gray-100 dark:border-gray-800"
                       >
                         <td class="px-5 py-4 flex items-center gap-3">
-                          <img :src="user.avatar" class="w-10 h-10 rounded-full" alt="User Avatar" />
+                          <img
+                            :src="user.avatar"
+                            class="w-10 h-10 rounded-full"
+                            :alt="
+                              'https://ui-avatars.com/api/?name=' +
+                              user.first_name +
+                              '+' +
+                              user.last_name
+                            "
+                          />
                           <span class="font-medium text-gray-800 dark:text-white">{{
                             user.first_name
                           }}</span>
@@ -132,24 +141,32 @@
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                       <tr
-                        v-for="(profile, index) in group.group_profile"
+                        v-for="(profile, index) in group.profiles"
                         :key="index"
                         class="border-t border-gray-100 dark:border-gray-800"
                       >
                         <td class="px-5 py-4 flex items-center gap-3">
-                          <img :src="profile.avatar" class="w-10 h-10 rounded-full" alt="User Avatar" />
+                          <img
+                            :src="
+                              'https://ui-avatars.com/api/?name=' +
+                              profile.first_name +
+                              '+' +
+                              profile.last_name
+                            "
+                            class="w-10 h-10 rounded-full"
+                          />
                           <span class="font-medium text-gray-800 dark:text-white">{{
-                            profile.profiles.first_name
+                            profile.first_name
                           }}</span>
                         </td>
                         <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ profile.profiles.email }}
+                          {{ profile.email }}
                         </td>
                         <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ profile.profiles.role }}
+                          {{ profile.role }}
                         </td>
                         <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ profile.profiles.group }}
+                          {{ profile.group }}
                         </td>
                         <td class="px-5 py-4">
                           <span

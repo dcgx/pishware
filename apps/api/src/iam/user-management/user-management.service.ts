@@ -15,11 +15,16 @@ export class UsersService {
   ) {}
 
   async getUsers() {
-    const users = await this.profileRepository.find({ relations: ['groups'] });
-    return users.map((user) => ({
-      ...user,
-      groups: user.groups?.map((g) => g.id) || [],
-    }));
+    const profiles = await this.profileRepository.find({ relations: ['groups'] });
+    const users = await this.userRepository.find({ relations: ['profile'] });
+    return users.map((user) => {
+      const profile = profiles.find((p) => p.id === user.profile.id);
+      return {
+        ...user,
+        profile: profile,
+        groups: profile?.groups?.map((g) => g.id) || [],
+      };
+    });
   }
 
   async createUser(body: {
