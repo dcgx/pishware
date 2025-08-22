@@ -5,7 +5,7 @@ import { TrackingEmail } from './entities/tracking-email.entity';
 
 interface LogEmailParams {
   landingId?: string | null;
-  userId: number;
+  userId: string;
   profileId: number;
   email: string;
   subject?: string | null;

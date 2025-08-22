@@ -8,9 +8,9 @@ export class TrackingEmail {
 
   @Column({ type: 'uuid', nullable: true })
   landing_id: string | null;
-  
-  @Column({ type: 'int' })
-  user_id: number;
+
+  @Column({ type: 'uuid' })
+  user_id: string;
 
   @Column({ type: 'int' })
   profile_id: number;

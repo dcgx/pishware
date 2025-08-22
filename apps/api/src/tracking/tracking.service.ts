@@ -14,7 +14,7 @@ export class TrackingService {
     eventType: string,
     payload: any,
     metadata: Record<string, any>,
-    userId?: number,
+    userId?: string,
   ) {
     const tracking = this.trackingRepository.create({
       event_type: eventType,
@@ -39,25 +39,20 @@ export class TrackingService {
       data_sent: 0,
     };
 
-    const details = events.map((e) => {
-      interface EventPayload {
-        firstName?: string;
-        lastName?: string;
-        email?: string;
-        position?: string;
+    const details = events.map(async (e) => {
+      // const  user = await this.userManagementService.findUserById(e.user_id ?? '');
+      const user = {
+        first_name: '',
+        last_name: '',
+        email: '',
       }
-      let payload: EventPayload = {};
-      try {
-        payload = JSON.parse(e.payload ?? '{}') as EventPayload;
-      } catch {
-        payload = {};
-      }
-
       const detail = {
-        firstName: payload.firstName ?? '',
-        lastName: payload.lastName ?? '',
-        email: payload.email ?? '',
-        position: payload.position ?? '',
+        firstName: user?.first_name ?? '',
+        lastName: user?.last_name ?? '',
+        email: user?.email ?? '',
+        position: '',
+        submittedAt: e.submitted_at,
+        payload: JSON.parse(e.payload),
         event_type: e.event_type,
       };
 

@@ -17,6 +17,9 @@ export class Tracking {
     @Column({ type: 'json' })
     metadata: Record<string, any>;
 
+    @Column({ type: 'uuid', nullable: true })
+    user_id: string | null; 
+
     @Column({ type: 'int', nullable: true })
-    user_id: number | null; 
+    tracking_email_id: number;
 }

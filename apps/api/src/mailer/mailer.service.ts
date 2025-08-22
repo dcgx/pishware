@@ -92,7 +92,7 @@ export class MailerService {
       to: 'diegocastillo.dev@gmail.com',
       subject: template?.subject ?? '',
       html: template?.body_content ?? '',
-      user_id: 0,
+      user_id: '0',
       profile_id: 0,
       landing_id: null,
     });

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import * as crypto from 'crypto';
 import { Profile } from '../profile/profile.entity';
 import { User } from './entities/user.entity';
@@ -14,7 +14,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly mailerService: MailerService,
-  ) {}
+  ) { }
 
   async getUsers() {
     const profiles = await this.profileRepository.find({ relations: ['groups'] });
@@ -28,6 +28,19 @@ export class UsersService {
       };
     });
   }
+
+  async findUsersByIds(ids: string[]): Promise<User[]> {
+    const users = await this.userRepository.find({ where: { id: In(ids) }, relations: ['profile'] });
+    return users.map((user) => {
+      return {
+        ...user,
+      };
+    });
+  }
+
+  async findUserById(id: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id }, relations: ['profile'] });
+  } 
 
   async createUser(body: {
     first_name: string;
