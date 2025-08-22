@@ -5,6 +5,8 @@ import * as crypto from 'crypto';
 import { Profile } from '../profile/profile.entity';
 import { User } from './entities/user.entity';
 import { MailerService } from 'src/mailer/mailer.service';
+import { ConfigService } from '@nestjs/config';
+import { createClient } from '@supabase/supabase-js';
 
 @Injectable()
 export class UsersService {
@@ -14,6 +16,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     private readonly mailerService: MailerService,
+    private readonly configService: ConfigService,
   ) {}
 
   async getUsers() {
@@ -53,6 +56,25 @@ export class UsersService {
       profile: savedProfile,
     });
     await this.userRepository.save(user);
+
+    const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
+    const supabaseKey = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
+      },
+    });
+
+    const { error } = await supabase.auth.admin.createUser({
+      email: body.email,
+      password: generatedPassword,
+      email_confirm: true,
+    });
+
+    if (error) {
+      throw new Error(`Error al registrar el usuario en Supabase: ${error.message}`);
+    }
 
     await this.mailerService.sendUserCredentialsEmail(body.email, generatedPassword);
 
