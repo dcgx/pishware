@@ -9,4 +9,9 @@ export class TrackingController {
   findAll() {
     return this.trackingService.findAll();
   }
+
+  @Get('metrics')
+  getMetrics() {
+    return this.trackingService.getMetrics();
+  }
 }
