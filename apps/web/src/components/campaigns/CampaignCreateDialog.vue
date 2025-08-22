@@ -59,6 +59,8 @@
                 :users="users"
                 :groups="groups"
                 @submit="handleCreateCampaign"
+                @send="handleSendCampaign"
+                @schedule="handleScheduleCampaign"
                 @cancel="handleClose"
               />
             </DialogPanel>
@@ -96,6 +98,7 @@ const form = reactive({
   status: 'draft',
   userIds: [],
   groupIds: [],
+  schedule: false,
 })
 
 const handleClose = () => {
@@ -104,6 +107,16 @@ const handleClose = () => {
 
 const handleCreateCampaign = async (payload) => {
   await createCampaign(payload)
+  handleClose()
+}
+
+const handleSendCampaign = async (payload) => {
+  await createCampaign({ ...payload, sendNow: true })
+  handleClose()
+}
+
+const handleScheduleCampaign = async (payload) => {
+  await createCampaign({ ...payload, status: 'scheduled' })
   handleClose()
 }
 </script>
