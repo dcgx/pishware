@@ -2,51 +2,59 @@ import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { TemplateService } from 'src/template/template.service';
 import { TrackingService } from 'src/tracking/tracking.service';
+import { TrackingEmailService } from 'src/tracking/tracking-email.service';
+import { SendEmailDto } from './dto/send-email.dto';
 
 @Injectable()
 export class MailerService {
-    private transporter;
+  private transporter: nodemailer.Transporter;
 
-    constructor(
-        private readonly templateService: TemplateService,
-        private readonly trackingService: TrackingService,
-    ) {
-        this.transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: 25,
-            secure: false,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
-    }
+  constructor(
+    private readonly templateService: TemplateService,
+    private readonly trackingService: TrackingService,
+    private readonly trackingEmailService: TrackingEmailService,
+  ) {
+    this.transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: 25,
+      secure: false,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  }
 
-    async sendTestEmail() {
-        const template = await this.templateService.findOne(23);
-        this.transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST,
-            port: 25,
-            secure: false,
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
+  async sendEmail(dto: SendEmailDto) {
+    const info = (await this.transporter.sendMail({
+      from: `Pishware <test>`,
+      to: dto.to,
+      subject: dto.subject,
+      html: dto.html,
+    })) as { messageId: string; accepted: string[] };
 
-        const info = await this.transporter.sendMail({
-            from: `Pishware <test>`,
-            to: 'diegocastillo.dev@gmail.com',
-            subject: template?.subject,
-            html: template?.body_content
-        });
+    await this.trackingEmailService.logEmail({
+      landingId: dto.landing_id ?? null,
+      userId: dto.user_id,
+      profileId: dto.profile_id,
+      email: dto.to,
+      subject: dto.subject,
+      messageId: info.messageId,
+    });
 
-        await this.trackingService.logEvent('email_sent', { to: 'diegocastillo.dev@gmail.com', subject: template?.subject }, { messageId: info.messageId });
-        for (const recipient of info.accepted) {
-            await this.trackingService.logEvent('email_delivered', { to: recipient }, { messageId: info.messageId });
-        }
-
-        return { messageId: info.messageId, accepted: info.accepted };
+    await this.trackingService.logEvent(
+      'email_sent',
+      { to: dto.to, subject: dto.subject },
+      { messageId: info.messageId },
+      dto.user_id,
+    );
+    for (const recipient of info.accepted) {
+      await this.trackingService.logEvent(
+        'email_delivered',
+        { to: recipient },
+        { messageId: info.messageId },
+        dto.user_id,
+      );
     }
 
     async sendUserCredentialsEmail(to: string, password: string) {
@@ -74,4 +82,18 @@ export class MailerService {
 
         return { messageId: info.messageId, accepted: info.accepted };
     }
+    return { messageId: info.messageId, accepted: info.accepted };
+  }
+
+  async sendTestEmail() {
+    const template = await this.templateService.findOne(23);
+    return this.sendEmail({
+      to: 'diegocastillo.dev@gmail.com',
+      subject: template?.subject ?? '',
+      html: template?.body_content ?? '',
+      user_id: 0,
+      profile_id: 0,
+      landing_id: null,
+    });
+  }
 }

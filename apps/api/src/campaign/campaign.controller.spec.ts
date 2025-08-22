@@ -14,7 +14,7 @@ describe('CampaignController', () => {
       providers: [
         CampaignService,
         { provide: getRepositoryToken(CampaignEntity), useValue: {} },
-        { provide: MailerService, useValue: { sendTestEmail: jest.fn() } },
+        { provide: MailerService, useValue: { sendEmail: jest.fn() } },
       ],
     }).compile();
 
