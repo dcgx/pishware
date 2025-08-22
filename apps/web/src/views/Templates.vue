@@ -9,13 +9,19 @@
           </Button>
         </template>
       </PageHeader>
-      <TemplatesTable :templates="emailTemplates" />
+      <TemplatesTable :templates="emailTemplates" @view="handleViewTemplate" />
     </div>
 
     <TemplateCreateDialog
       :show="openCreateTemplateDialog"
       @create="handleCreateTemplate"
       @close="() => setOpenCreateTemplateDialog(false)"
+    />
+
+    <TemplateViewDialog
+      :show="openViewTemplateDialog"
+      :template="selectedTemplate"
+      @close="() => setOpenViewTemplateDialog(false)"
     />
   </admin-layout>
 </template>
@@ -29,16 +35,30 @@ import Button from '@/components/ui/Button.vue'
 // components
 import TemplatesTable from '@/components/templates/TemplatesTable.vue'
 import TemplateCreateDialog from '@/components/templates/TemplateCreateDialog.vue'
+import TemplateViewDialog from '@/components/templates/TemplateViewDialog.vue'
 // composables
 import { useTemplates } from '@/composables/useTemplates'
 
-const { fetchTemplates, emailTemplates } = useTemplates()
+const { fetchTemplates, emailTemplates, getTemplate } = useTemplates()
 
 const openCreateTemplateDialog = ref(false)
+const openViewTemplateDialog = ref(false)
+const selectedTemplate = ref(null)
 
 const setOpenCreateTemplateDialog = (value) => {
   openCreateTemplateDialog.value = value
 }
+
+const setOpenViewTemplateDialog = (value) => {
+  openViewTemplateDialog.value = value
+}
+
+const handleViewTemplate = async (id) => {
+  selectedTemplate.value = await getTemplate(id)
+  setOpenViewTemplateDialog(true)
+}
+
+const handleCreateTemplate = () => {}
 
 onMounted(async () => {
   await fetchTemplates()
