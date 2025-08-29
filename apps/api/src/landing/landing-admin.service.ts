@@ -34,6 +34,15 @@ export class LandingAdminService {
         return this.landingPageRepository.save(landingPage);
     }
 
+    async update(id: string, dto: Partial<LandingPageEntity>): Promise<LandingPageEntity> {
+        await this.landingPageRepository.update(id, dto);
+        return (await this.findOne(id)) as LandingPageEntity;
+    }
+
+    async remove(id: string): Promise<void> {
+        await this.landingPageRepository.delete(id);
+    }
+
     async importHtmlFromUrl(rawUrl: string): Promise<string> {
         let origin: string
         try {

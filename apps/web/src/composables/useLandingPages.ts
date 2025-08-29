@@ -1,5 +1,4 @@
 import { useLandingPagesStore } from "@/stores/useLandingPagesStore";
-import LandingPages from "@/views/LandingPages.vue";
 import { computed } from "vue";
 
 export const useLandingPages = () => {
@@ -67,6 +66,43 @@ export const useLandingPages = () => {
         }
     };
 
+    const getLandingPage = async (id: string) => {
+        const response = await fetch(`${apiUrl}/landing-pages/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch landing page');
+        return await response.json();
+    };
+
+    const updateLandingPage = async (id: string, landingPage) => {
+        landingPagesStore.loading = true;
+        try {
+            const response = await fetch(`${apiUrl}/landing-pages/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(landingPage),
+            });
+            if (!response.ok) throw new Error('Failed to update landing page');
+            const updated = await response.json();
+            const index = landingPagesStore.landingPages.findIndex(l => l.id === id);
+            if (index !== -1) landingPagesStore.landingPages[index] = updated;
+        } catch (err) {
+            landingPagesStore.error = 'Failed to update landing page';
+        } finally {
+            landingPagesStore.loading = false;
+        }
+    };
+
+    const deleteLandingPage = async (id: string) => {
+        try {
+            const response = await fetch(`${apiUrl}/landing-pages/${id}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) throw new Error('Failed to delete landing page');
+            landingPagesStore.landingPages = landingPagesStore.landingPages.filter(l => l.id !== id);
+        } catch (err) {
+            landingPagesStore.error = 'Failed to delete landing page';
+        }
+    };
+
     return {
         ...landingPagesStore,
         fetching: computed(() => landingPagesStore.fetching),
@@ -74,5 +110,8 @@ export const useLandingPages = () => {
         fetchLandingPages,
         fetchLandingPage,
         createLandingPage,
+        getLandingPage,
+        updateLandingPage,
+        deleteLandingPage,
     };
 }

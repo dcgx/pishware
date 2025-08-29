@@ -29,11 +29,10 @@
             >
               <DialogTitle
                 as="h3"
-                class="text-lg my-2 font-medium leading-6 text-gray-900 dark:text-white"
+                class="text-lg my-3 font-medium leading-6 text-gray-900 dark:text-gray-200"
               >
                 <div class="flex items-center justify-between">
-                  <h2>Ver página de destino</h2>
-
+                  Ver página de destino
                   <button @click="handleClose" class="text-gray-500 hover:text-gray-700">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -43,28 +42,18 @@
                       stroke="currentColor"
                       class="size-6"
                     >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M6 18 18 6M6 6l12 12"
-                      />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
                   </button>
                 </div>
               </DialogTitle>
-
-              <div v-if="landingPage">
-                <p class="mb-1"><strong>Nombre:</strong> {{ landingPage.name }}</p>
-                <p class="mb-1"><strong>Slug:</strong> {{ landingPage.slug }}</p>
-                <p class="mb-1"><strong>Clave pública:</strong> {{ landingPage.public_key }}</p>
-                <p class="mb-1"><strong>URL de redirección:</strong> {{ landingPage.redirect_url }}</p>
-                <p class="mb-1"><strong>URL importada:</strong> {{ landingPage.imported_url }}</p>
-                <p class="mb-1"><strong>Captura datos enviados:</strong> {{ landingPage.capture_submitted_data ? 'Sí' : 'No' }}</p>
-                <p class="mb-4"><strong>Captura contraseña:</strong> {{ landingPage.capture_password ? 'Sí' : 'No' }}</p>
-
+              <div class="space-y-2">
+                <div><strong>ID:</strong> {{ landingPage?.id }}</div>
+                <div><strong>Nombre:</strong> {{ landingPage?.name }}</div>
+                <div><strong>Redirect:</strong> {{ landingPage?.redirect_url }}</div>
                 <div>
-                  <h4 class="font-medium mb-2">Contenido HTML</h4>
-                  <div class="border p-2 max-h-96 overflow-auto" v-html="landingPage.html_content"></div>
+                  <strong>Contenido:</strong>
+                  <div class="border p-2 rounded bg-gray-50 dark:bg-gray-900" v-html="landingPage?.html_content"></div>
                 </div>
               </div>
             </DialogPanel>
@@ -76,14 +65,17 @@
 </template>
 
 <script setup>
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { defineProps, defineEmits } from 'vue'
+import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 
 const props = defineProps({
   show: { type: Boolean, required: true },
   landingPage: { type: Object, default: null }
 })
+
 const emit = defineEmits(['close'])
 
-const handleClose = () => emit('close')
+const handleClose = () => {
+  emit('close')
+}
 </script>

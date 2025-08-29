@@ -228,7 +228,7 @@ const menuGroups = [
       },
       {
         icon: PageIcon,
-        name: 'Landing Pages',
+        name: 'Páginas de destino',
         path: '/landing-pages',
       },
       {
