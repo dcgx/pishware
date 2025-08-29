@@ -20,6 +20,10 @@ export class LandingAdminService {
         return this.landingPageRepository.find();
     }
 
+    async findOne(id: string): Promise<LandingPageEntity | null> {
+        return this.landingPageRepository.findOne({ where: { id } });
+    }
+
     async findByPublicKey(key: string): Promise<LandingPageEntity | null> {
         console.log('Finding landing page by public key:', key);
         return this.landingPageRepository.findOne({ where: { public_key: key } });
@@ -28,6 +32,15 @@ export class LandingAdminService {
     async create(dto: Partial<LandingPageEntity>): Promise<LandingPageEntity> {
         const landingPage = this.landingPageRepository.create(dto);
         return this.landingPageRepository.save(landingPage);
+    }
+
+    async update(id: string, dto: Partial<LandingPageEntity>): Promise<LandingPageEntity> {
+        await this.landingPageRepository.update(id, dto);
+        return (await this.findOne(id)) as LandingPageEntity;
+    }
+
+    async remove(id: string): Promise<void> {
+        await this.landingPageRepository.delete(id);
     }
 
     async importHtmlFromUrl(rawUrl: string): Promise<string> {

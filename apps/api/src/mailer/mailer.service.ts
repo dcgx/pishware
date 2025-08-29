@@ -32,6 +32,7 @@ export class MailerService {
       subject: dto.subject,
       html: dto.html,
     })) as { messageId: string; accepted: string[] };
+    console.log('Email sent:', info);
 
     await this.trackingEmailService.logEmail({
       landingId: dto.landing_id ?? null,
@@ -56,33 +57,39 @@ export class MailerService {
         dto.user_id,
       );
     }
-
-    async sendUserCredentialsEmail(to: string, password: string) {
-        const html = `<p>Su usuario ha sido creado correctamente.</p><p>Contraseña temporal: <b>${password}</b></p>`;
-
-        const info = await this.transporter.sendMail({
-            from: `Pishware <${process.env.SMTP_USER}>`,
-            to,
-            subject: 'Credenciales de acceso',
-            html,
-        });
-
-        await this.trackingService.logEvent(
-            'email_sent',
-            { to, subject: 'Credenciales de acceso' },
-            { messageId: info.messageId },
-        );
-        for (const recipient of info.accepted) {
-            await this.trackingService.logEvent(
-                'email_delivered',
-                { to: recipient },
-                { messageId: info.messageId },
-            );
-        }
-
-        return { messageId: info.messageId, accepted: info.accepted };
-    }
     return { messageId: info.messageId, accepted: info.accepted };
+  }
+
+
+  async sendUserCredentialsEmail(to: string, password: string) {
+    try {
+      const html = `<p>Su usuario ha sido creado correctamente.</p><p>Contraseña temporal: <b>${password}</b></p>`;
+
+      const info = await this.transporter.sendMail({
+        from: `Pishware <${process.env.SMTP_USER}>`,
+        to,
+        subject: 'Credenciales de acceso',
+        html,
+      });
+
+      await this.trackingService.logEvent(
+        'email_sent',
+        { to, subject: 'Credenciales de acceso' },
+        { messageId: info.messageId },
+      );
+      for (const recipient of info.accepted) {
+        await this.trackingService.logEvent(
+          'email_delivered',
+          { to: recipient },
+          { messageId: info.messageId },
+        );
+      }
+
+      return { messageId: info.messageId, accepted: info.accepted };
+    } catch (error) {
+      console.error('Error sending user credentials email:', error);
+      throw error;
+    }
   }
 
   async sendTestEmail() {
@@ -91,8 +98,8 @@ export class MailerService {
       to: 'diegocastillo.dev@gmail.com',
       subject: template?.subject ?? '',
       html: template?.body_content ?? '',
-      user_id: 0,
-      profile_id: 0,
+      user_id: '0',
+      profile_id: '0',
       landing_id: null,
     });
   }

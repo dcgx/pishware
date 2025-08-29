@@ -1,8 +1,11 @@
 import { Profile } from 'src/iam/profile/profile.entity';
+import { Tracking } from 'src/tracking/entities/tracking.entity';
 import {
   Column,
   Entity,
   JoinColumn,
+  ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -12,7 +15,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', unique: true })
   email: string;
 
   @Column({ type: 'text' })
@@ -37,4 +40,7 @@ export class User {
   @OneToOne(() => Profile, (profile) => profile.user)
   @JoinColumn()
   profile: Profile;
+
+  @OneToMany(() => Tracking, (tracking) => tracking.user)
+  trackings: Tracking[];
 }

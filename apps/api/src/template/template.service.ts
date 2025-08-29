@@ -28,6 +28,15 @@ export class TemplateService {
         return this.templateRepository.save(template);
     }
 
+    async update(id: number, dto: Partial<TemplateEntity>): Promise<TemplateEntity | null> {
+        await this.templateRepository.update(id, dto);
+        return this.findOne(id);
+    }
+
+    async remove(id: number): Promise<void> {
+        await this.templateRepository.delete(id);
+    }
+
     async uploadAttachment(templateId: number, file: any): Promise<void> {
         const fileUploaded = await this.fileUploadService.uploadToS3(file, {
             folder: `template-attachments/${templateId}`,

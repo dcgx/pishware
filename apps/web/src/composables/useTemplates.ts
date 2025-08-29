@@ -56,6 +56,49 @@ export const useTemplates = () => {
         }
     };
 
+    const updateTemplate = async (id: number, template: any) => {
+        templatesStore.updating = true;
+        try {
+            const response = await fetch(`${apiUrl}/templates/${id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(template),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update template');
+            }
+            const data = await response.json();
+            const index = templatesStore.emailTemplates.findIndex((t: any) => t.id === id);
+            if (index !== -1) templatesStore.emailTemplates[index] = data;
+            return { success: true, data };
+        } catch (err: any) {
+            templatesStore.error = 'Error updating template';
+            return { success: false, error: err.message };
+        } finally {
+            templatesStore.updating = false;
+        }
+    };
+
+    const deleteTemplate = async (id: number) => {
+        templatesStore.deleting = true;
+        try {
+            const response = await fetch(`${apiUrl}/templates/${id}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete template');
+            }
+            templatesStore.emailTemplates = templatesStore.emailTemplates.filter((t: any) => t.id !== id);
+            return { success: true };
+        } catch (err: any) {
+            templatesStore.error = 'Error deleting template';
+            return { success: false, error: err.message };
+        } finally {
+            templatesStore.deleting = false;
+        }
+    };
 
     const uploadAttachment = async (templateId: number, file: any) => {
         const formData = new FormData();
@@ -79,13 +122,14 @@ export const useTemplates = () => {
         emailTemplates: computed(() => templatesStore.emailTemplates),
         loading: templatesStore.loading,
         creating: templatesStore.creating,
+        updating: templatesStore.updating,
+        deleting: templatesStore.deleting,
         error: templatesStore.error,
-        createForm: templatesStore.createForm,
-        editForm: templatesStore.editForm,
-        showImportEmailDialog: templatesStore.showImportEmailDialog,
         fetchTemplates,
         getTemplate,
         createTemplate,
+        updateTemplate,
+        deleteTemplate,
         uploadAttachment,
     };
 }
