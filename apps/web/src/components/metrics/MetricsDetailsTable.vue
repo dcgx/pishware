@@ -7,7 +7,7 @@
       <fwb-table-head-cell>Cargo</fwb-table-head-cell>
       <fwb-table-head-cell>Evento</fwb-table-head-cell>
       <fwb-table-head-cell>
-        <span class="sr-only">Edit</span>
+        <span class="sr-only">Editar</span>
       </fwb-table-head-cell>
     </fwb-table-head>
     <fwb-table-body>

@@ -12,7 +12,7 @@
         <fwb-table-cell>{{ role.name }}</fwb-table-cell>
         <fwb-table-cell>{{ role.description }}</fwb-table-cell>
         <fwb-table-cell>
-          <fwb-a href="#"> Edit </fwb-a>
+          <fwb-a href="#" class="text-blue-600 hover:underline">Editar</fwb-a>
         </fwb-table-cell>
       </fwb-table-row>
     </fwb-table-body>
