@@ -74,7 +74,7 @@
     </div>
 
     <button type="submit" class="mt-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-      Guardar Plantilla
+      {{ submitText }}
     </button>
 
     <ImportEmailDialog
@@ -91,20 +91,24 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { ref, defineEmits, defineProps } from 'vue'
 import Button from '@/components/ui/Button.vue'
 import ImportEmailDialog from './ImportEmailDialog.vue'
 import Editor from '@tinymce/tinymce-vue'
 
 const openImportEmailDialog = ref(false)
+const props = defineProps({
+  template: { type: Object, default: () => ({}) },
+  submitText: { type: String, default: 'Guardar Plantilla' },
+})
 
-const emit = defineEmits(['submit'])
+const emit = defineEmits(['submit', 'cancel'])
 
-const tab = ref('html')
-const name = ref('')
-const subject = ref('')
-const textContent = ref('')
-const htmlContent = ref('')
+const tab = ref(props.template.type || 'html')
+const name = ref(props.template.name || '')
+const subject = ref(props.template.subject || '')
+const textContent = ref(tab.value === 'text' ? props.template.body_content || '' : '')
+const htmlContent = ref(tab.value === 'html' ? props.template.body_content || '' : '')
 const files = ref([])
 
 const activeTabClass =
