@@ -5,6 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -14,7 +15,7 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', unique: true })
   email: string;
 
   @Column({ type: 'text' })
@@ -40,7 +41,6 @@ export class User {
   @JoinColumn()
   profile: Profile;
 
-  @ManyToOne(() => Tracking, (tracking) => tracking.user,  { nullable: true })
-  @Column({ type: 'text', nullable: true })
-  trackings?: Tracking[];
+  @OneToMany(() => Tracking, (tracking) => tracking.user)
+  trackings: Tracking[];
 }

@@ -25,7 +25,11 @@ export class LandingRuntimeController {
             return res.status(HttpStatus.NOT_FOUND).send('Landing page not found');
         }
 
-        await this.trackingService.logEvent('landing_viewed', null, { key, landingId: landingPage.id });
+        try {
+            await this.trackingService.logEvent('landing_viewed', null, { key, landingId: landingPage.id });
+        } catch (error) {
+            console.error('Error logging landing_viewed event:', error);
+        }
 
         const withAction = (landingPage.html_content || '')
             .replace(/<form[^>]*action="[^"]*"([^>]*)>/i, `<form action="http://localhost:3000/r/submit?k=${key}"$1>`)

@@ -6,7 +6,7 @@ import { TrackingEmail } from './entities/tracking-email.entity';
 interface LogEmailParams {
   landingId?: string | null;
   userId: string;
-  profileId: number;
+  profileId: string;
   email: string;
   subject?: string | null;
   messageId?: string | null;
@@ -30,6 +30,7 @@ export class TrackingEmailService {
       message_id: params.messageId ?? null,
       metadata: params.metadata ?? {},
     } as DeepPartial<TrackingEmail>);
+    console.log('Logging email:', record);
     return this.trackingEmailRepository.save(record);
   }
 }

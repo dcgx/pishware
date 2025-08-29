@@ -8,17 +8,28 @@ import { MailerService } from 'src/mailer/mailer.service';
 import { SendEmailDto } from 'src/mailer/dto/send-email.dto';
 import { Cron } from '@nestjs/schedule';
 import { UsersService } from 'src/iam/user-management/user-management.service';
+import { User } from 'src/iam/user-management/entities/user.entity';
+import { GroupEntity } from 'src/iam/groups/group.entity';
 
 @Injectable()
 export class CampaignService {
   constructor(
     @InjectRepository(CampaignEntity)
     private readonly campaignRepository: Repository<CampaignEntity>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(GroupEntity)
+    private readonly groupRepository: Repository<GroupEntity>,
     private readonly userManagementService: UsersService,
     private readonly mailerService: MailerService,
   ) { }
 
   async create(dto: CreateCampaignDto): Promise<CampaignEntity> {
+    const requestedUserIds = dto.user_ids ?? [];
+    const users = requestedUserIds.length
+      ? await this.userRepository.find({ where: { id: In(requestedUserIds) } })
+      : [];
+    console.log('Requested User IDs:', requestedUserIds);
     const campaign = this.campaignRepository.create({
       name: dto.name,
       description: dto.description ?? null,
@@ -27,7 +38,7 @@ export class CampaignService {
       scheduled_start_at: dto.scheduled_start_at ? new Date(dto.scheduled_start_at) : null,
       status: dto.status ?? CampaignStatus.DRAFT,
       groups: dto.group_ids?.map((id) => ({ id }) as any) || [],
-      users: dto.user_ids?.map((id) => ({ id }) as any) || [],
+      users: users,
     });
     const saved = await this.campaignRepository.save(campaign);
     if (dto.send_now) {
@@ -44,8 +55,8 @@ export class CampaignService {
           to: user.email,
           subject: campaign.template?.subject || 'Test email',
           html: campaign.template?.body_content || '<p>Test</p>',
-          user_id: user.id.toString(),
-          profile_id: parseInt(user.profile.id),
+          user_id: user.id,
+          profile_id: user.profile.id.toString(),
           landing_id: dto.landing_page_id?.toString(),
         };
         await this.mailerService.sendEmail(emailDto);
@@ -74,7 +85,9 @@ export class CampaignService {
     id: number,
     dto: UpdateCampaignDto,
   ): Promise<CampaignEntity | null> {
-    const campaign = await this.campaignRepository.findOne({ where: { id } });
+    const campaign = await this.campaignRepository.findOne({ where: { id }, relations: ['groups', 'users', 'template', 'landing_page'] });
+    const template = campaign?.template;
+    console.log('Updating Campaign:', campaign);
     if (!campaign) return null;
     if (dto.name !== undefined) campaign.name = dto.name;
     if (dto.description !== undefined) campaign.description = dto.description;
@@ -90,18 +103,51 @@ export class CampaignService {
     if (dto.user_ids !== undefined)
       campaign.users = dto.user_ids.map((id) => ({ id }) as any);
     if (dto.send_now) {
-      const emailDto: SendEmailDto = {
-        to: 'test@example.com',
-        subject: 'Test email',
-        html: '<p>Test</p>',
-        user_id: '0',
-        profile_id: 0,
-        landing_id: dto.landing_page_id?.toString(),
-      };
-      await this.mailerService.sendEmail(emailDto);
+      // const emailDto: SendEmailDto = {
+      //   to: 'test@example.com',
+      //   subject: 'Test email',
+      //   html: '<p>Test</p>',
+      //   user_id: '0',
+      //   profile_id: 0,
+      //   landing_id: dto.landing_page_id?.toString(),
+      // };
+      // await this.mailerService.sendEmail(emailDto);
+      const groups = campaign.groups || [];
+      let userIds: string[] = dto.user_ids || [];
+      let profileIds: string[] = [];
+      for (const group of groups) {
+        const groupWithUsers = await this.groupRepository.findOne({
+          where: { id: group.id },
+          relations: ['profiles'],
+        });
+        if (groupWithUsers) {
+          const profileIdsFromGroup = groupWithUsers.profiles.map((profile) => profile.id);
+          profileIds = profileIdsFromGroup.concat(profileIdsFromGroup);
+        }
+      }
+      profileIds = Array.from(new Set(profileIds)); // Remove duplicates
+      console.log('Final Profile IDs to send emails to:', profileIds);
+      const users = profileIds.length ?
+        await this.userRepository.find({ where: { profile: In(profileIds) }, relations: ['profile'] }) :
+        [];
+      console.log('Users to send emails to:', users);
+      for (const user of users) {
+        console.log('template', template);
+        const emailDto: SendEmailDto = {
+          to: user.email,
+          subject: template?.subject || 'Test email',
+          html: template?.body_content || 'Test email',
+          user_id: user.id.toString(),
+          profile_id: user.profile.id,
+          landing_id: dto.landing_page_id?.toString(),
+        };
+        await this.mailerService.sendEmail(emailDto);
+      }
+
       campaign.status = CampaignStatus.SENT;
       campaign.scheduled_start_at = null;
     }
+    console.log('Updated Campaign:', campaign);
     return this.campaignRepository.save(campaign);
   }
 
@@ -126,7 +172,7 @@ export class CampaignService {
         subject: 'Test email',
         html: '<p>Test</p>',
         user_id: '',
-        profile_id: 0,
+        profile_id: '',
         landing_id: campaign.landing_page?.id,
       };
       await this.mailerService.sendEmail(emailDto);

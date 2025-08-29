@@ -20,6 +20,7 @@ export class TrackingService {
     metadata: Record<string, any>,
     userId?: string,
   ) {
+    console.log('Logging event:', { eventType, payload, metadata, userId });
     const tracking = this.trackingRepository.create({
       event_type: eventType,
       payload: JSON.stringify(payload ?? {}),
@@ -37,7 +38,8 @@ export class TrackingService {
   }
 
   async getMetrics() {
-    const events = await this.trackingRepository.find();
+    const events = await this.trackingRepository.find({ relations: ['user'] });
+
     const counts = {
       email_sent: 0,
       email_opened: 0,
@@ -45,23 +47,25 @@ export class TrackingService {
       data_sent: 0,
     };
 
-    const details = await events.map(async (e) => {
-      const detail = {
-        firstName: e.user?.first_name ?? '',
-        lastName: e.user?.last_name ?? '',
-        email: e.user?.email ?? '',
-        position: '',
-        submittedAt: e.submitted_at,
-        payload: JSON.parse(e.payload),
-        event_type: e.event_type,
-      };
-      console.log('detail', detail);
-      if (Object.prototype.hasOwnProperty.call(counts, e.event_type)) {
-        counts[e.event_type as keyof typeof counts]++;
-      }
+    const details = await Promise.all(
+      events.map(async (e) => {
+        // contar según el tipo
+        if (e.event_type === 'email_sent') counts.email_sent++;
+        if (e.event_type === 'email_opened') counts.email_opened++;
+        if (e.event_type === 'link_clicked') counts.link_clicked++;
+        if (e.event_type === 'data_sent') counts.data_sent++;
 
-      return detail;
-    });
+        return {
+          firstName: e.user?.first_name ?? '',
+          lastName: e.user?.last_name ?? '',
+          email: e.user?.email ?? '',
+          position: '',
+          submittedAt: e.submitted_at,
+          payload: e.payload ? JSON.parse(e.payload) : {},
+          event_type: e.event_type,
+        };
+      })
+    );
 
     const riskIndex = Math.min(
       100,
@@ -80,4 +84,5 @@ export class TrackingService {
       details,
     };
   }
+
 }

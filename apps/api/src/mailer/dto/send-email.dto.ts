@@ -10,8 +10,8 @@ export class SendEmailDto {
   @IsString()
   user_id: string;
 
-  @IsInt()
-  profile_id: number;
+  @IsString()
+  profile_id: string;
 
   @IsEmail()
   to: string;
