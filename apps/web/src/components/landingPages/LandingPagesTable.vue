@@ -84,10 +84,15 @@
       </fwb-table-row>
     </fwb-table-body>
   </fwb-table>
+  <LandingPageViewDialog
+    :show="showView"
+    :landing-page="selectedLandingPage"
+    @close="showView = false"
+  />
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits } from 'vue'
 import {
   FwbTable,
   FwbTableBody,
@@ -96,6 +101,8 @@ import {
   FwbTableHeadCell,
   FwbTableRow,
 } from 'flowbite-vue'
+import LandingPageViewDialog from './LandingPageViewDialog.vue'
+import { useLandingPages } from '@/composables/useLandingPages'
 
 const props = defineProps({
   landingPages: {
@@ -105,4 +112,16 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['view', 'edit', 'delete'])
+const { fetchLandingPage } = useLandingPages()
+const showView = ref(false)
+const selectedLandingPage = ref(null)
+
+const handleView = async (id) => {
+  try {
+    selectedLandingPage.value = await fetchLandingPage(id)
+    showView.value = true
+  } catch (err) {
+    console.error('Error fetching landing page', err)
+  }
+}
 </script>

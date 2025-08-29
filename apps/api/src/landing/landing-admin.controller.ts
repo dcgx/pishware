@@ -1,5 +1,4 @@
 import { Body, Controller, Get, Post, Param, Put, Delete } from "@nestjs/common";
-
 import { LandingAdminService } from "./landing-admin.service";
 import { CreateLandingPageRequestDto } from "./dto/request/create-landing-page-request.dto";
 import { ImportUrlDto } from "./dto/import-url.dto";

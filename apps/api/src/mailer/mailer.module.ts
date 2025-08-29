@@ -8,7 +8,7 @@ import { TrackingModule } from 'src/tracking/tracking.module';
   imports: [
     SendingProfileModule,
     TemplateModule,
-    TrackingModule
+    TrackingModule,
   ],
   providers: [MailerService],
   exports: [MailerService],
