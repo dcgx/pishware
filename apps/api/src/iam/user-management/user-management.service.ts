@@ -135,7 +135,11 @@ export class UsersService {
 
     }
 
-    await this.mailerService.sendUserCredentialsEmail(body.email, generatedPassword);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    await this.mailerService.sendUserCredentialsEmail(
+      body.email,
+      generatedPassword,
+    );
 
     return {
       profile: savedProfile,
@@ -150,5 +154,73 @@ export class UsersService {
     // Also delete or deactivate the authentication user record
     await this.userRepository.delete({ profile: { id } });
     return { message: 'Usuario eliminado correctamente.' };
+  }
+
+  async getMe() {
+    const users = await this.userRepository.find({
+      relations: ['profile'],
+      take: 1,
+    });
+    const user = users[0];
+    if (!user) return null;
+    return {
+      id: user.profile.id,
+      email: user.email,
+      first_name: user.profile.first_name,
+      last_name: user.profile.last_name,
+      username: user.profile.username,
+    };
+  }
+
+  async updateUser(
+    id: string,
+    body: {
+      first_name?: string;
+      last_name?: string;
+      username?: string;
+      password?: string;
+      oldPassword?: string;
+    },
+  ) {
+    const profileUpdate: Partial<Profile> = {};
+    const userUpdate: Partial<User> = {};
+
+    if (body.first_name) {
+      profileUpdate.first_name = body.first_name;
+      userUpdate.first_name = body.first_name;
+    }
+    if (body.last_name) {
+      profileUpdate.last_name = body.last_name;
+      userUpdate.last_name = body.last_name;
+    }
+    if (body.username) {
+      profileUpdate.username = body.username;
+    }
+    if (body.password) {
+      const user = await this.userRepository.findOne({
+        where: { profile: { id } },
+      });
+      if (!user) {
+        throw new Error('Usuario no encontrado.');
+      }
+      if (!body.oldPassword || user.password !== body.oldPassword) {
+        throw new Error('La contraseña actual es incorrecta.');
+      }
+      if (body.password.length < 8) {
+        throw new Error(
+          'La nueva contraseña debe tener al menos 8 caracteres.',
+        );
+      }
+      userUpdate.password = body.password;
+    }
+
+    if (Object.keys(profileUpdate).length > 0) {
+      await this.profileRepository.update(id, profileUpdate);
+    }
+    if (Object.keys(userUpdate).length > 0) {
+      await this.userRepository.update({ profile: { id } }, userUpdate);
+    }
+
+    return { message: 'Usuario actualizado correctamente.' };
   }
 }
