@@ -18,6 +18,19 @@ export const useSendingProfiles = () => {
     }
   };
 
+  const fetchSendingProfile = async (id: number) => {
+    try {
+      const response = await fetch(`${apiUrl}/sending-profiles/${id}`);
+      if (!response.ok) throw new Error('Failed to fetch sending profile');
+      const data = await response.json();
+      Object.assign(store.editForm.value, data);
+      return data;
+    } catch (err) {
+      store.error = 'Failed to fetch sending profile';
+      return null;
+    }
+  };
+
   const createSendingProfile = async (profile: any) => {
     store.creating = true;
     store.error = '';
@@ -85,6 +98,7 @@ export const useSendingProfiles = () => {
     createForm: store.createForm,
     editForm: store.editForm,
     fetchSendingProfiles,
+    fetchSendingProfile,
     createSendingProfile,
     updateSendingProfile,
     deleteSendingProfile,
