@@ -35,7 +35,7 @@
   </admin-layout>
 </template>
 
-<script  setup>
+<script setup>
 import { ref, onMounted } from 'vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import PageHeader from '@/components/page/PageHeader.vue'
@@ -50,8 +50,8 @@ import { useSendingProfiles } from '@/composables/useSendingProfiles'
 
 const { sendingProfiles, fetchSendingProfiles, fetching, editForm } = useSendingProfiles()
 
-const selectedProfile = ref<any | null>(null)
-const selectedProfileId = ref<number | null>(null)
+const selectedProfile = ref(null)
+const selectedProfileId = ref(null)
 
 const openCreate = ref(false)
 const openEditDialog = ref(false)
