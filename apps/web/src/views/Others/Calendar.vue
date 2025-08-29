@@ -17,7 +17,7 @@
             <h5
               class="mb-2 font-semibold text-gray-800 modal-title text-theme-xl dark:text-white/90 lg:text-2xl"
             >
-              {{ selectedEvent ? 'Edit Event' : 'Add Event' }}
+              {{ selectedEvent ? 'Editar Evento' : 'Agregar Evento' }}
             </h5>
             <p class="text-sm text-gray-500 dark:text-gray-400">
               Plan your next big moment: schedule or edit an event to stay on track
@@ -121,7 +121,7 @@
                 @click="handleDeleteEvent"
                 class="flex w-full justify-center rounded-lg border border-error-500 bg-error-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-error-600 sm:w-auto"
               >
-                Delete Event
+                Eliminar Evento
               </button>
             </div>
           </div>

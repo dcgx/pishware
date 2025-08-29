@@ -31,7 +31,7 @@
             :key="`router-${index}`"
             :to="item.to"
             @click.native="handleMenuItemClick(item.onClick)"
-            :class="itemClass"
+            :class="[itemClass, item.class]"
           >
             {{ item.label }}
           </router-link>
@@ -40,7 +40,7 @@
             v-else
             :key="`button-${index}`"
             @click="handleMenuItemClick(item.onClick)"
-            :class="itemClass"
+            :class="[itemClass, item.class]"
           >
             {{ item.label }}
           </button>

@@ -12,8 +12,18 @@
         <fwb-table-cell>{{ profile.name }}</fwb-table-cell>
         <fwb-table-cell>{{ profile.host }}</fwb-table-cell>
         <fwb-table-cell class="space-x-2">
-          <button @click="$emit('edit', profile)">Edit</button>
-          <button @click="$emit('delete', profile.id)">Delete</button>
+          <button
+            class="px-3 py-1 text-sm text-white bg-blue-500 rounded hover:bg-blue-600"
+            @click="$emit('edit', profile)"
+          >
+            Editar
+          </button>
+          <button
+            class="px-3 py-1 text-sm text-white bg-red-500 rounded hover:bg-red-600"
+            @click="$emit('delete', profile.id)"
+          >
+            Eliminar
+          </button>
         </fwb-table-cell>
       </fwb-table-row>
     </fwb-table-body>
