@@ -52,7 +52,7 @@
                   </button>
                 </div>
               </DialogTitle>
-              <TemplateCreateForm @submit="handleCreateTemplate" @cancel="() => {}" />
+              <TemplateForm @submit="handleCreateTemplate" @cancel="() => {}" />
             </DialogPanel>
           </TransitionChild>
         </div>
@@ -62,10 +62,10 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from 'vue'
+import { defineEmits } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 // components
-import TemplateCreateForm from '@/components/templates/TemplateCreateForm.vue'
+import TemplateForm from '@/components/templates/TemplateForm.vue'
 // composables
 import { useTemplates } from '@/composables/useTemplates'
 
@@ -87,7 +87,7 @@ const handleCreateTemplate = async (templateData) => {
   await createTemplate(templateData)
     .then(async (response) => {
       console.log('Template created successfully:', response)
-      let templateId = response.data.id
+      const templateId = response.data.id
       if (templateData.attachments && templateId) {
         templateData.attachments.forEach((attachment) => {
           uploadAttachment(templateId, attachment)

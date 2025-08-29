@@ -6,14 +6,17 @@ import {
   Param,
   Patch,
   Post,
+  Header
 } from '@nestjs/common';
 import { UsersService } from './user-management.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @Get()
+  @Header('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+  @Header('Pragma', 'no-cache')
   async getAll() {
     return this.usersService.getUsers();
   }

@@ -63,6 +63,54 @@ const router = createRouter({
       },
     },
     {
+      path: '/reports/overview',
+      name: 'reports-overview',
+      component: () => import('../views/reports/ReportViewer.vue'),
+      meta: {
+        title: 'Resumen general',
+      },
+    },
+    {
+      path: '/reports/emails-opened',
+      name: 'reports-emails-opened',
+      component: () => import('../views/reports/ReportViewer.vue'),
+      meta: {
+        title: 'Correos enviados vs abiertos',
+      },
+    },
+    {
+      path: '/reports/link-clicks',
+      name: 'reports-link-clicks',
+      component: () => import('../views/reports/ReportViewer.vue'),
+      meta: {
+        title: 'Clics en enlaces',
+      },
+    },
+    {
+      path: '/reports/credential-submission',
+      name: 'reports-credential-submission',
+      component: () => import('../views/reports/ReportViewer.vue'),
+      meta: {
+        title: 'Captura de credenciales',
+      },
+    },
+    {
+      path: '/reports/risk-department',
+      name: 'reports-risk-department',
+      component: () => import('../views/reports/ReportViewer.vue'),
+      meta: {
+        title: 'Índice de riesgo por departamento',
+      },
+    },
+    {
+      path: '/reports/geolocation',
+      name: 'reports-geolocation',
+      component: () => import('../views/reports/ReportViewer.vue'),
+      meta: {
+        title: 'Geolocalización de clics',
+      },
+    },
+    {
       path: '/sending-profiles',
       name: 'sending-profiles',
       component: () => import('../views/SendingProfiles.vue'),

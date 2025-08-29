@@ -9,6 +9,7 @@ layer(base);
 @plugin "flowbite/plugin";
 
 @source "../node_modules/flowbite-vue";
+@source "../node_modules/vue-tailwind-datepicker";
 
 @custom-variant dark (&:is(.dark *));
 
