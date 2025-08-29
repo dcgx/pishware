@@ -20,7 +20,9 @@ export class UsersService {
   ) {}
 
   async getUsers() {
-    const profiles = await this.profileRepository.find({ relations: ['groups'] });
+    const profiles = await this.profileRepository.find({
+      relations: ['groups'],
+    });
     const users = await this.userRepository.find({ relations: ['profile'] });
     return users.map((user) => {
       const profile = profiles.find((p) => p.id === user.profile.id);
@@ -58,7 +60,9 @@ export class UsersService {
     await this.userRepository.save(user);
 
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL');
-    const supabaseKey = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
+    const supabaseKey = this.configService.get<string>(
+      'SUPABASE_SERVICE_ROLE_KEY',
+    );
     const supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
         autoRefreshToken: false,
@@ -73,10 +77,16 @@ export class UsersService {
     });
 
     if (error) {
-      throw new Error(`Error al registrar el usuario en Supabase: ${error.message}`);
+      throw new Error(
+        `Error al registrar el usuario en Supabase: ${error.message}`,
+      );
     }
 
-    await this.mailerService.sendUserCredentialsEmail(body.email, generatedPassword);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    await this.mailerService.sendUserCredentialsEmail(
+      body.email,
+      generatedPassword,
+    );
 
     return {
       profile: savedProfile,
@@ -91,5 +101,54 @@ export class UsersService {
     // Also delete or deactivate the authentication user record
     await this.userRepository.delete({ profile: { id } });
     return { message: 'Usuario eliminado correctamente.' };
+  }
+
+  async getMe() {
+    const user = await this.userRepository.findOne({ relations: ['profile'] });
+    if (!user) return null;
+    return {
+      id: user.profile.id,
+      email: user.email,
+      first_name: user.profile.first_name,
+      last_name: user.profile.last_name,
+      username: user.profile.username,
+    };
+  }
+
+  async updateUser(
+    id: string,
+    body: {
+      first_name?: string;
+      last_name?: string;
+      username?: string;
+      password?: string;
+    },
+  ) {
+    const profileUpdate: Partial<Profile> = {};
+    const userUpdate: Partial<User> = {};
+
+    if (body.first_name) {
+      profileUpdate.first_name = body.first_name;
+      userUpdate.first_name = body.first_name;
+    }
+    if (body.last_name) {
+      profileUpdate.last_name = body.last_name;
+      userUpdate.last_name = body.last_name;
+    }
+    if (body.username) {
+      profileUpdate.username = body.username;
+    }
+    if (body.password) {
+      userUpdate.password = body.password;
+    }
+
+    if (Object.keys(profileUpdate).length > 0) {
+      await this.profileRepository.update(id, profileUpdate);
+    }
+    if (Object.keys(userUpdate).length > 0) {
+      await this.userRepository.update({ profile: { id } }, userUpdate);
+    }
+
+    return { message: 'Usuario actualizado correctamente.' };
   }
 }
