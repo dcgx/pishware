@@ -65,7 +65,7 @@ const router = createRouter({
     {
       path: '/reports/overview',
       name: 'reports-overview',
-      component: () => import('../views/reports/ReportPlaceholder.vue'),
+      component: () => import('../views/reports/ReportViewer.vue'),
       meta: {
         title: 'Resumen general',
       },
@@ -73,7 +73,7 @@ const router = createRouter({
     {
       path: '/reports/emails-opened',
       name: 'reports-emails-opened',
-      component: () => import('../views/reports/ReportPlaceholder.vue'),
+      component: () => import('../views/reports/ReportViewer.vue'),
       meta: {
         title: 'Correos enviados vs abiertos',
       },
@@ -81,7 +81,7 @@ const router = createRouter({
     {
       path: '/reports/link-clicks',
       name: 'reports-link-clicks',
-      component: () => import('../views/reports/ReportPlaceholder.vue'),
+      component: () => import('../views/reports/ReportViewer.vue'),
       meta: {
         title: 'Clics en enlaces',
       },
@@ -89,7 +89,7 @@ const router = createRouter({
     {
       path: '/reports/credential-submission',
       name: 'reports-credential-submission',
-      component: () => import('../views/reports/ReportPlaceholder.vue'),
+      component: () => import('../views/reports/ReportViewer.vue'),
       meta: {
         title: 'Captura de credenciales',
       },
@@ -97,7 +97,7 @@ const router = createRouter({
     {
       path: '/reports/risk-department',
       name: 'reports-risk-department',
-      component: () => import('../views/reports/ReportPlaceholder.vue'),
+      component: () => import('../views/reports/ReportViewer.vue'),
       meta: {
         title: 'Índice de riesgo por departamento',
       },
@@ -105,7 +105,7 @@ const router = createRouter({
     {
       path: '/reports/geolocation',
       name: 'reports-geolocation',
-      component: () => import('../views/reports/ReportPlaceholder.vue'),
+      component: () => import('../views/reports/ReportViewer.vue'),
       meta: {
         title: 'Geolocalización de clics',
       },

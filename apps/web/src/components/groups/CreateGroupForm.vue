@@ -145,7 +145,7 @@ const handleCancel = () => {
 
 const removeUser = (index) => {
   console.log('Removing user at index:', index)
-  let user = selectedUsers.value[index]
+  const user = selectedUsers.value[index]
   selectedUsers.value = selectedUsers.value.filter((u) => u !== user)
 }
 

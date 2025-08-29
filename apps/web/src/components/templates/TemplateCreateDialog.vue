@@ -87,7 +87,7 @@ const handleCreateTemplate = async (templateData) => {
   await createTemplate(templateData)
     .then(async (response) => {
       console.log('Template created successfully:', response)
-      let templateId = response.data.id
+      const templateId = response.data.id
       if (templateData.attachments && templateId) {
         templateData.attachments.forEach((attachment) => {
           uploadAttachment(templateId, attachment)
