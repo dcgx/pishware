@@ -19,10 +19,14 @@ export const useAuthStore = defineStore('auth', {
       const { data } = await axios.get(`${apiUrl}/users/me`)
       this.user = data
     },
-    async updateUser(payload: Partial<User> & { password?: string }) {
+    async updateUser(
+      payload: Partial<User> & { password?: string; oldPassword?: string },
+    ) {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
       await axios.patch(`${apiUrl}/users/${this.user.id}`, payload)
-      this.user = { ...this.user, ...payload }
+      const { oldPassword: _ignored, ...userData } = payload
+      void _ignored
+      this.user = { ...this.user, ...userData }
     },
   },
 })

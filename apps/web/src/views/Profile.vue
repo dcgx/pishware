@@ -1,21 +1,47 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
   <admin-layout>
-    <form class="space-y-4" @submit.prevent="save">
-      <div>
-        <label class="block mb-1">First Name</label>
-        <input v-model="firstName" class="border p-2 rounded w-full" />
-      </div>
-      <div>
-        <label class="block mb-1">Last Name</label>
-        <input v-model="lastName" class="border p-2 rounded w-full" />
-      </div>
-      <div>
-        <label class="block mb-1">Username</label>
-        <input v-model="username" class="border p-2 rounded w-full" />
-      </div>
-      <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded">Save</button>
-    </form>
+    <div class="max-w-2xl mx-auto p-6">
+      <form
+        class="space-y-4 rounded bg-white p-6 shadow"
+        @submit.prevent="save"
+      >
+        <h2 class="mb-4 text-lg font-semibold">Editar Perfil</h2>
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700"
+            >First Name</label
+          >
+          <input
+            v-model="firstName"
+            class="w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700"
+            >Last Name</label
+          >
+          <input
+            v-model="lastName"
+            class="w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring"
+          />
+        </div>
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700"
+            >Username</label
+          >
+          <input
+            v-model="username"
+            class="w-full rounded border-gray-300 p-2 focus:border-blue-500 focus:ring"
+          />
+        </div>
+        <button
+          type="submit"
+          class="rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700"
+        >
+          Guardar
+        </button>
+      </form>
+    </div>
   </admin-layout>
 </template>
 

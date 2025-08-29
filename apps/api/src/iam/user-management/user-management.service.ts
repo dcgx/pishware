@@ -122,6 +122,7 @@ export class UsersService {
       last_name?: string;
       username?: string;
       password?: string;
+      oldPassword?: string;
     },
   ) {
     const profileUpdate: Partial<Profile> = {};
@@ -139,6 +140,20 @@ export class UsersService {
       profileUpdate.username = body.username;
     }
     if (body.password) {
+      const user = await this.userRepository.findOne({
+        where: { profile: { id } },
+      });
+      if (!user) {
+        throw new Error('Usuario no encontrado.');
+      }
+      if (!body.oldPassword || user.password !== body.oldPassword) {
+        throw new Error('La contraseña actual es incorrecta.');
+      }
+      if (body.password.length < 8) {
+        throw new Error(
+          'La nueva contraseña debe tener al menos 8 caracteres.',
+        );
+      }
       userUpdate.password = body.password;
     }
 
