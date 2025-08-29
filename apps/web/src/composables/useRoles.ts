@@ -43,7 +43,46 @@ export const useRoles = () => {
             rolesStore.creating = false;
         }
     };
-    
+
+    const updateRole = async (id, role) => {
+        rolesStore.error = '';
+        try {
+            const response = await fetch(`${apiUrl}/roles/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(role),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to update role');
+            }
+            const data = await response.json();
+            rolesStore.updateRole(data);
+            return { success: true };
+        } catch (err) {
+            rolesStore.error = 'Error updating role';
+            return { success: false, error: err.message };
+        }
+    };
+
+    const deleteRole = async (id) => {
+        rolesStore.error = '';
+        try {
+            const response = await fetch(`${apiUrl}/roles/${id}`, {
+                method: 'DELETE',
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete role');
+            }
+            rolesStore.removeRole(id);
+            return { success: true };
+        } catch (err) {
+            rolesStore.error = 'Error deleting role';
+            return { success: false, error: err.message };
+        }
+    };
+
     return {
         roles: computed(() => rolesStore.roles),
         loading: computed(() => rolesStore.loading),
@@ -51,5 +90,7 @@ export const useRoles = () => {
         error: rolesStore.error,
         fetchRoles,
         createRole,
+        updateRole,
+        deleteRole,
     };
 }

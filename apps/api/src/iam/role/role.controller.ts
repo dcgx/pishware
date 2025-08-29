@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from "@nestjs/common";
 import { RoleService } from "./role.service";
 import { RoleEntity } from "./role.entity";
 
@@ -13,10 +13,26 @@ export class RoleController {
         return this.roleService.findAll();
     }
 
-    @Post('create')
-    create(
+    @Get(':id')
+    findOne(@Param('id', ParseIntPipe) id: number) {
+        return this.roleService.findOne(id);
+    }
+
+    @Post()
+    create(@Body() dto: Partial<RoleEntity>) {
+        return this.roleService.create(dto);
+    }
+
+    @Put(':id')
+    update(
+        @Param('id', ParseIntPipe) id: number,
         @Body() dto: Partial<RoleEntity>
     ) {
-        return this.roleService.create(dto);
+        return this.roleService.update(id, dto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id', ParseIntPipe) id: number) {
+        return this.roleService.remove(id);
     }
 }
