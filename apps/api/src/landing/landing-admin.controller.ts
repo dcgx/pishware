@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post, Param } from "@nestjs/common";
 
 import { LandingAdminService } from "./landing-admin.service";
 import { CreateLandingPageRequestDto } from "./dto/request/create-landing-page-request.dto";
@@ -14,6 +14,11 @@ export class LandingAdminController {
     @Get()
     async findAll() {
         return this.landingAdminService.findAll();
+    }
+
+    @Get(':id')
+    async findOne(@Param('id') id: string) {
+        return this.landingAdminService.findOne(id);
     }
 
     @Post()
