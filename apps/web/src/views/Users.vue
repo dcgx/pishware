@@ -50,14 +50,13 @@
                       >
                         <td class="px-5 py-4 flex items-center gap-3">
                           <img
-                            :src="user.avatar"
-                            class="w-10 h-10 rounded-full"
-                            :alt="
+                            :src="
                               'https://ui-avatars.com/api/?name=' +
                               user.first_name +
                               '+' +
                               user.last_name
                             "
+                            class="w-10 h-10 rounded-full"
                           />
                           <span class="font-medium text-gray-800 dark:text-white">{{
                             user.first_name
@@ -92,7 +91,7 @@
                             variant="danger"
                             @click="
                               selectedUserForDeletion = user.id;
-                              setOpenDeleteUserDialog(true);
+                              setOpenDeleteUserDialog(true)
                             "
                             class="mt-2"
                           >
@@ -195,7 +194,7 @@
                             variant="danger"
                             @click="
                               selectedUserForDeletion = profile.profiles.id;
-                              setOpenDeleteUserDialog(true);
+                              setOpenDeleteUserDialog(true)
                             "
                             class="mt-2"
                           >
@@ -290,7 +289,7 @@
                   Crear nuevo grupo
                 </DialogTitle>
 
-                <CreateGroupForm @submit="handleCreateGroup" @cancel="() => {}" />
+                <CreateGroupForm @submit="handleCreateGroup" @cancel="() => handleClickCancel()" />
               </DialogPanel>
             </TransitionChild>
           </div>
@@ -412,6 +411,10 @@ const handleCreateUser = async (userData) => {
     toastVariant.value = 'error'
     showToast.value = true
   }
+}
+
+const handleClickCancel = () => {
+  isOpenCreateGroupDialog.value = false
 }
 
 const handleCreateGroup = async (groupData) => {

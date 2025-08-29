@@ -1,22 +1,27 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { User } from "src/iam/user-management/entities/user.entity";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
 
 @Entity('tracking')
 export class Tracking {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    event_type: string; // e.g., 'click', 'view', 'submit'
+  @Column()
+  event_type: string;
 
-    @Column()
-    payload: string;
+  @Column()
+  payload: string;
 
-    @Column({ type: 'timestamp' })
-    submitted_at: Date;
+  @Column({ type: 'timestamp' })
+  submitted_at: Date;
 
-    @Column({ type: 'json' })
-    metadata: Record<string, any>;
+  @Column({ type: 'json' })
+  metadata: Record<string, any>;
 
-    @Column({ type: 'int', nullable: true })
-    user_id: number | null; // Assuming tracking is associated with a user
+  @ManyToOne(() => User, (user) => user.trackings, { nullable: true })
+  @JoinColumn({ name: 'user_id' })
+  user: User | null;
+
+  @Column({ type: 'int', nullable: true })
+  tracking_email_id: number | null;
 }
