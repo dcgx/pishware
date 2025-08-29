@@ -7,9 +7,19 @@ export const useLandingPagesStore = defineStore('landingPages', () => {
 
     const createForm = ref({
         name: '',
+        htmlContent: '',
+        redirectUrl: '',
+        importedUrl: '',
+        captureSubmittedData: false,
+        capturePassword: false,
     });
     const editForm = ref({
+        id: '',
         name: '',
+        htmlContent: '',
+        redirectUrl: '',
+        captureSubmittedData: false,
+        capturePassword: false,
     });
     
     const fetching = ref(false);
