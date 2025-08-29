@@ -11,6 +11,7 @@ import { LandingPageEntity } from "src/landing/entities/landing-page.entity";
 import { TemplateEntity } from "src/template/entities/template.entity";
 import { GroupEntity } from "src/iam/groups/group.entity";
 import { Profile } from "src/iam/profile/profile.entity";
+import { User } from "src/iam/user-management/entities/user.entity";
 
 export enum CampaignStatus {
     DRAFT = 'draft',
@@ -39,7 +40,7 @@ export class CampaignEntity {
     landing_page: LandingPageEntity;
 
     @Column({ type: 'timestamp', nullable: true })
-    scheduled_start_at: Date | null;
+    scheduled_start_at?: Date | null;
 
     @Column({ type: 'enum', enum: CampaignStatus, default: CampaignStatus.DRAFT })
     status: CampaignStatus;
@@ -52,13 +53,13 @@ export class CampaignEntity {
     })
     groups: GroupEntity[];
 
-    @ManyToMany(() => Profile)
+    @ManyToMany(() => User)
     @JoinTable({
-        name: 'campaign_profiles',
+        name: 'campaign_users',
         joinColumn: { name: 'campaign_id', referencedColumnName: 'id' },
-        inverseJoinColumn: { name: 'profile_id', referencedColumnName: 'id' },
+        inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
     })
-    profiles: Profile[];
+    users: User[];
 
     @Column({ type: 'timestamp', default: () => "CURRENT_TIMESTAMP" })
     created_at: Date;

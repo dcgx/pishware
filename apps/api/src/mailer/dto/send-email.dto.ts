@@ -7,11 +7,11 @@ import {
 } from 'class-validator';
 
 export class SendEmailDto {
-  @IsInt()
-  user_id: number;
+  @IsString()
+  user_id: string;
 
-  @IsInt()
-  profile_id: number;
+  @IsString()
+  profile_id: string;
 
   @IsEmail()
   to: string;

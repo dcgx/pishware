@@ -20,6 +20,10 @@ export class LandingAdminService {
         return this.landingPageRepository.find();
     }
 
+    async findOne(id: string): Promise<LandingPageEntity | null> {
+        return this.landingPageRepository.findOne({ where: { id } });
+    }
+
     async findByPublicKey(key: string): Promise<LandingPageEntity | null> {
         console.log('Finding landing page by public key:', key);
         return this.landingPageRepository.findOne({ where: { public_key: key } });

@@ -22,6 +22,19 @@ export const useLandingPages = () => {
         }
     };
 
+    const fetchLandingPage = async (id) => {
+        try {
+            const response = await fetch(`${apiUrl}/landing-pages/${id}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch landing page');
+            }
+            return await response.json();
+        } catch (err) {
+            landingPagesStore.error = 'Failed to fetch landing page';
+            throw err;
+        }
+    };
+
     const createLandingPage = async (landingPage) => {
         landingPagesStore.loading = true;
         try {
@@ -59,6 +72,7 @@ export const useLandingPages = () => {
         fetching: computed(() => landingPagesStore.fetching),
         landingPages: computed(() => landingPagesStore.landingPages),
         fetchLandingPages,
+        fetchLandingPage,
         createLandingPage,
     };
 }
