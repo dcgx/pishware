@@ -22,7 +22,7 @@ export class RoleService {
         return this.roleRepository.save(role);
     }
 
-    async update(id: number, dto: Partial<RoleEntity>): Promise<RoleEntity> {
+    async update(id: number, dto: Partial<RoleEntity>): Promise<RoleEntity | null> {
         await this.roleRepository.update(id, dto);
         return this.findOne(id);
     }

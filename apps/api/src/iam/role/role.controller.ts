@@ -18,10 +18,8 @@ export class RoleController {
         return this.roleService.findOne(id);
     }
 
-    @Post('create')
-    create(
-        @Body() dto: Partial<RoleEntity>
-    ) {
+    @Post()
+    create(@Body() dto: Partial<RoleEntity>) {
         return this.roleService.create(dto);
     }
 
