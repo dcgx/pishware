@@ -35,7 +35,7 @@ export const useCampaigns = () => {
           scheduled_start_at: campaign.scheduledStartAt,
           status: campaign.status,
           send_now: campaign.sendNow,
-          profile_ids: campaign.userIds,
+          user_ids: campaign.userIds,
           group_ids: campaign.groupIds,
         }),
       });

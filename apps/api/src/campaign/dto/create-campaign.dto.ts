@@ -34,7 +34,7 @@ export class CreateCampaignDto {
   @IsOptional()
   @IsArray()
   @IsString({ each: true })
-  profile_ids?: string[];
+  user_ids?: string[];
 
   @IsOptional()
   @IsBoolean()
