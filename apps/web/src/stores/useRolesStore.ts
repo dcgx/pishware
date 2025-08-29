@@ -10,8 +10,19 @@ export const useRolesStore = defineStore('roles', () => {
   const creating = ref(false);
 
   const setRoles = (data: any) => { roles.value = data; };
-  
+
   const addRole = (role: any) => { roles.value.push(role); };
+
+  const updateRole = (updatedRole: any) => {
+    const index = roles.value.findIndex((r: any) => r.id === updatedRole.id);
+    if (index !== -1) {
+      roles.value[index] = updatedRole;
+    }
+  };
+
+  const removeRole = (id: number) => {
+    roles.value = roles.value.filter((r: any) => r.id !== id);
+  };
 
   return {
     roles,
@@ -20,5 +31,7 @@ export const useRolesStore = defineStore('roles', () => {
     creating,
     setRoles,
     addRole,
+    updateRole,
+    removeRole,
   };
 });
