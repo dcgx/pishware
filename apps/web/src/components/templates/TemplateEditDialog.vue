@@ -60,7 +60,7 @@ const emit = defineEmits(['close'])
 
 const handleClose = () => emit('close')
 
-const handleUpdate = async (data: any) => {
+const handleUpdate = async (data) => {
   await updateTemplate(props.template.id, data)
   handleClose()
 }
