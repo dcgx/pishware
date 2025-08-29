@@ -12,6 +12,7 @@
         <fwb-table-cell>{{ role.name }}</fwb-table-cell>
         <fwb-table-cell>{{ role.description }}</fwb-table-cell>
         <fwb-table-cell>
+          <fwb-a href="#" class="text-blue-600 hover:underline">Editar</fwb-a>
           <div class="flex gap-2">
             <fwb-a href="#" @click.prevent="$emit('edit', role)">Editar</fwb-a>
             <fwb-a href="#" class="text-red-600" @click.prevent="$emit('delete', role)">Eliminar</fwb-a>

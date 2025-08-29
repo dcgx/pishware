@@ -35,7 +35,7 @@
   </admin-layout>
 </template>
 
-<script lang="ts" setup>
+<script  setup>
 import { ref, onMounted } from 'vue'
 import AdminLayout from '@/components/layout/AdminLayout.vue'
 import PageHeader from '@/components/page/PageHeader.vue'
@@ -57,27 +57,27 @@ const openCreate = ref(false)
 const openEditDialog = ref(false)
 const openDeleteDialog = ref(false)
 
-const setOpenCreate = (val: boolean) => {
+const setOpenCreate = (val) => {
   openCreate.value = val
 }
-const setOpenEdit = (val: boolean) => {
+const setOpenEdit = (val) => {
   openEditDialog.value = val
   if (!val) selectedProfile.value = null
 }
-const setOpenDelete = (val: boolean) => {
+const setOpenDelete = (val) => {
   openDeleteDialog.value = val
   if (!val) selectedProfileId.value = null
 }
 
-const openEdit = (profile: any) => {
-  selectedProfile.value = { ...profile }
-  if (editForm.value && selectedProfile.value) {
-    Object.assign(editForm.value, selectedProfile.value)
+const openEdit = async (profile) => {
+  const data = await fetchSendingProfile(profile.id);
+  if (data) {
+    selectedProfile.value = data;
+    setOpenEdit(true);
   }
-  setOpenEdit(true)
-}
+};
 
-const openDelete = (id: number) => {
+const openDelete = (id) => {
   selectedProfileId.value = id
   setOpenDelete(true)
 }
