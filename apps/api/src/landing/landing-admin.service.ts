@@ -34,10 +34,6 @@ export class LandingAdminService {
         return this.landingPageRepository.save(landingPage);
     }
 
-    async findOne(id: string): Promise<LandingPageEntity | null> {
-        return this.landingPageRepository.findOne({ where: { id } });
-    }
-
     async update(id: string, dto: Partial<LandingPageEntity>): Promise<LandingPageEntity> {
         await this.landingPageRepository.update(id, dto);
         return (await this.findOne(id)) as LandingPageEntity;
