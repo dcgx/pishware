@@ -23,6 +23,9 @@ export const useAuthStore = defineStore('auth', {
       payload: Partial<User> & { password?: string; oldPassword?: string },
     ) {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+      if (!this.user.id) {
+        await this.fetchUser()
+      }
       await axios.patch(`${apiUrl}/users/${this.user.id}`, payload)
       const { oldPassword: _ignored, ...userData } = payload
       void _ignored
