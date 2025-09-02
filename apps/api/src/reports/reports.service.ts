@@ -18,32 +18,48 @@ export class ReportsService {
   private async generateLinkClicksPdf(): Promise<Buffer> {
     const metrics = await this.trackingService.getMetrics();
     const details = metrics.details.filter(
-      (d) =>
-        d.event_type === 'link_clicked' || d.event_type === 'landing_viewed',
+      (d) => d.event_type === 'link_clicked',
     );
 
-    const lines = [
-      `Total de clics: ${metrics.linksClicked}`,
-      '',
-      ...details.map(
-        (d) =>
-          `${d.email} - ${new Date(d.submittedAt).toLocaleString('es-ES')}`,
-      ),
-    ];
+    const rows = details.map((d) => [
+      d.email,
+      new Date(d.submittedAt).toLocaleString('es-ES'),
+    ]);
 
-    return this.createPdf('Reporte de clics en enlaces', lines);
+    return this.createTablePdf(
+      'Reporte de clics en enlaces',
+      ['Email', 'Fecha'],
+      rows,
+      `Total de clics: ${metrics.linksClicked}`,
+    );
   }
 
-  private createPdf(title: string, lines: string[]): Buffer {
+  private createTablePdf(
+    title: string,
+    headers: string[],
+    rows: string[][],
+    summary?: string,
+  ): Buffer {
     const escapePdf = (text: string) =>
       text.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
 
-    const textLines = lines
-      .map((l) => `(${escapePdf(l)}) Tj\n0 -15 Td\n`)
-      .join('');
-    const textStream = `BT\n/F1 12 Tf\n50 780 Td\n(${escapePdf(
-      title,
-    )}) Tj\n0 -20 Td\n${textLines}ET`;
+    let textStream = `BT\n/F1 12 Tf\n50 780 Td\n(${escapePdf(title)}) Tj\n0 -20 Td\n`;
+    if (summary) {
+      textStream += `(${escapePdf(summary)}) Tj\n0 -20 Td\n`;
+    }
+
+    // headers
+    textStream += `(${escapePdf(headers[0])}) Tj\n200 0 Td\n(${escapePdf(
+      headers[1],
+    )}) Tj\n-200 -20 Td\n`;
+
+    // rows
+    for (const row of rows) {
+      textStream += `(${escapePdf(row[0])}) Tj\n200 0 Td\n(${escapePdf(
+        row[1],
+      )}) Tj\n-200 -15 Td\n`;
+    }
+    textStream += 'ET';
 
     const objects = [
       '1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n',
