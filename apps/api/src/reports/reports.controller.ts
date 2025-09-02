@@ -8,7 +8,7 @@ export class ReportsController {
 
   @Get(':slug/pdf')
   async getReport(@Param('slug') slug: string, @Res() res: Response) {
-    const pdf = this.reportsService.getPdf();
+    const pdf = await this.reportsService.getPdf(slug);
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `inline; filename="${slug}.pdf"`,
