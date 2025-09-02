@@ -34,6 +34,12 @@
             Email enviado
           </div>
           <div
+            v-else-if="metric.event_type === 'email_delivered'"
+            class="bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded dark:bg-yellow-900 dark:text-yellow-300 inline-flex items-center"
+          >
+            Email entregado
+          </div>
+          <div
             v-else-if="metric.event_type === 'link_clicked'"
             class="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded dark:bg-red-900 dark:text-red-300 inline-flex items-center"
           >
@@ -44,6 +50,20 @@
             class="bg-purple-100 text-purple-800 text-sm font-medium px-3 py-1 rounded dark:bg-purple-900 dark:text-purple-300 inline-flex items-center"
           >
             Datos enviados
+          </div>
+          <div v-else-if="metric.event_type === 'landing_viewed'">
+            <div
+              class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded dark:bg-indigo-900 dark:text-indigo-300 inline-flex items-center"
+            >
+              Página vista
+            </div>
+          </div>
+          <div v-else-if="metric.event_type === 'landing_submitted'">
+            <div
+              class="bg-red-100 text-red-800 text-sm font-medium px-3 py-1 rounded dark:bg-red-900 dark:text-red-300 inline-flex items-center"
+            >
+              Formulario enviado
+            </div>
           </div>
         </fwb-table-cell>
       </fwb-table-row>

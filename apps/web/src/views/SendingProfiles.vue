@@ -48,7 +48,7 @@ import SendingProfileDeleteDialog from '@/components/sending-profiles/SendingPro
 
 import { useSendingProfiles } from '@/composables/useSendingProfiles'
 
-const { sendingProfiles, fetchSendingProfiles, fetching, editForm } = useSendingProfiles()
+const { sendingProfiles, fetchSendingProfiles, fetchSendingProfile, fetching, editForm } = useSendingProfiles()
 
 const selectedProfile = ref(null)
 const selectedProfileId = ref(null)
@@ -71,6 +71,7 @@ const setOpenDelete = (val) => {
 
 const openEdit = async (profile) => {
   const data = await fetchSendingProfile(profile.id);
+  console.log(data);
   if (data) {
     selectedProfile.value = data;
     setOpenEdit(true);

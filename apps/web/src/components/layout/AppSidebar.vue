@@ -19,8 +19,9 @@
           v-if="isExpanded || isHovered || isMobileOpen"
           class="dark:hidden"
           alt="Logo"
-          width="150"
+          width="40"
           height="40"
+          src="/images/logo/auth-logo.png"
         />
         <img
           v-if="isExpanded || isHovered || isMobileOpen"
