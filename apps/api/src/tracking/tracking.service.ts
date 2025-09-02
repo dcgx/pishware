@@ -65,7 +65,9 @@ export class TrackingService {
           event_type: e.event_type,
         };
       })
-    );
+      .slice(-20)
+      .reverse(), 
+    )
 
     const riskIndex = Math.min(
       100,
