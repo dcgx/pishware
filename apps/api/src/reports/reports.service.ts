@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import PDFDocument from 'pdfkit';
-import QuickChart from 'quickchart-js';
 import { TrackingService } from 'src/tracking/tracking.service';
 
-const PLACEHOLDER_PDF_BASE64 =
-  'JVBERi0xLjMKJcTl8uXrp/Og0MTGCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8L1R5cGUvUGFnZXMvS2lkc1szIDAgUl0vQ291bnQgMT4+CmVuZG9iagozIDAgb2JqCjw8L1R5cGUvUGFnZS9QYXJlbnQgMiAwIFIvTWVkaWFCb3hbMCAwIDYxMiA3OTJdL0NvbnRlbnRzIDQgMCBSL1Jlc291cmNlczw8L0ZvbnQ8PC9GMSA1IDAgUj4+ID4+ID4+CmVuZG9iagp0IDAgb2JqCjw8L0xlbmd0aCA0NT4+c3RyZWFtCkJUIEF1RjEgMTIgVGYgMTAwIDcwMCBUZCAoSGVsbG8gV29ybGQpIFRqIEVUCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iago8PC9UeXBlL0ZvbnQvU3VidHlwZS9UeXBlMS9CYXNlRm9udC9IZWx2ZXRpY2E+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNTMgMDAwMDAgbiAKMDAwMDAwMDExNyAwMDAwMCBuIAowMDAwMDAwMjIxIDAwMDAwIG4gCjAwMDAwMDAyNzEgMDAwMDAgbiAKdHJhaWxlcgo8PC9TaXplIDYvUm9vdCAxIDAgUj4+CnN0YXJ0eHJlZgoxMzQ3CiUlRU9G';
+const PDFDocument = require('pdfkit');
+const QuickChart: any = require('quickchart-js');
 
 @Injectable()
 export class ReportsService {
@@ -31,7 +29,7 @@ export class ReportsService {
         },
       });
 
-      const image = await chart.toBuffer();
+      const image: Buffer = await chart.toBinary();
 
       const doc = new PDFDocument();
       const buffers: Buffer[] = [];
@@ -54,7 +52,6 @@ export class ReportsService {
       return finished;
     }
 
-    return Buffer.from(PLACEHOLDER_PDF_BASE64, 'base64');
+    return Buffer.from('...', 'base64');
   }
 }
-
