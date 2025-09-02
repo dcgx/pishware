@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tracking } from './entities/tracking.entity';
 import { User } from 'src/iam/user-management/entities/user.entity';
-import PDFDocument from 'pdfkit';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import PDFDocument = require('pdfkit');
 
 @Injectable()
 export class TrackingService {
