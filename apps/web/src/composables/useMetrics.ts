@@ -8,7 +8,7 @@ export const useMetrics = () => {
 
   const fetchMetrics = async () => {
     try {
-      const { data } = await axios.get(`${apiUrl}/tracking/metrics`)
+      const { data } = await axios.get(`${apiUrl}/tracking/report`)
       store.setMetrics(data)
     } catch (err) {
       store.setMetrics({})
@@ -22,6 +22,9 @@ export const useMetrics = () => {
     linksClicked: computed(() => store.linksClicked),
     dataSent: computed(() => store.dataSent),
     details: computed(() => store.details),
+    campaignOverview: computed(() => store.campaignOverview),
+    departmentRisk: computed(() => store.departmentRisk),
+    geoLocation: computed(() => store.geoLocation),
     fetchMetrics,
   }
 }

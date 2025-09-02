@@ -9,6 +9,23 @@ interface MetricDetail {
   event_type: string
 }
 
+interface CampaignOverview {
+  campaign: string
+  emailsSent: number
+  emailsOpened: number
+  openRate: number
+}
+
+interface DepartmentRisk {
+  department: string
+  riskIndex: number
+}
+
+interface GeoLocation {
+  location: string
+  count: number
+}
+
 interface MetricsData {
   riskIndex?: number
   emailsSent?: number
@@ -16,6 +33,9 @@ interface MetricsData {
   linksClicked?: number
   dataSent?: number
   details?: MetricDetail[]
+  campaignOverview?: CampaignOverview[]
+  departmentRisk?: DepartmentRisk[]
+  geoLocation?: GeoLocation[]
 }
 
 export const useMetricsStore = defineStore('metrics', () => {
@@ -25,6 +45,9 @@ export const useMetricsStore = defineStore('metrics', () => {
   const linksClicked = ref(0)
   const dataSent = ref(0)
   const details = ref<MetricDetail[]>([])
+  const campaignOverview = ref<CampaignOverview[]>([])
+  const departmentRisk = ref<DepartmentRisk[]>([])
+  const geoLocation = ref<GeoLocation[]>([])
 
   const setMetrics = (data: MetricsData) => {
     riskIndex.value = data.riskIndex ?? 0
@@ -33,6 +56,9 @@ export const useMetricsStore = defineStore('metrics', () => {
     linksClicked.value = data.linksClicked ?? 0
     dataSent.value = data.dataSent ?? 0
     details.value = data.details ?? []
+    campaignOverview.value = data.campaignOverview ?? []
+    departmentRisk.value = data.departmentRisk ?? []
+    geoLocation.value = data.geoLocation ?? []
   }
 
   return {
@@ -42,6 +68,9 @@ export const useMetricsStore = defineStore('metrics', () => {
     linksClicked,
     dataSent,
     details,
+    campaignOverview,
+    departmentRisk,
+    geoLocation,
     setMetrics,
   }
 })
