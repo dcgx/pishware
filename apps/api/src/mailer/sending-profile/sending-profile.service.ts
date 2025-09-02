@@ -10,7 +10,7 @@ export class SendingProfileService {
   constructor(
     @InjectRepository(SendingProfileEntity)
     private readonly repo: Repository<SendingProfileEntity>,
-  ) {}
+  ) { }
 
   create(dto: CreateSendingProfileDto) {
     const profile = this.repo.create(dto);
@@ -26,7 +26,15 @@ export class SendingProfileService {
   }
 
   async update(id: number, dto: UpdateSendingProfileDto) {
-    await this.repo.update(id, dto);
+    const updateData = Object.fromEntries(
+      Object.entries(dto).filter(([_, v]) => v !== undefined && v !== null)
+    );
+
+    if (Object.keys(updateData).length === 0) {
+      throw new Error('No fields to update')
+    }
+
+    await this.repo.update(id, updateData);
     return this.findOne(id);
   }
 

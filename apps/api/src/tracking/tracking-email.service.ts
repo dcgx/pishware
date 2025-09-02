@@ -11,6 +11,7 @@ interface LogEmailParams {
   subject?: string | null;
   messageId?: string | null;
   metadata?: Record<string, any>;
+  token?: string | null;
 }
 
 @Injectable()

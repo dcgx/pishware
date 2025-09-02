@@ -10,12 +10,16 @@ import { Cron } from '@nestjs/schedule';
 import { UsersService } from 'src/iam/user-management/user-management.service';
 import { User } from 'src/iam/user-management/entities/user.entity';
 import { GroupEntity } from 'src/iam/groups/group.entity';
+import { parseHtmlCampaign } from './utils/parseHtml';
+import { LandingPageEntity } from 'src/landing/entities/landing-page.entity';
 
 @Injectable()
 export class CampaignService {
   constructor(
     @InjectRepository(CampaignEntity)
     private readonly campaignRepository: Repository<CampaignEntity>,
+    @InjectRepository(LandingPageEntity)
+    private readonly landingPageRepository: Repository<LandingPageEntity>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(GroupEntity)
@@ -54,11 +58,12 @@ export class CampaignService {
         const emailDto: SendEmailDto = {
           to: user.email,
           subject: campaign.template?.subject || 'Test email',
-          html: campaign.template?.body_content || '<p>Test</p>',
+          html: parseHtmlCampaign(campaign.template?.body_content, campaign.landing_page, campaign.template, user),
           user_id: user.id,
           profile_id: user.profile.id.toString(),
           landing_id: dto.landing_page_id?.toString(),
         };
+        console.log({ emailDto });
         await this.mailerService.sendEmail(emailDto);
       }
       saved.status = CampaignStatus.SENT;
@@ -91,27 +96,41 @@ export class CampaignService {
     if (!campaign) return null;
     if (dto.name !== undefined) campaign.name = dto.name;
     if (dto.description !== undefined) campaign.description = dto.description;
-    if (dto.template_id !== undefined)
-      campaign.template = { id: dto.template_id } as any;
-    if (dto.landing_page_id !== undefined)
-      campaign.landing_page = { id: dto.landing_page_id } as any;
-    if (dto.scheduled_start_at !== undefined)
-      campaign.scheduled_start_at = dto.scheduled_start_at;
+    if (dto.template_id !== undefined) {
+      if (dto.template_id) {
+        campaign.template = { id: dto.template_id } as any;
+      } else {
+        // Opción 1: mantener el valor actual y no sobreescribir
+        // campaign.template se deja como está
+        // Opción 2: permitir null explícito (si la DB lo acepta)
+        // campaign.template = null;
+      }
+    }
+    if (dto.landing_page_id !== undefined) {
+      const landingPage = await this.landingPageRepository.findOne({ 
+        where: { id: dto.landing_page_id?.toString() }
+      });
+      campaign.landing_page = { id: dto.landing_page_id, public_key: landingPage?.public_key } as any;
+
+    }
+    if (dto.scheduled_start_at !== undefined) {
+      if (dto.scheduled_start_at) {
+        const parsedDate = new Date(dto.scheduled_start_at);
+        if (!isNaN(parsedDate.getTime())) {
+          campaign.scheduled_start_at = parsedDate;
+        } else {
+          campaign.scheduled_start_at = null;
+        }
+      } else {
+        campaign.scheduled_start_at = null;
+      }
+    }
     if (dto.status !== undefined) campaign.status = dto.status;
     if (dto.group_ids !== undefined)
       campaign.groups = dto.group_ids.map((id) => ({ id }) as any);
     if (dto.user_ids !== undefined)
       campaign.users = dto.user_ids.map((id) => ({ id }) as any);
     if (dto.send_now) {
-      // const emailDto: SendEmailDto = {
-      //   to: 'test@example.com',
-      //   subject: 'Test email',
-      //   html: '<p>Test</p>',
-      //   user_id: '0',
-      //   profile_id: 0,
-      //   landing_id: dto.landing_page_id?.toString(),
-      // };
-      // await this.mailerService.sendEmail(emailDto);
       const groups = campaign.groups || [];
       let userIds: string[] = dto.user_ids || [];
       let profileIds: string[] = [];
@@ -126,17 +145,15 @@ export class CampaignService {
         }
       }
       profileIds = Array.from(new Set(profileIds)); // Remove duplicates
-      console.log('Final Profile IDs to send emails to:', profileIds);
       const users = profileIds.length ?
         await this.userRepository.find({ where: { profile: In(profileIds) }, relations: ['profile'] }) :
         [];
-      console.log('Users to send emails to:', users);
       for (const user of users) {
-        console.log('template', template);
+        
         const emailDto: SendEmailDto = {
           to: user.email,
           subject: template?.subject || 'Test email',
-          html: template?.body_content || 'Test email',
+          html: parseHtmlCampaign(template?.body_content, campaign.landing_page, template, user),
           user_id: user.id.toString(),
           profile_id: user.profile.id,
           landing_id: dto.landing_page_id?.toString(),

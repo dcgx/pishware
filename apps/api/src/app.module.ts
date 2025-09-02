@@ -12,6 +12,7 @@ import { CampaignModule } from './campaign/campaign.module';
 import { MailerModule } from './mailer/mailer.module';
 import { IamModule } from './iam/iam.module';
 import { TrackingModule } from './tracking/tracking.module';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -38,8 +39,9 @@ import { TrackingModule } from './tracking/tracking.module';
     CampaignModule,
     MailerModule,
     TrackingModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Patch, Delete, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { TemplateService } from "./template.service";
 import { CreateTemplateDto } from "./dto/create-template.dto";
+import { UpdateTemplateDto } from "./dto/update-template.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 
 @Controller('templates')
@@ -34,5 +35,18 @@ export class TemplateController {
         @UploadedFile() file: Express.Multer.File
     ) {
         return this.templateService.uploadAttachment(templateId, file);
+    }
+
+    @Patch(':id')
+    update(
+        @Param('id') id: number,
+        @Body() dto: UpdateTemplateDto
+    ) {
+        return this.templateService.update(Number(id), dto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: number) {
+        return this.templateService.remove(Number(id));
     }
 }
