@@ -15,25 +15,25 @@ export class MailerService {
     private readonly trackingEmailService: TrackingEmailService,
   ) {
     this.transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: 25,
+      host: 'smtp.gmail.com',
+      port: 587,
       secure: false,
       auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
+        user: 'diegocastillo.dev@gmail.com',
+        pass: 'bgjq gosn asra knhx'
       },
     });
   }
 
   async sendEmail(dto: SendEmailDto) {
     const info = (await this.transporter.sendMail({
-      from: `Pishware <test>`,
+      from: `Pishware <${process.env.SMTP_USER}>`,
       to: dto.to,
       subject: dto.subject,
       html: dto.html,
     })) as { messageId: string; accepted: string[] };
-    console.log('Email sent:', info);
 
+    // Guardar log de correo enviado
     await this.trackingEmailService.logEmail({
       landingId: dto.landing_id ?? null,
       userId: dto.user_id,
@@ -43,20 +43,6 @@ export class MailerService {
       messageId: info.messageId,
     });
 
-    await this.trackingService.logEvent(
-      'email_sent',
-      { to: dto.to, subject: dto.subject },
-      { messageId: info.messageId },
-      dto.user_id,
-    );
-    for (const recipient of info.accepted) {
-      await this.trackingService.logEvent(
-        'email_delivered',
-        { to: recipient },
-        { messageId: info.messageId },
-        dto.user_id,
-      );
-    }
     return { messageId: info.messageId, accepted: info.accepted };
   }
 

@@ -59,6 +59,10 @@ export class UsersService {
     }
   }
 
+  async findOne(id: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { id }, relations: ['profile'] });
+  }
+
   async findUsersByIds(ids: string[]): Promise<User[]> {
     const users = await this.userRepository.find({ where: { id: In(ids) }, relations: ['profile'] });
     return users.map((user) => {

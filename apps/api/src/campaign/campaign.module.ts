@@ -8,10 +8,11 @@ import { TemplateModule } from 'src/template/template.module.ts';
 import { UserManagmentModule } from 'src/iam/user-management/user-management.module';
 import { User } from 'src/iam/user-management/entities/user.entity';
 import { GroupEntity } from 'src/iam/groups/group.entity';
+import { LandingPageEntity } from 'src/landing/entities/landing-page.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([CampaignEntity, User, GroupEntity]),
+    TypeOrmModule.forFeature([CampaignEntity, User, GroupEntity, LandingPageEntity]),
     TemplateModule,
     UserManagmentModule,
     MailerModule

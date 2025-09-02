@@ -10,12 +10,16 @@ import { Cron } from '@nestjs/schedule';
 import { UsersService } from 'src/iam/user-management/user-management.service';
 import { User } from 'src/iam/user-management/entities/user.entity';
 import { GroupEntity } from 'src/iam/groups/group.entity';
+import { parseHtmlCampaign } from './utils/parseHtml';
+import { LandingPageEntity } from 'src/landing/entities/landing-page.entity';
 
 @Injectable()
 export class CampaignService {
   constructor(
     @InjectRepository(CampaignEntity)
     private readonly campaignRepository: Repository<CampaignEntity>,
+    @InjectRepository(LandingPageEntity)
+    private readonly landingPageRepository: Repository<LandingPageEntity>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(GroupEntity)
@@ -54,11 +58,12 @@ export class CampaignService {
         const emailDto: SendEmailDto = {
           to: user.email,
           subject: campaign.template?.subject || 'Test email',
-          html: campaign.template?.body_content || '<p>Test</p>',
+          html: parseHtmlCampaign(campaign.template?.body_content, campaign.landing_page, campaign.template, user),
           user_id: user.id,
           profile_id: user.profile.id.toString(),
           landing_id: dto.landing_page_id?.toString(),
         };
+        console.log({ emailDto });
         await this.mailerService.sendEmail(emailDto);
       }
       saved.status = CampaignStatus.SENT;
@@ -101,8 +106,13 @@ export class CampaignService {
         // campaign.template = null;
       }
     }
-    if (dto.landing_page_id !== undefined)
-      campaign.landing_page = { id: dto.landing_page_id } as any;
+    if (dto.landing_page_id !== undefined) {
+      const landingPage = await this.landingPageRepository.findOne({ 
+        where: { id: dto.landing_page_id?.toString() }
+      });
+      campaign.landing_page = { id: dto.landing_page_id, public_key: landingPage?.public_key } as any;
+
+    }
     if (dto.scheduled_start_at !== undefined) {
       if (dto.scheduled_start_at) {
         const parsedDate = new Date(dto.scheduled_start_at);
@@ -121,15 +131,6 @@ export class CampaignService {
     if (dto.user_ids !== undefined)
       campaign.users = dto.user_ids.map((id) => ({ id }) as any);
     if (dto.send_now) {
-      // const emailDto: SendEmailDto = {
-      //   to: 'test@example.com',
-      //   subject: 'Test email',
-      //   html: '<p>Test</p>',
-      //   user_id: '0',
-      //   profile_id: 0,
-      //   landing_id: dto.landing_page_id?.toString(),
-      // };
-      // await this.mailerService.sendEmail(emailDto);
       const groups = campaign.groups || [];
       let userIds: string[] = dto.user_ids || [];
       let profileIds: string[] = [];
@@ -144,17 +145,15 @@ export class CampaignService {
         }
       }
       profileIds = Array.from(new Set(profileIds)); // Remove duplicates
-      console.log('Final Profile IDs to send emails to:', profileIds);
       const users = profileIds.length ?
         await this.userRepository.find({ where: { profile: In(profileIds) }, relations: ['profile'] }) :
         [];
-      console.log('Users to send emails to:', users);
       for (const user of users) {
-        console.log('template', template);
+        console.log({ template })
         const emailDto: SendEmailDto = {
           to: user.email,
           subject: template?.subject || 'Test email',
-          html: template?.body_content || 'Test email',
+          html: parseHtmlCampaign(template?.body_content, campaign.landing_page, template, user),
           user_id: user.id.toString(),
           profile_id: user.profile.id,
           landing_id: dto.landing_page_id?.toString(),
