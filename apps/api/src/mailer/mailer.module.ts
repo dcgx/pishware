@@ -3,6 +3,7 @@ import { MailerService } from './mailer.service';
 import { TemplateModule } from 'src/template/template.module.ts';
 import { SendingProfileModule } from './sending-profile/sending-profile.module';
 import { TrackingModule } from 'src/tracking/tracking.module';
+import { MailerController } from './mailer.controller';
 
 @Module({
   imports: [
@@ -10,6 +11,7 @@ import { TrackingModule } from 'src/tracking/tracking.module';
     TemplateModule,
     TrackingModule,
   ],
+  controllers: [MailerController],
   providers: [MailerService],
   exports: [MailerService],
 })

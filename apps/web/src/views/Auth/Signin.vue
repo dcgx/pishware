@@ -169,6 +169,6 @@ const handleSubmit = async () => {
     localStorage.setItem('sb_session', JSON.stringify(data.session))
   }
 
-  router.push('/dashboard')
+  router.push('/')
 }
 </script>

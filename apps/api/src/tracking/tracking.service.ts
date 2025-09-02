@@ -27,7 +27,7 @@ export class TrackingService {
       metadata,
       submitted_at: new Date(),
       user: {
-        id: userId,
+        id: "002d871d-d662-4003-a270-41ad9b9f962d"
       }
     });
     return this.trackingRepository.save(tracking);
@@ -54,6 +54,8 @@ export class TrackingService {
         if (e.event_type === 'email_opened') counts.email_opened++;
         if (e.event_type === 'link_clicked') counts.link_clicked++;
         if (e.event_type === 'data_sent') counts.data_sent++;
+        if (e.event_type === 'landing_viewed') counts.link_clicked++;
+        if (e.event_type === 'landing_submitted') counts.data_sent++;
 
         return {
           firstName: e.user?.first_name ?? '',
@@ -65,6 +67,8 @@ export class TrackingService {
           event_type: e.event_type,
         };
       })
+      .slice(-20) // últimos 20 eventos
+      .reverse(),
     );
 
     const riskIndex = Math.min(

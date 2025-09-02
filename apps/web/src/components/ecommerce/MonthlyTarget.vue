@@ -137,7 +137,11 @@ import { ref, computed } from 'vue'
 import DropdownMenu from '../common/DropdownMenu.vue'
 const menuItems = [
   { label: 'View More', onClick: () => console.log('View More clicked') },
-  { label: 'Delete', onClick: () => console.log('Delete clicked') },
+  {
+    label: 'Eliminar',
+    onClick: () => console.log('Eliminar clicked'),
+    class: 'text-red-600',
+  },
 ]
 import VueApexCharts from 'vue3-apexcharts'
 

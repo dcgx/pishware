@@ -8,7 +8,7 @@
         <img src="/images/user/owner.jpg" alt="User" />
       </span> -->
 
-      <span class="block mr-1 font-medium text-theme-sm">Diego </span>
+      <span class="block mr-1 font-medium text-theme-sm">{{ authStore.user.first_name }} </span>
 
       <ChevronDownIcon :class="{ 'rotate-180': dropdownOpen }" />
     </button>
@@ -20,10 +20,10 @@
     >
       <div>
         <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-          Diego Castillo
+          {{ authStore.user.first_name }} {{ authStore.user.last_name }}
         </span>
         <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-          randomuser@pimjo.com
+          {{ authStore.user.email }}
         </span>
       </div>
 
@@ -57,18 +57,18 @@
   </div>
 </template>
 
-<script setup>
-import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon } from '@/icons'
-import { RouterLink } from 'vue-router'
+<script setup lang="ts">
+import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon } from '@/icons'
 import { ref, onMounted, onUnmounted } from 'vue'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const dropdownOpen = ref(false)
 const dropdownRef = ref(null)
+const authStore = useAuthStore()
 
 const menuItems = [
   { href: '/profile', icon: UserCircleIcon, text: 'Edit profile' },
-  { href: '/chat', icon: SettingsIcon, text: 'Account settings' },
-  { href: '/profile', icon: InfoCircleIcon, text: 'Support' },
+  { href: '/configuration', icon: SettingsIcon, text: 'Account settings' },
 ]
 
 const toggleDropdown = () => {
@@ -93,6 +93,7 @@ const handleClickOutside = (event) => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+  authStore.fetchUser()
 })
 
 onUnmounted(() => {

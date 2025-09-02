@@ -87,6 +87,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/Profile.vue'),
+      meta: {
+        title: 'Perfil',
+      },
+    },
+    {
       path: '/blank',
       name: 'Blank',
       component: () => import('../views/Pages/BlankPage.vue'),
