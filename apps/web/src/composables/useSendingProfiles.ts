@@ -23,7 +23,9 @@ export const useSendingProfiles = () => {
       const response = await fetch(`${apiUrl}/sending-profiles/${id}`);
       if (!response.ok) throw new Error('Failed to fetch sending profile');
       const data = await response.json();
-      Object.assign(store.editForm.value, data);
+      console.log('Fetched sending profile:', data);
+      // Object.assign(store.editForm.value, data);
+      store.editForm = { ...data };
       return data;
     } catch (err) {
       store.error = 'Failed to fetch sending profile';

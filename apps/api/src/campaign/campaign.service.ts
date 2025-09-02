@@ -91,12 +91,30 @@ export class CampaignService {
     if (!campaign) return null;
     if (dto.name !== undefined) campaign.name = dto.name;
     if (dto.description !== undefined) campaign.description = dto.description;
-    if (dto.template_id !== undefined)
-      campaign.template = { id: dto.template_id } as any;
+    if (dto.template_id !== undefined) {
+      if (dto.template_id) {
+        campaign.template = { id: dto.template_id } as any;
+      } else {
+        // Opción 1: mantener el valor actual y no sobreescribir
+        // campaign.template se deja como está
+        // Opción 2: permitir null explícito (si la DB lo acepta)
+        // campaign.template = null;
+      }
+    }
     if (dto.landing_page_id !== undefined)
       campaign.landing_page = { id: dto.landing_page_id } as any;
-    if (dto.scheduled_start_at !== undefined)
-      campaign.scheduled_start_at = dto.scheduled_start_at;
+    if (dto.scheduled_start_at !== undefined) {
+      if (dto.scheduled_start_at) {
+        const parsedDate = new Date(dto.scheduled_start_at);
+        if (!isNaN(parsedDate.getTime())) {
+          campaign.scheduled_start_at = parsedDate;
+        } else {
+          campaign.scheduled_start_at = null;
+        }
+      } else {
+        campaign.scheduled_start_at = null;
+      }
+    }
     if (dto.status !== undefined) campaign.status = dto.status;
     if (dto.group_ids !== undefined)
       campaign.groups = dto.group_ids.map((id) => ({ id }) as any);

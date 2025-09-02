@@ -204,7 +204,9 @@ export class UsersService {
         throw new Error('Usuario no encontrado.');
       }
       if (!body.oldPassword || user.password !== body.oldPassword) {
-        throw new Error('La contraseña actual es incorrecta.');
+        return {
+          message: 'La contraseña actual es incorrecta.',
+        }
       }
       if (body.password.length < 8) {
         throw new Error(
