@@ -1,25 +1,84 @@
 import { Injectable } from '@nestjs/common';
+import { TrackingService } from 'src/tracking/tracking.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tracking } from 'src/tracking/entities/tracking.entity';
 
+const PDFDocument = require('pdfkit');
+const QuickChart: any = require('quickchart-js');
+
 const PLACEHOLDER_PDF_BASE64 =
-  'JVBERi0xLjMKJcTl8uXrp/Og0MTGCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8L1R5cGUvUGFnZXMvS2lkc1szIDAgUl0vQ291bnQgMT4+CmVuZG9iagozIDAgb2JqCjw8L1R5cGUvUGFnZS9QYXJlbnQgMiAwIFIvTWVkaWFCb3hbMCAwIDYxMiA3OTJdL0NvbnRlbnRzIDQgMCBSL1Jlc291cmNlczw8L0ZvbnQ8PC9GMQogNSAwIFI+PiA+PiA+PgplbmRvYmoKNCAwIG9iago8PC9MZW5ndGggNDU+PnN0cmVhbQpCVCAvRjEgMTIgVGYgMTAwIDcwMCBUZCAoSGVsbG8gV29ybGQpIFRqIEVUCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iago8PC9UeXBlL0ZvbnQvU3VidHlwZS9UeXBlMS9CYXNlRm9udC9IZWx2ZXRpY2E+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNTMgMDAwMDAgbiAKMDAwMDAwMDExNyAwMDAwMCBuIAowMDAwMDAwMjIxIDAwMDAwIG4gCjAwMDAwMDAyNzEgMDAwMDAgbiAKdHJhaWxlcgo8PC9TaXplIDYvUm9vdCAxIDAgUj4+CnN0YXJ0eHJlZgoxMzQ3CiUlRU9G';
+  'JVBERi0xLjMKJcTl8uXrp/Og0MTGCjEgMCBvYmoKPDwvVHlwZS9DYXRhbG9nL1BhZ2VzIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8L1R5cGUvUGFnZXMvS2lkc1szIDAgUl0vQ291bnQgMT4+CmVuZG9iagozIDAgb2JqCjw8L1R5cGUvUGFnZS9QYXJlbnQgMiAwIFIvTWVkaWFCb3hbMCAwIDYxMiA3OTJdL0NvbnRlbnRzIDQgMCBSL1Jlc291cmNlczw8L0ZvbnQ8PC9GMSA1IDAgUj4+ID4+ID4+CmVuZG9iagp0IDAgb2JqCjw8L0xlbmd0aCA0NT4+c3RyZWFtCkJUIEF1RjEgMTIgVGYgMTAwIDcwMCBUZCAoSGVsbG8gV29ybGQpIFRqIEVUCmVuZHN0cmVhbQplbmRvYmoKNSAwIG9iago8PC9UeXBlL0ZvbnQvU3VidHlwZS9UeXBlMS9CYXNlRm9udC9IZWx2ZXRpY2E+PgplbmRvYmoKeHJlZgowIDYKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAwMDEwIDAwMDAwIG4gCjAwMDAwMDAwNTMgMDAwMDAgbiAKMDAwMDAwMDExNyAwMDAwMCBuIAowMDAwMDAwMjIxIDAwMDAwIG4gCjAwMDAwMDAyNzEgMDAwMDAgbiAKdHJhaWxlcgo8PC9TaXplIDYvUm9vdCAxIDAgUj4+CnN0YXJ0eHJlZgoxMzQ3CiUlRU9G';
 
 @Injectable()
 export class ReportsService {
   constructor(
+    private readonly trackingService: TrackingService,
     @InjectRepository(Tracking)
     private readonly trackingRepository: Repository<Tracking>,
   ) {}
 
   async getPdf(slug: string): Promise<Buffer> {
+    if (slug === 'emails-opened') {
+      return this.generateEmailsOpenedReport();
+    }
+
     if (slug === 'credential-submission') {
       return this.generateCredentialSubmissionReport();
     }
+
     return Buffer.from(PLACEHOLDER_PDF_BASE64, 'base64');
   }
 
+  /**
+   * Reporte gráfico: correos enviados vs abiertos
+   */
+  private async generateEmailsOpenedReport(): Promise<Buffer> {
+    const { emailsSent: sent, emailsOpened: opened } =
+      await this.trackingService.getMetrics();
+
+    const chart = new QuickChart();
+    chart.setWidth(500).setHeight(300);
+    chart.setConfig({
+      type: 'bar',
+      data: {
+        labels: ['Enviados', 'Abiertos'],
+        datasets: [
+          {
+            label: 'Correos',
+            data: [sent, opened],
+            backgroundColor: ['#3498db', '#2ecc71'],
+          },
+        ],
+      },
+    });
+
+    const image: Buffer = await chart.toBinary();
+
+    const doc = new PDFDocument();
+    const buffers: Buffer[] = [];
+    doc.on('data', (data) => buffers.push(data));
+    const finished = new Promise<Buffer>((resolve) => {
+      doc.on('end', () => resolve(Buffer.concat(buffers)));
+    });
+
+    doc.fontSize(20).text('Correos enviados vs abiertos', {
+      align: 'center',
+    });
+    doc.moveDown();
+    doc.image(image, {
+      fit: [500, 300],
+      align: 'center',
+      valign: 'center',
+    });
+    doc.end();
+
+    return finished;
+  }
+
+  /**
+   * Reporte de credenciales capturadas
+   */
   private async generateCredentialSubmissionReport(): Promise<Buffer> {
     const events = await this.trackingRepository.find({
       where: { event_type: 'landing_submitted' },
@@ -33,7 +92,10 @@ export class ReportsService {
     const lines = [
       'Captura de credenciales',
       '',
-      `${pad('Nombre', 15)} ${pad('Apellido', 15)} ${pad('Email', 30)} ${pad('Fecha', 20)}`,
+      `${pad('Nombre', 15)} ${pad('Apellido', 15)} ${pad(
+        'Email',
+        30,
+      )} ${pad('Fecha', 20)}`,
       ...events.map((e) => {
         const first = pad(e.user?.first_name ?? '', 15);
         const last = pad(e.user?.last_name ?? '', 15);
@@ -46,6 +108,9 @@ export class ReportsService {
     return this.buildPdf(lines);
   }
 
+  /**
+   * Construye un PDF de texto simple sin PDFKit
+   */
   private buildPdf(lines: string[]): Buffer {
     const escape = (s: string) =>
       s.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
@@ -92,4 +157,3 @@ export class ReportsService {
     return Buffer.from(pdf);
   }
 }
-
