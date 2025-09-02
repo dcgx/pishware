@@ -27,4 +27,8 @@ export class SendEmailDto {
   @IsString()
   @IsOptional()
   landing_id?: string | null;
+
+  @IsString()
+  @IsOptional()
+  tracking_token?: string | null;
 }

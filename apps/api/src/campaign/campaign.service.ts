@@ -149,7 +149,7 @@ export class CampaignService {
         await this.userRepository.find({ where: { profile: In(profileIds) }, relations: ['profile'] }) :
         [];
       for (const user of users) {
-        console.log({ template })
+        
         const emailDto: SendEmailDto = {
           to: user.email,
           subject: template?.subject || 'Test email',

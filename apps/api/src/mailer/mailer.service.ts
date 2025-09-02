@@ -26,6 +26,9 @@ export class MailerService {
   }
 
   async sendEmail(dto: SendEmailDto) {
+
+
+
     const info = (await this.transporter.sendMail({
       from: `Pishware <${process.env.SMTP_USER}>`,
       to: dto.to,
