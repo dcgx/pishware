@@ -63,6 +63,14 @@ const router = createRouter({
       },
     },
     {
+      path: '/reports/:report',
+      name: 'report-viewer',
+      component: () => import('../views/Reports/ReportViewer.vue'),
+      meta: {
+        title: 'Reporte',
+      },
+    },
+    {
       path: '/sending-profiles',
       name: 'sending-profiles',
       component: () => import('../views/SendingProfiles.vue'),

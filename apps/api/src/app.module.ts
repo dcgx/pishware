@@ -12,6 +12,7 @@ import { CampaignModule } from './campaign/campaign.module';
 import { MailerModule } from './mailer/mailer.module';
 import { IamModule } from './iam/iam.module';
 import { TrackingModule } from './tracking/tracking.module';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TrackingModule } from './tracking/tracking.module';
     CampaignModule,
     MailerModule,
     TrackingModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
