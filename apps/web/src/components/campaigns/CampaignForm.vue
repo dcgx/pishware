@@ -10,10 +10,7 @@
         type="text"
         v-model="form.name"
         required
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-               dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-               dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
     </div>
 
@@ -25,10 +22,7 @@
       <textarea
         id="description"
         v-model="form.description"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-               dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-               dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
     </div>
 
@@ -84,10 +78,7 @@
       <select
         id="user"
         v-model="form.userId"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-               dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-               dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <option :value="null" disabled>Selecciona un usuario</option>
         <option v-for="u in users" :key="u.id" :value="u.id">
@@ -104,10 +95,7 @@
       <select
         id="group"
         v-model="form.groupId"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-               dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-               dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <option :value="null" disabled>Selecciona un grupo</option>
         <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }}</option>
@@ -120,8 +108,7 @@
         id="schedule"
         type="checkbox"
         v-model="form.schedule"
-        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-               focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
       />
       <label for="schedule" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
         Programar campaña
@@ -153,10 +140,7 @@
       <select
         id="status"
         v-model="form.status"
-        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-               focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-               dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-               dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
         <option value="draft">Borrador</option>
         <option value="scheduled">Programada</option>
@@ -167,19 +151,89 @@
 
     <!-- Botones -->
     <div class="mt-6 flex justify-end gap-3">
-      <Button variant="outline" type="button" @click="emit('cancel')">Cancelar</Button>
-      <Button type="button" @click="handleSendNow">Enviar campaña</Button>
-      <Button type="button" :disabled="!form.schedule" @click="handleScheduleCampaign">
-        Programar campaña
+      <Button variant="outline" type="button" @click="emit('cancel')" :disabled="anyLoading">
+        Cancelar
       </Button>
-      <Button type="submit">Guardar</Button>
+
+      <Button type="button" @click="handleSendNow" :disabled="anyLoading">
+        <span class="flex items-center">
+          <svg
+            v-if="loadingSend"
+            class="animate-spin h-5 w-5 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          </svg>
+          <span>{{ loadingSend ? 'Enviando…' : 'Enviar campaña' }}</span>
+        </span>
+      </Button>
+
+      <Button
+        type="button"
+        :disabled="!form.schedule || anyLoading"
+        @click="handleScheduleCampaign"
+      >
+        <span class="flex items-center">
+          <svg
+            v-if="loadingSchedule"
+            class="animate-spin h-5 w-5 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          </svg>
+          <span>{{ loadingSchedule ? 'Programando…' : 'Programar campaña' }}</span>
+        </span>
+      </Button>
+
+      <Button type="submit" :disabled="anyLoading">
+        <span class="flex items-center">
+          <svg
+            v-if="loadingSave"
+            class="animate-spin h-5 w-5 mr-2"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            />
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+          </svg>
+          <span>{{ loadingSave ? 'Guardando…' : 'Guardar' }}</span>
+        </span>
+      </Button>
     </div>
   </form>
 </template>
 
 <script setup>
 import Button from '@/components/ui/Button.vue'
-import { reactive, watch, defineProps, defineEmits } from 'vue'
+import { reactive, watch, defineProps, defineEmits, computed } from 'vue'
 import VueTailwindDatepicker from 'vue-tailwind-datepicker'
 
 const props = defineProps({
@@ -188,13 +242,21 @@ const props = defineProps({
   landingPages: { type: Array, default: () => [] },
   users: { type: Array, default: () => [] },
   groups: { type: Array, default: () => [] },
+  // ← estados de carga controlados por el padre
+  loadingSave: { type: Boolean, default: false },
+  loadingSend: { type: Boolean, default: false },
+  loadingSchedule: { type: Boolean, default: false },
 })
 
 const emit = defineEmits(['update:modelValue', 'submit', 'cancel', 'send', 'schedule'])
 
+const anyLoading = computed(() => props.loadingSave || props.loadingSend || props.loadingSchedule)
+
 const buildForm = (mv = {}) => {
-  const userId = mv.userId ?? (Array.isArray(mv.userIds) && mv.userIds.length ? mv.userIds[0] : null)
-  const groupId = mv.groupId ?? (Array.isArray(mv.groupIds) && mv.groupIds.length ? mv.groupIds[0] : null)
+  const userId =
+    mv.userId ?? (Array.isArray(mv.userIds) && mv.userIds.length ? mv.userIds[0] : null)
+  const groupId =
+    mv.groupId ?? (Array.isArray(mv.groupIds) && mv.groupIds.length ? mv.groupIds[0] : null)
   return {
     id: mv.id ?? null,
     name: mv.name ?? '',
@@ -212,27 +274,35 @@ const buildForm = (mv = {}) => {
 
 const form = reactive(buildForm(props.modelValue))
 
-// Sincroniza -> padre
-watch(form, (val) => {
-  emit('update:modelValue', {
-    ...val,
-    userIds: val.targetMode === 'user' && val.userId ? [val.userId] : [],
-    groupIds: val.targetMode === 'group' && val.groupId ? [val.groupId] : [],
-  })
-}, { deep: true })
+watch(
+  form,
+  (val) => {
+    emit('update:modelValue', {
+      ...val,
+      userIds: val.targetMode === 'user' && val.userId ? [val.userId] : [],
+      groupIds: val.targetMode === 'group' && val.groupId ? [val.groupId] : [],
+    })
+  },
+  { deep: true },
+)
 
-// Sincroniza <- padre
-watch(() => props.modelValue, (mv) => {
-  const next = buildForm(mv)
-  Object.keys(next).forEach((k) => { form[k] = next[k] })
-}, { deep: true, immediate: true })
+watch(
+  () => props.modelValue,
+  (mv) => {
+    const next = buildForm(mv)
+    Object.keys(next).forEach((k) => {
+      form[k] = next[k]
+    })
+  },
+  { deep: true, immediate: true },
+)
 
-// Payload helpers
 const payloadBase = () => ({
   ...form,
   userIds: form.targetMode === 'user' && form.userId ? [form.userId] : [],
   groupIds: form.targetMode === 'group' && form.groupId ? [form.groupId] : [],
 })
+
 const handleSubmit = () => emit('submit', payloadBase())
 const handleSendNow = () => emit('send', { ...payloadBase(), sendNow: true })
 const handleScheduleCampaign = () => emit('schedule', { ...payloadBase(), status: 'scheduled' })

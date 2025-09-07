@@ -52,6 +52,7 @@
                   </button>
                 </div>
               </DialogTitle>
+
               <CampaignForm
                 :key="form.id || 'new'"
                 v-model="form"
@@ -59,6 +60,9 @@
                 :landing-pages="landingPages"
                 :users="users"
                 :groups="groups"
+                :loading-save="loadingSave"
+                :loading-send="loadingSend"
+                :loading-schedule="loadingSchedule"
                 @submit="handleUpdateCampaign"
                 @send="handleSendCampaign"
                 @schedule="handleScheduleCampaign"
@@ -73,7 +77,7 @@
 </template>
 
 <script setup>
-import { reactive, watch, defineEmits, defineProps } from 'vue'
+import { reactive, watch, defineEmits, defineProps, ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 import CampaignForm from './CampaignForm.vue'
 import { useCampaigns } from '@/composables/useCampaigns'
@@ -89,14 +93,27 @@ const props = defineProps({
 })
 const emit = defineEmits(['close'])
 
-const toForm = (c = {}) => ({
-  ...c,
-  templateId: c.email_template?.id ?? c.templateId ?? null,
-  landingPageId: c.landing_page?.id ?? c.landingPageId ?? null,
-  userIds: Array.isArray(c.profiles) ? c.profiles.map((p) => p.id) : (c.userIds ?? []),
-  groupIds: Array.isArray(c.groups) ? c.groups.map((g) => g.id) : (c.groupIds ?? []),
-  schedule: !!c.scheduledStartAt,
-})
+// Normalización para el form (IDs planos + flags)
+const toForm = (c = {}) => {
+  const templateId = c.email_template?.id ?? c.templateId ?? null
+  const landingPageId = c.landing_page?.id ?? c.landingPageId ?? null
+  const userIds = Array.isArray(c.profiles) ? c.profiles.map((p) => p.id) : (c.userIds ?? [])
+  const groupIds = Array.isArray(c.groups) ? c.groups.map((g) => g.id) : (c.groupIds ?? [])
+  // Para el form actual usamos targetMode + userId/groupId
+  const userId = Array.isArray(userIds) && userIds.length ? userIds[0] : null
+  const groupId = Array.isArray(groupIds) && groupIds.length ? groupIds[0] : null
+  return {
+    ...c,
+    templateId,
+    landingPageId,
+    userIds,
+    groupIds,
+    userId,
+    groupId,
+    targetMode: userId ? 'user' : groupId ? 'group' : null,
+    schedule: !!c.scheduledStartAt,
+  }
+}
 
 const form = reactive(toForm(props.campaign))
 
@@ -105,49 +122,51 @@ watch(
   (val) => {
     Object.assign(form, toForm(val))
   },
-  { immediate: true },
+  { immediate: true }
 )
 
-const handleClose = () => {
-  emit('close')
-}
+const loadingSave   = ref(false)
+const loadingSend   = ref(false)
+const loadingSchedule = ref(false)
+
+const handleClose = () => emit('close')
+
+// Helpers para mapear nombres esperados por la API en update
+const buildBody = (payload) => ({
+  ...payload,
+  email_template_id: payload.templateId ?? null,
+  landing_page_id: payload.landingPageId ?? null,
+  user_ids: payload.userIds ?? [],
+  group_ids: payload.groupIds ?? [],
+})
 
 const handleUpdateCampaign = async (payload) => {
-  // asegúrate de mandar IDs (no objetos):
-  const body = {
-    ...payload,
-    email_template_id: payload.templateId ?? null,
-    landing_page_id: payload.landingPageId ?? null,
-    user_ids: payload.userIds ?? [],
-    group_ids: payload.groupIds ?? [],
+  loadingSave.value = true
+  try {
+    await updateCampaign(payload.id, buildBody(payload))
+    handleClose()
+  } finally {
+    loadingSave.value = false
   }
-  await updateCampaign(payload.id, body)
-  handleClose()
 }
 
 const handleSendCampaign = async (payload) => {
-  const body = {
-    ...payload,
-    email_template_id: payload.templateId ?? null,
-    landing_page_id: payload.landingPageId ?? null,
-    user_ids: payload.userIds ?? [],
-    group_ids: payload.groupIds ?? [],
-    sendNow: true,
+  loadingSend.value = true
+  try {
+    await updateCampaign(payload.id, { ...buildBody(payload), sendNow: true })
+    handleClose()
+  } finally {
+    loadingSend.value = false
   }
-  await updateCampaign(payload.id, body)
-  handleClose()
 }
 
 const handleScheduleCampaign = async (payload) => {
-  const body = {
-    ...payload,
-    email_template_id: payload.templateId ?? null,
-    landing_page_id: payload.landingPageId ?? null,
-    user_ids: payload.userIds ?? [],
-    group_ids: payload.groupIds ?? [],
-    status: 'scheduled',
+  loadingSchedule.value = true
+  try {
+    await updateCampaign(payload.id, { ...buildBody(payload), status: 'scheduled' })
+    handleClose()
+  } finally {
+    loadingSchedule.value = false
   }
-  await updateCampaign(payload.id, body)
-  handleClose()
 }
 </script>

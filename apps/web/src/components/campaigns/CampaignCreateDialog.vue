@@ -52,12 +52,16 @@
                   </button>
                 </div>
               </DialogTitle>
+
               <CampaignForm
                 v-model="form"
                 :templates="templates"
                 :landing-pages="landingPages"
                 :users="users"
                 :groups="groups"
+                :loading-save="loadingSave"
+                :loading-send="loadingSend"
+                :loading-schedule="loadingSchedule"
                 @submit="handleCreateCampaign"
                 @send="handleSendCampaign"
                 @schedule="handleScheduleCampaign"
@@ -72,7 +76,7 @@
 </template>
 
 <script setup>
-import { reactive, defineEmits, defineProps } from 'vue'
+import { reactive, defineEmits, defineProps, ref } from 'vue'
 import { Dialog, DialogPanel, DialogTitle, TransitionRoot, TransitionChild } from '@headlessui/vue'
 import CampaignForm from './CampaignForm.vue'
 import { useCampaigns } from '@/composables/useCampaigns'
@@ -96,27 +100,58 @@ const form = reactive({
   landingPageId: null,
   scheduledStartAt: '',
   status: 'draft',
+  // el form usa targetMode + userId/groupId; exponemos arrays derivados desde el form
   userIds: [],
   groupIds: [],
   schedule: false,
+  targetMode: null,
+  userId: null,
+  groupId: null,
 })
 
-const handleClose = () => {
-  emit('close')
-}
+// estados de carga para spinners del CampaignForm
+const loadingSave = ref(false)
+const loadingSend = ref(false)
+const loadingSchedule = ref(false)
+
+const handleClose = () => emit('close')
+
+// Helpers para mapear nombres esperados por la API en create
+const buildBody = (payload) => ({
+  ...payload,
+  email_template_id: payload.templateId ?? null,
+  landing_page_id: payload.landingPageId ?? null,
+  user_ids: payload.userIds ?? [],
+  group_ids: payload.groupIds ?? [],
+})
 
 const handleCreateCampaign = async (payload) => {
-  await createCampaign(payload)
-  handleClose()
+  loadingSave.value = true
+  try {
+    await createCampaign(buildBody(payload))
+    handleClose()
+  } finally {
+    loadingSave.value = false
+  }
 }
 
 const handleSendCampaign = async (payload) => {
-  await createCampaign({ ...payload, sendNow: true })
-  handleClose()
+  loadingSend.value = true
+  try {
+    await createCampaign({ ...buildBody(payload), sendNow: true })
+    handleClose()
+  } finally {
+    loadingSend.value = false
+  }
 }
 
 const handleScheduleCampaign = async (payload) => {
-  await createCampaign({ ...payload, status: 'scheduled' })
-  handleClose()
+  loadingSchedule.value = true
+  try {
+    await createCampaign({ ...buildBody(payload), status: 'scheduled' })
+    handleClose()
+  } finally {
+    loadingSchedule.value = false
+  }
 }
 </script>
