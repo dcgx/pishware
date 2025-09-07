@@ -61,18 +61,18 @@ const reports: Report[] = [
     route: '/reports/credential-submission',
     endpoint: '/reports/credential-submission/pdf',
   },
-  {
-    title: 'Índice de riesgo por departamento',
-    desc: 'Comparación entre áreas de la organización',
-    route: '/reports/risk-department',
-    endpoint: '/reports/risk-department/pdf',
-  },
-  {
-    title: 'Geolocalización de clics',
-    desc: 'Ubicación de las interacciones registradas',
-    route: '/reports/geolocation',
-    endpoint: '/reports/geolocation/pdf',
-  },
+  // {
+  //   title: 'Índice de riesgo por departamento',
+  //   desc: 'Comparación entre áreas de la organización',
+  //   route: '/reports/risk-department',
+  //   endpoint: '/reports/risk-department/pdf',
+  // },
+  // {
+  //   title: 'Geolocalización de clics',
+  //   desc: 'Ubicación de las interacciones registradas',
+  //   route: '/reports/geolocation',
+  //   endpoint: '/reports/geolocation/pdf',
+  // },
 ]
 
 const generateReport = async (report: Report) => {
