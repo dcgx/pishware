@@ -7,7 +7,6 @@ export class FileUploadService {
   private readonly s3 = new S3Client({ region: process.env.AWS_REGION });
 
   async upload(file: Express.Multer.File) {
-    console.log('Received file:', file);
     if (!file) {
       throw new BadRequestException('no file uploaded');
     }

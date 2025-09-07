@@ -16,6 +16,5 @@ export const parseHtmlCampaign = (bodyContent: string | undefined, landingPage: 
     parsedHtml = parsedHtml.replace(/{{Email}}/g, user.email || '');
     parsedHtml = parsedHtml.replace(/{{URL}}/g, `http://localhost:3000/r?k=${publicKey}&t=${encodedToken}`);
     parsedHtml += `<img src="http://localhost:3000/mailer/open?t=${encodedToken}" width="1" height="1" style="display:none;" />`;
-    console.log({ parsedHtml });
     return parsedHtml;
 }

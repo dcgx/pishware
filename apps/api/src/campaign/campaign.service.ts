@@ -35,7 +35,6 @@ export class CampaignService {
     const users = requestedUserIds.length
       ? await this.userRepository.find({ where: { id: In(requestedUserIds) } })
       : [];
-    console.log('Requested User IDs:', requestedUserIds);
     const campaign = this.campaignRepository.create({
       name: dto.name,
       description: dto.description ?? null,
@@ -93,7 +92,6 @@ export class CampaignService {
   ): Promise<CampaignEntity | null> {
     const campaign = await this.campaignRepository.findOne({ where: { id }, relations: ['groups', 'users', 'template', 'landing_page'] });
     const template = campaign?.template;
-    console.log('Updating Campaign:', campaign);
     if (!campaign) return null;
     if (dto.name !== undefined) campaign.name = dto.name;
     if (dto.description !== undefined) campaign.description = dto.description;
@@ -169,7 +167,6 @@ export class CampaignService {
       campaign.status = CampaignStatus.SENT;
       campaign.scheduled_start_at = null;
     }
-    console.log('Updated Campaign:', campaign);
     return this.campaignRepository.save(campaign);
   }
 

@@ -68,13 +68,11 @@ export class LandingRuntimeController {
         let decodedtoken = Buffer.from(token || '', 'base64').toString('ascii');
         let timestamp = decodedtoken.split('-').pop();
         let userId = decodedtoken.replace(`-${timestamp}`, '');
-        console.log('Decoded token:', decodedtoken, 'User ID:', userId, 'Timestamp:', timestamp);
         let user = await this.userService.findOne(userId);
 
         const landingPage = await this.landingAdminService.findByPublicKey(key);
         await this.trackingService.logEvent('landing_submitted', body, { key, landingId: landingPage?.id }, user?.id.toString());
         const redirectUrl = landingPage?.redirect_url || `https://google.com/`;
-        console.log(`Event received key=${key} event=submitLanding`, body);
         return res.status(HttpStatus.FOUND).redirect(redirectUrl);
     }
 }

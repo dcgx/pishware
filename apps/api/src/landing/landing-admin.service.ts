@@ -25,7 +25,6 @@ export class LandingAdminService {
     }
 
     async findByPublicKey(key: string): Promise<LandingPageEntity | null> {
-        console.log('Finding landing page by public key:', key);
         return this.landingPageRepository.findOne({ where: { public_key: key } });
     }
 
@@ -168,7 +167,6 @@ export class LandingAdminService {
 
         // 6) Incrusta estilos como inline con juice
         const htmlBeforeJuice = $.html();
-        console.log('HTML before inlining:', htmlBeforeJuice);
         const inlined = juice(htmlBeforeJuice, {
             preserveMediaQueries: true,
             applyWidthAttributes: true,
@@ -180,7 +178,6 @@ export class LandingAdminService {
         // 7) (Opcional) Limpiezas finales
         // - elimina comentarios HTML si quieres
         // - añade no-cache headers cuando lo sirvas
-        console.log('HTML inlined successfully', inlined);
         return inlined;
     }
 

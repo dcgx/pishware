@@ -30,14 +30,10 @@ export class UsersService {
         .getMany();
 
       const { data: userList } = await this.supabase.auth.admin.listUsers();
-      console.log('User List:', userList);
       const lastAccessMap = new Map<string, any>(
         userList.users.map((u) => [u.id, u.last_sign_in_at] as [string, any]),
       );
-      console.log('Last Access Map:', lastAccessMap);
-      console.log('Fetched Profiles:', profiles);
       const mappedProfiles = profiles?.map((profile: Profile) => {
-        console.log('Processing profile:', profile);
         return {
           id: profile.id,
           first_name: profile.first_name,
@@ -50,11 +46,9 @@ export class UsersService {
           created_at: profile.created_at,
         }
       })
-      console.log('Mapped Profiles:', mappedProfiles);
       return mappedProfiles;
 
     } catch (error) {
-      console.error('Error fetching users:', error);
       throw new Error('Error fetching users');
     }
   }
@@ -114,7 +108,6 @@ export class UsersService {
 
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL') as string;
     const supabaseKey = this.configService.get<string>('SUPABASE_SERVICE_ROLE_KEY') as string;
-    console.log('Supabase URL:', supabaseUrl);
     const supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
         autoRefreshToken: false,
