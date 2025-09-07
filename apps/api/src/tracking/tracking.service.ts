@@ -103,10 +103,10 @@ export class TrackingService {
     };
 
     const details = events
+      .sort((a, b) => b.submitted_at.getTime() - a.submitted_at.getTime()) 
       .map((e) => {
         const normalized = this.normalizeEventType(e.event_type);
         if (normalized) counts[normalized]++;
-
         return {
           firstName: e.user?.first_name ?? '',
           lastName: e.user?.last_name ?? '',

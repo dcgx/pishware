@@ -77,14 +77,13 @@ export class UsersService {
     username: string;
   }) {
     const generatedPassword = crypto.randomBytes(8).toString('hex');
-
     const profile = this.profileRepository.create({
       first_name: body.first_name,
       last_name: body.last_name,
       email: body.email,
       username: body.username,
     });
-
+    
     let savedProfile = null;
     try {
       const savedProfile = await this.profileRepository.save(profile);
