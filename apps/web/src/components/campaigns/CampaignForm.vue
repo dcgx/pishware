@@ -29,11 +29,12 @@
                dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       />
     </div>
+
     <div class="mt-4">
       <label class="block text-sm mb-1">Plantilla de correo</label>
       <select v-model="form.templateId" class="w-full border rounded p-2">
         <option :value="null" disabled>Selecciona una plantilla</option>
-        <option v-for="t in templates" :key="t.id" :value="t.id" :selected="t.id === form.templateId">
+        <option v-for="t in templates" :key="t.id" :value="t.id">
           {{ t.name }}
         </option>
       </select>
@@ -49,38 +50,40 @@
       </select>
     </div>
 
+    <!-- USUARIO: select simple -->
     <div class="mt-4">
-      <label for="users" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Usuarios
+      <label for="user" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Usuario
       </label>
       <select
-        id="users"
-        multiple
-        v-model="form.userIds"
+        id="user"
+        v-model="form.userId"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
                focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
+        <option :value="null" disabled>Selecciona un usuario</option>
         <option v-for="u in users" :key="u.id" :value="u.id">
           {{ u.first_name }} {{ u.last_name }}
         </option>
       </select>
     </div>
 
+    <!-- GRUPO: select simple -->
     <div class="mt-4">
-      <label for="groups" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-        Grupos
+      <label for="group" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+        Grupo
       </label>
       <select
-        id="groups"
-        multiple
-        v-model="form.groupIds"
+        id="group"
+        v-model="form.groupId"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
                focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
       >
+        <option :value="null" disabled>Selecciona un grupo</option>
         <option v-for="g in groups" :key="g.id" :value="g.id">{{ g.name }}</option>
       </select>
     </div>
@@ -160,7 +163,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'submit', 'cancel', 'send', 'schedule'])
 
-// Inicializa el form local a partir de modelValue
+// Build/normalize: si viene userIds/groupIds, toma el primero para el select simple
 const buildForm = (mv = {}) => ({
   id: mv.id ?? null,
   name: mv.name ?? '',
@@ -169,17 +172,26 @@ const buildForm = (mv = {}) => ({
   landingPageId: mv.landingPageId ?? null,
   scheduledStartAt: mv.scheduledStartAt ?? '',
   status: mv.status ?? 'draft',
-  userIds: mv.userIds ?? [],
-  groupIds: mv.groupIds ?? [],
+  // selects simples:
+  userId: mv.userId ?? (Array.isArray(mv.userIds) && mv.userIds.length ? mv.userIds[0] : null),
+  groupId: mv.groupId ?? (Array.isArray(mv.groupIds) && mv.groupIds.length ? mv.groupIds[0] : null),
+  // flag de programación
   schedule: mv.schedule ?? false,
 })
 
 const form = reactive(buildForm(props.modelValue))
 
-// Sincroniza -> padre (v-model)
-watch(form, (val) => emit('update:modelValue', { ...val }), { deep: true })
+// Sync -> padre (v-model)
+watch(form, (val) => {
+  emit('update:modelValue', {
+    ...val,
+    // mantiene compatibilidad: expone arrays derivados
+    userIds: val.userId ? [val.userId] : [],
+    groupIds: val.groupId ? [val.groupId] : [],
+  })
+}, { deep: true })
 
-// Sincroniza <- padre (cuando cambias de campaña)
+// Sync <- padre (cuando cambias de campaña)
 watch(
   () => props.modelValue,
   (mv) => {
@@ -189,9 +201,30 @@ watch(
   { deep: true, immediate: true }
 )
 
-const handleSubmit = () => emit('submit', { ...form })
-const handleSendNow = () => emit('send', { ...form, sendNow: true })
-const handleScheduleCampaign = () => emit('schedule', { ...form, status: 'scheduled' })
+// Emits con mapeo a arrays (lo que esperará tu API)
+const handleSubmit = () => {
+  emit('submit', {
+    ...form,
+    userIds: form.userId ? [form.userId] : [],
+    groupIds: form.groupId ? [form.groupId] : [],
+  })
+}
+const handleSendNow = () => {
+  emit('send', {
+    ...form,
+    userIds: form.userId ? [form.userId] : [],
+    groupIds: form.groupId ? [form.groupId] : [],
+    sendNow: true,
+  })
+}
+const handleScheduleCampaign = () => {
+  emit('schedule', {
+    ...form,
+    userIds: form.userId ? [form.userId] : [],
+    groupIds: form.groupId ? [form.groupId] : [],
+    status: 'scheduled',
+  })
+}
 
 // Formateador de fecha
 const formatter = { date: 'YYYY-MM-DD HH:mm', month: 'MMM' }
