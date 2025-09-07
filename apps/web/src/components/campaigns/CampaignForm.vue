@@ -1,5 +1,6 @@
 <template>
   <form @submit.prevent="handleSubmit">
+    <!-- Nombre -->
     <div>
       <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
         Nombre
@@ -16,6 +17,7 @@
       />
     </div>
 
+    <!-- Descripción -->
     <div class="mt-4">
       <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
         Descripción
@@ -30,6 +32,7 @@
       />
     </div>
 
+    <!-- Plantilla -->
     <div class="mt-4">
       <label class="block text-sm mb-1">Plantilla de correo</label>
       <select v-model="form.templateId" class="w-full border rounded p-2">
@@ -40,6 +43,7 @@
       </select>
     </div>
 
+    <!-- Landing Page -->
     <div class="mt-4">
       <label class="block text-sm mt-3 mb-1">Página de destino</label>
       <select v-model="form.landingPageId" class="w-full border rounded p-2">
@@ -50,8 +54,30 @@
       </select>
     </div>
 
-    <!-- USUARIO: select simple -->
-    <div class="mt-4">
+    <!-- Radio buttons para targeting -->
+    <div class="mt-6 flex gap-6">
+      <label class="flex items-center gap-2">
+        <input
+          type="radio"
+          value="user"
+          v-model="form.targetMode"
+          class="text-blue-600 focus:ring-blue-500 border-gray-300"
+        />
+        <span>Por usuario</span>
+      </label>
+      <label class="flex items-center gap-2">
+        <input
+          type="radio"
+          value="group"
+          v-model="form.targetMode"
+          class="text-blue-600 focus:ring-blue-500 border-gray-300"
+        />
+        <span>Por grupo</span>
+      </label>
+    </div>
+
+    <!-- Select de usuarios -->
+    <div class="mt-4" v-if="form.targetMode === 'user'">
       <label for="user" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
         Usuario
       </label>
@@ -70,8 +96,8 @@
       </select>
     </div>
 
-    <!-- GRUPO: select simple -->
-    <div class="mt-4">
+    <!-- Select de grupos -->
+    <div class="mt-4" v-if="form.targetMode === 'group'">
       <label for="group" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
         Grupo
       </label>
@@ -88,7 +114,8 @@
       </select>
     </div>
 
-    <div class="mt-4 flex items-center">
+    <!-- Programar -->
+    <div class="mt-6 flex items-center">
       <input
         id="schedule"
         type="checkbox"
@@ -118,6 +145,7 @@
       />
     </div>
 
+    <!-- Estado -->
     <div class="mt-4">
       <label for="status" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
         Estado
@@ -137,6 +165,7 @@
       </select>
     </div>
 
+    <!-- Botones -->
     <div class="mt-6 flex justify-end gap-3">
       <Button variant="outline" type="button" @click="emit('cancel')">Cancelar</Button>
       <Button type="button" @click="handleSendNow">Enviar campaña</Button>
@@ -163,69 +192,50 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'submit', 'cancel', 'send', 'schedule'])
 
-// Build/normalize: si viene userIds/groupIds, toma el primero para el select simple
-const buildForm = (mv = {}) => ({
-  id: mv.id ?? null,
-  name: mv.name ?? '',
-  description: mv.description ?? '',
-  templateId: mv.templateId ?? null,
-  landingPageId: mv.landingPageId ?? null,
-  scheduledStartAt: mv.scheduledStartAt ?? '',
-  status: mv.status ?? 'draft',
-  // selects simples:
-  userId: mv.userId ?? (Array.isArray(mv.userIds) && mv.userIds.length ? mv.userIds[0] : null),
-  groupId: mv.groupId ?? (Array.isArray(mv.groupIds) && mv.groupIds.length ? mv.groupIds[0] : null),
-  // flag de programación
-  schedule: mv.schedule ?? false,
-})
+const buildForm = (mv = {}) => {
+  const userId = mv.userId ?? (Array.isArray(mv.userIds) && mv.userIds.length ? mv.userIds[0] : null)
+  const groupId = mv.groupId ?? (Array.isArray(mv.groupIds) && mv.groupIds.length ? mv.groupIds[0] : null)
+  return {
+    id: mv.id ?? null,
+    name: mv.name ?? '',
+    description: mv.description ?? '',
+    templateId: mv.templateId ?? null,
+    landingPageId: mv.landingPageId ?? null,
+    scheduledStartAt: mv.scheduledStartAt ?? '',
+    status: mv.status ?? 'draft',
+    userId,
+    groupId,
+    targetMode: userId ? 'user' : groupId ? 'group' : null,
+    schedule: mv.schedule ?? false,
+  }
+}
 
 const form = reactive(buildForm(props.modelValue))
 
-// Sync -> padre (v-model)
+// Sincroniza -> padre
 watch(form, (val) => {
   emit('update:modelValue', {
     ...val,
-    // mantiene compatibilidad: expone arrays derivados
-    userIds: val.userId ? [val.userId] : [],
-    groupIds: val.groupId ? [val.groupId] : [],
+    userIds: val.targetMode === 'user' && val.userId ? [val.userId] : [],
+    groupIds: val.targetMode === 'group' && val.groupId ? [val.groupId] : [],
   })
 }, { deep: true })
 
-// Sync <- padre (cuando cambias de campaña)
-watch(
-  () => props.modelValue,
-  (mv) => {
-    const next = buildForm(mv)
-    Object.keys(next).forEach((k) => { form[k] = next[k] })
-  },
-  { deep: true, immediate: true }
-)
+// Sincroniza <- padre
+watch(() => props.modelValue, (mv) => {
+  const next = buildForm(mv)
+  Object.keys(next).forEach((k) => { form[k] = next[k] })
+}, { deep: true, immediate: true })
 
-// Emits con mapeo a arrays (lo que esperará tu API)
-const handleSubmit = () => {
-  emit('submit', {
-    ...form,
-    userIds: form.userId ? [form.userId] : [],
-    groupIds: form.groupId ? [form.groupId] : [],
-  })
-}
-const handleSendNow = () => {
-  emit('send', {
-    ...form,
-    userIds: form.userId ? [form.userId] : [],
-    groupIds: form.groupId ? [form.groupId] : [],
-    sendNow: true,
-  })
-}
-const handleScheduleCampaign = () => {
-  emit('schedule', {
-    ...form,
-    userIds: form.userId ? [form.userId] : [],
-    groupIds: form.groupId ? [form.groupId] : [],
-    status: 'scheduled',
-  })
-}
+// Payload helpers
+const payloadBase = () => ({
+  ...form,
+  userIds: form.targetMode === 'user' && form.userId ? [form.userId] : [],
+  groupIds: form.targetMode === 'group' && form.groupId ? [form.groupId] : [],
+})
+const handleSubmit = () => emit('submit', payloadBase())
+const handleSendNow = () => emit('send', { ...payloadBase(), sendNow: true })
+const handleScheduleCampaign = () => emit('schedule', { ...payloadBase(), status: 'scheduled' })
 
-// Formateador de fecha
 const formatter = { date: 'YYYY-MM-DD HH:mm', month: 'MMM' }
 </script>

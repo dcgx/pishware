@@ -3,6 +3,7 @@
     <fwb-table-head>
       <fwb-table-head-cell>ID</fwb-table-head-cell>
       <fwb-table-head-cell>Nombre</fwb-table-head-cell>
+      <fwb-table-head-cell>Asunto</fwb-table-head-cell>
       <fwb-table-head-cell>
         <span class="sr-only">Acciones</span>
       </fwb-table-head-cell>
@@ -11,6 +12,7 @@
       <fwb-table-row v-for="template in templates" :key="template.id">
         <fwb-table-cell>{{ template.id }}</fwb-table-cell>
         <fwb-table-cell>{{ template.name }}</fwb-table-cell>
+        <fwb-table-cell>{{ template.subject }}</fwb-table-cell>
         <fwb-table-cell class="flex gap-2">
           <button
             @click="emit('view', template.id)"
