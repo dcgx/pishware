@@ -18,7 +18,7 @@ export class TrackingService {
     private readonly trackingRepository: Repository<Tracking>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   // ✅ mejora: respeta el userId si viene, y no hardcodea un id
   async logEvent(
@@ -50,7 +50,7 @@ export class TrackingService {
 
   // ---------- Helpers de métrica y riesgo ----------
 
-  private normalizeEventType(t: string): 'email_sent'|'email_opened'|'link_clicked'|'data_sent'|undefined {
+  private normalizeEventType(t: string): 'email_sent' | 'email_opened' | 'link_clicked' | 'data_sent' | undefined {
     if (!t) return undefined;
     switch (t) {
       case 'email_sent': return 'email_sent';
@@ -105,7 +105,7 @@ export class TrackingService {
     };
 
     const details = events
-      .sort((a, b) => a.submitted_at.getTime() - b.submitted_at.getTime()) 
+      .sort((a, b) => a.submitted_at.getTime() - b.submitted_at.getTime())
       .map((e) => {
         const normalized = this.normalizeEventType(e.event_type);
         if (normalized) counts[normalized]++;
@@ -120,7 +120,8 @@ export class TrackingService {
           metadata: e.metadata ?? {},
         };
       })
-      .reverse();
+      .slice(-20) // últimos 20 eventos
+      .reverse()
 
     const { riskIndex, pOpen, pClick, pData } = this.calculateRiskIndex(counts);
 
