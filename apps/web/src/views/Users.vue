@@ -15,21 +15,22 @@
           </Button>
         </div>
       </div>
+
       <div class="w-full my-5">
         <div class="w-full rounded-2xl bg-white p-2 dark:bg-white/[0.03]">
-          <Disclosure v-slot="{ open }" v-if="usersWithoutGroups && usersWithoutGroups.length > 0">
+          <!-- SIN GRUPO -->
+          <Disclosure v-slot="{ open }" v-if="usersWithoutGroupsFixed && usersWithoutGroupsFixed.length > 0">
             <DisclosureButton
               class="flex w-full justify-between rounded-lg px-4 py-2 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md"
-                >Sin grupo ({{ usersWithoutGroups ? usersWithoutGroups.length : 0 }})</span
-              >
+              <span class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md">
+                Sin grupo ({{ usersWithoutGroupsFixed ? usersWithoutGroupsFixed.length : 0 }})
+              </span>
               <ChevronDownIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5" />
             </DisclosureButton>
+
             <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500">
-              <div
-                class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]"
-              >
+              <div class="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="max-w-full overflow-x-auto custom-scrollbar">
                   <table class="min-w-full">
                     <thead>
@@ -40,52 +41,41 @@
                         <th class="px-5 py-3 text-left">Grupo</th>
                         <th class="px-5 py-3 text-left">Estado</th>
                         <th class="px-5 py-3 text-left">Último acceso</th>
+                        <th class="px-5 py-3 text-left"></th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                       <tr
-                        v-for="(user, index) in usersWithoutGroups"
-                        :key="index"
+                        v-for="user in usersWithoutGroupsFixed"
+                        :key="user.id"
                         class="border-t border-gray-100 dark:border-gray-800"
                       >
                         <td class="px-5 py-4 flex items-center gap-3">
                           <img
-                            :src="
-                              'https://ui-avatars.com/api/?name=' +
-                              user.first_name +
-                              '+' +
-                              user.last_name
-                            "
+                            :src="`https://ui-avatars.com/api/?name=${user.first_name}+${user.last_name}`"
                             class="w-10 h-10 rounded-full"
                           />
-                          <span class="font-medium text-gray-800 dark:text-white">{{
-                            user.first_name
-                          }}</span>
+                          <span class="font-medium text-gray-800 dark:text-white">{{ user.first_name }}</span>
                         </td>
                         <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.email }}</td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.role }}</td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.group }}</td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.role ?? '—' }}</td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">—</td>
                         <td class="px-5 py-4">
                           <span
                             :class="[
                               'rounded-full px-2 py-0.5 text-sm font-medium',
                               {
-                                'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500':
-                                  user.status === 'ACTIVE',
-                                'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400':
-                                  user.status === 'PENDING',
-                                'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500':
-                                  user.status === 'INACTIVE',
+                                'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500': user.status === 'ACTIVE' || user.status === true,
+                                'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400': user.status === 'PENDING',
+                                'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500': user.status === 'INACTIVE' || user.status === false,
                               },
                             ]"
                           >
-                            {{ user.status }}
+                            {{ typeof user.status === 'string' ? user.status : (user.status ? 'ACTIVE' : 'INACTIVE') }}
                           </span>
                         </td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ user.ultimo_acceso }}
-                        </td>
-                        <td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ user.ultimo_acceso ?? '—' }}</td>
+                        <td class="px-5 py-4">
                           <Button
                             size="xs"
                             variant="danger"
@@ -105,6 +95,8 @@
               </div>
             </DisclosurePanel>
           </Disclosure>
+
+          <!-- POR GRUPO -->
           <Disclosure
             as="div"
             class="mt-2"
@@ -115,18 +107,12 @@
             <DisclosureButton
               class="flex w-full justify-between rounded-lg px-4 py-4 text-left text-sm font-medium focus:outline-none focus-visible:ring focus-visible:ring-purple-500/75"
             >
-              <span class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md">{{
-                group.name
-              }}</span>
-              <ChevronUpIcon
-                :class="open ? 'rotate-180 transform' : ''"
-                class="h-5 w-5 text-purple-500"
-              />
+              <span class="text-gray-900 dark:text-gray-100 uppercase font-semibold text-md">{{ group.name }}</span>
+              <ChevronDownIcon :class="open ? 'rotate-180 transform' : ''" class="h-5 w-5" />
             </DisclosureButton>
+
             <DisclosurePanel class="px-4 pb-2 pt-4 text-sm text-gray-500">
-              <div
-                class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
-              >
+              <div class="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
                 <div class="max-w-full overflow-x-auto custom-scrollbar">
                   <table class="min-w-full">
                     <thead>
@@ -137,63 +123,46 @@
                         <th class="px-5 py-3 text-left">Grupo</th>
                         <th class="px-5 py-3 text-left">Estado</th>
                         <th class="px-5 py-3 text-left">Último acceso</th>
+                        <th class="px-5 py-3 text-left"></th>
                       </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                       <tr
-                        v-for="(profile, index) in group.profiles"
-                        :key="index"
+                        v-for="profile in group.profiles"
+                        :key="profile.id"
                         class="border-t border-gray-100 dark:border-gray-800"
                       >
                         <td class="px-5 py-4 flex items-center gap-3">
                           <img
-                            :src="
-                              'https://ui-avatars.com/api/?name=' +
-                              profile.first_name +
-                              '+' +
-                              profile.last_name
-                            "
+                            :src="`https://ui-avatars.com/api/?name=${profile.first_name}+${profile.last_name}`"
                             class="w-10 h-10 rounded-full"
                           />
-                          <span class="font-medium text-gray-800 dark:text-white">{{
-                            profile.first_name
-                          }}</span>
+                          <span class="font-medium text-gray-800 dark:text-white">{{ profile.first_name }}</span>
                         </td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ profile.email }}
-                        </td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ profile.role }}
-                        </td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ profile.group }}
-                        </td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.email }}</td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.role ?? '—' }}</td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ group.name }}</td>
                         <td class="px-5 py-4">
                           <span
                             :class="[
                               'rounded-full px-2 py-0.5 text-sm font-medium',
                               {
-                                'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500':
-                                  profile.status === 'ACTIVE',
-                                'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400':
-                                  profile.status === 'PENDING',
-                                'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500':
-                                  profile.status === 'INACTIVE',
+                                'bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-500': profile.status === 'ACTIVE' || profile.status === true,
+                                'bg-warning-50 text-warning-700 dark:bg-warning-500/15 dark:text-warning-400': profile.status === 'PENDING',
+                                'bg-error-50 text-error-700 dark:bg-error-500/15 dark:text-error-500': profile.status === 'INACTIVE' || profile.status === false,
                               },
                             ]"
                           >
-                            {{ profile.status }}
+                            {{ typeof profile.status === 'string' ? profile.status : (profile.status ? 'ACTIVE' : 'INACTIVE') }}
                           </span>
                         </td>
-                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">
-                          {{ profile.ultimo_acceso }}
-                        </td>
-                        <td>
+                        <td class="px-5 py-4 text-gray-600 dark:text-gray-400">{{ profile.ultimo_acceso ?? '—' }}</td>
+                        <td class="px-5 py-4">
                           <Button
                             size="xs"
                             variant="danger"
                             @click="
-                              selectedUserForDeletion = profile.profiles.id;
+                              selectedUserForDeletion = profile.id;
                               setOpenDeleteUserDialog(true)
                             "
                             class="mt-2"
@@ -211,6 +180,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Crear usuario -->
     <TransitionRoot appear :show="isOpenCreateUserDialog" as="template">
       <Dialog as="div" @close="setOpenCreateUserDialog(false)" class="relative z-10">
         <TransitionChild
@@ -257,6 +228,7 @@
       </Dialog>
     </TransitionRoot>
 
+    <!-- Crear grupo -->
     <TransitionRoot appear :show="isOpenCreateGroupDialog" as="template">
       <Dialog as="div" @close="setOpenCreateGroupDialog(false)" class="relative z-10">
         <TransitionChild
@@ -297,6 +269,7 @@
       </Dialog>
     </TransitionRoot>
 
+    <!-- Eliminar usuario -->
     <TransitionRoot appear :show="isOpenDeleteUserDialog" as="template">
       <Dialog as="div" @close="setOpenDeleteUserDialog(false)" class="relative z-10">
         <TransitionChild
@@ -349,7 +322,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import {
   TransitionRoot,
   TransitionChild,
@@ -381,31 +354,30 @@ onMounted(async () => {
   await Promise.all([fetchUsers(), fetchGroups()])
 })
 
-const selectedUserForDeletion = ref(null)
+const selectedUserForDeletion = ref<string | null>(null)
 
 const isOpenCreateUserDialog = ref(false)
 const isOpenCreateGroupDialog = ref(false)
 const isOpenDeleteUserDialog = ref(false)
 
-const setOpenCreateUserDialog = (value) => {
+const setOpenCreateUserDialog = (value: boolean) => {
   isOpenCreateUserDialog.value = value
 }
-
-const setOpenCreateGroupDialog = (value) => {
+const setOpenCreateGroupDialog = (value: boolean) => {
   isOpenCreateGroupDialog.value = value
 }
-
-const setOpenDeleteUserDialog = (value) => {
+const setOpenDeleteUserDialog = (value: boolean) => {
   isOpenDeleteUserDialog.value = value
 }
 
-const handleCreateUser = async (userData) => {
+const handleCreateUser = async (userData: any) => {
   const { success } = await createUser(userData)
   if (success) {
     toastMessage.value = 'Usuario creado correctamente. Se envió una contraseña al correo.'
     toastVariant.value = 'success'
     showToast.value = true
     setOpenCreateUserDialog(false)
+    await Promise.all([fetchUsers(), fetchGroups()])
   } else {
     toastMessage.value = 'Error al crear usuario'
     toastVariant.value = 'error'
@@ -417,8 +389,26 @@ const handleClickCancel = () => {
   isOpenCreateGroupDialog.value = false
 }
 
-const handleCreateGroup = async (groupData) => {
-  console.log('Creating group with data:', groupData)
+const handleCreateGroup = async (groupData: any) => {
   await createGroup(groupData)
+  await fetchGroups()
 }
+
+/** === FIX: calcular correctamente “sin grupo” ===
+ * Tomamos todos los IDs que aparecen en cualquier group.profiles
+ * y filtramos usersWithoutGroups para excluirlos.
+ */
+const groupedProfileIds = computed<Set<string>>(() => {
+  const ids = new Set<string>()
+  ;(groups.value || []).forEach((g: any) => {
+    (g?.profiles || []).forEach((p: any) => ids.add(p.id))
+  })
+  return ids
+})
+
+const usersWithoutGroupsFixed = computed(() => {
+  const base = usersWithoutGroups.value || []
+  const ids = groupedProfileIds.value
+  return base.filter((u: any) => !ids.has(u.id))
+})
 </script>
