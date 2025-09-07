@@ -27,6 +27,8 @@ export class TrackingService {
     metadata: Record<string, any> = {},
     userId?: string,
   ) {
+
+    console.log('Logging event:', { eventType, payload, metadata, userId }); // --- IGNORE ---
     const user = userId
       ? await this.userRepository.findOne({ where: { id: userId } })
       : undefined;
@@ -103,7 +105,7 @@ export class TrackingService {
     };
 
     const details = events
-      .sort((a, b) => b.submitted_at.getTime() - a.submitted_at.getTime()) 
+      .sort((a, b) => a.submitted_at.getTime() - b.submitted_at.getTime()) 
       .map((e) => {
         const normalized = this.normalizeEventType(e.event_type);
         if (normalized) counts[normalized]++;

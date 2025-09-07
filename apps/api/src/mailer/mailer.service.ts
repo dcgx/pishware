@@ -58,19 +58,6 @@ export class MailerService {
         html,
       });
 
-      await this.trackingService.logEvent(
-        'email_sent',
-        { to, subject: 'Credenciales de acceso' },
-        { messageId: info.messageId },
-      );
-      for (const recipient of info.accepted) {
-        await this.trackingService.logEvent(
-          'email_delivered',
-          { to: recipient },
-          { messageId: info.messageId },
-        );
-      }
-
       return { messageId: info.messageId, accepted: info.accepted };
     } catch (error) {
       console.error('Error sending user credentials email:', error);

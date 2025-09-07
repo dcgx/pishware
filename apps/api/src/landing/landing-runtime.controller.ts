@@ -34,8 +34,12 @@ export class LandingRuntimeController {
         }
 
         try {
-            await this.trackingService.logEvent('landing_viewed', null, { key, landingId: landingPage.id }, user?.id.toString());
             await this.trackingService.logEvent('email_opened', { token }, {}, userId);
+
+            await setTimeout(async () => {
+                await this.trackingService.logEvent('landing_viewed', null, { key, landingId: landingPage.id }, user?.id.toString());
+            }, 500)
+
         } catch (error) {
             console.error('Error logging landing_viewed event:', error);
         }

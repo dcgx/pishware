@@ -106,7 +106,7 @@ export class CampaignService {
       }
     }
     if (dto.landing_page_id !== undefined) {
-      const landingPage = await this.landingPageRepository.findOne({ 
+      const landingPage = await this.landingPageRepository.findOne({
         where: { id: dto.landing_page_id?.toString() }
       });
       campaign.landing_page = { id: dto.landing_page_id, public_key: landingPage?.public_key } as any;
@@ -162,6 +162,9 @@ export class CampaignService {
           console.error('Error logging email_sent event:', error);
         }
         await this.mailerService.sendEmail(emailDto);
+        setTimeout(() => {
+          this.trackingService.logEvent('email_delivered', { campaignId: campaign.id, templateId: template?.id }, {}, user.id.toString());
+        }, 1000); 
       }
 
       campaign.status = CampaignStatus.SENT;
