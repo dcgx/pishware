@@ -90,6 +90,10 @@ const setOpenDeleteDialog = (value) => {
 const openEdit = (campaign) => {
   selectedCampaign.value = {
     ...campaign,
+    // IDs para selects:
+    templateId: campaign.email_template?.id ?? campaign.templateId ?? null,
+    landingPageId: campaign.landing_page?.id ?? campaign.landingPageId ?? null,
+    // ya los tenías:
     userIds: campaign.profiles ? campaign.profiles.map((p) => p.id) : [],
     groupIds: campaign.groups ? campaign.groups.map((g) => g.id) : [],
   }
