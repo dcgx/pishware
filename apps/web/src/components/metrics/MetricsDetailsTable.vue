@@ -4,7 +4,7 @@
       <fwb-table-head-cell>Nombre</fwb-table-head-cell>
       <fwb-table-head-cell>Apellido</fwb-table-head-cell>
       <fwb-table-head-cell>Email</fwb-table-head-cell>
-      <fwb-table-head-cell>Cargo</fwb-table-head-cell>
+      <fwb-table-head-cell>Fecha</fwb-table-head-cell>
       <fwb-table-head-cell>Evento</fwb-table-head-cell>
       <fwb-table-head-cell>
         <span class="sr-only">Editar</span>
@@ -18,7 +18,7 @@
           {{ metric.email }}
         </fwb-table-cell>
         <fwb-table-cell>
-          {{ metric.position }}
+          {{ formatDate(metric.submittedAt) }}
         </fwb-table-cell>
         <fwb-table-cell>
           <div
@@ -81,11 +81,23 @@ import {
   FwbTableRow,
 } from 'flowbite-vue'
 
+const formatDate = (dateStr: string) => {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('es-ES', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
 interface MetricDetail {
   firstName: string
   lastName: string
   email: string
   position: string
+  submittedAt: string
   event_type: string
 }
 
