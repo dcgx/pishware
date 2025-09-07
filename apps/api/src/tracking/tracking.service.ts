@@ -120,7 +120,6 @@ export class TrackingService {
           metadata: e.metadata ?? {},
         };
       })
-      .slice(-20) // últimos 20 eventos
       .reverse()
 
     const { riskIndex, pOpen, pClick, pData } = this.calculateRiskIndex(counts);

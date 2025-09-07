@@ -21,7 +21,7 @@ export const useMetrics = () => {
     emailsOpened: computed(() => store.emailsOpened),
     linksClicked: computed(() => store.linksClicked),
     dataSent: computed(() => store.dataSent),
-    details: computed(() => store.details),
+    details: computed(() => store.details.slice(0, 20)), // últimos 20 eventos
     fetchMetrics,
   }
 }
