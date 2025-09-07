@@ -18,9 +18,9 @@ export class MailerController {
         let timestamp = decodedtoken.split('-').pop();
         let userId = decodedtoken.replace(`-${timestamp}`, '');
 
-        if (token) {
-            await this.trackingService.logEvent('email_opened', { token }, {}, userId);
-        }
+        // if (token) {
+        //     await this.trackingService.logEvent('email_opened', { token }, {}, userId);
+        // }
 
         const pixel = Buffer.from(
             'R0lGODlhAQABAPAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',

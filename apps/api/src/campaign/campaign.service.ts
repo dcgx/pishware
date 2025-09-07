@@ -12,6 +12,7 @@ import { User } from 'src/iam/user-management/entities/user.entity';
 import { GroupEntity } from 'src/iam/groups/group.entity';
 import { parseHtmlCampaign } from './utils/parseHtml';
 import { LandingPageEntity } from 'src/landing/entities/landing-page.entity';
+import { TrackingService } from 'src/tracking/tracking.service';
 
 @Injectable()
 export class CampaignService {
@@ -24,6 +25,7 @@ export class CampaignService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(GroupEntity)
     private readonly groupRepository: Repository<GroupEntity>,
+    private readonly trackingService: TrackingService,
     private readonly userManagementService: UsersService,
     private readonly mailerService: MailerService,
   ) { }
@@ -63,7 +65,6 @@ export class CampaignService {
           profile_id: user.profile.id.toString(),
           landing_id: dto.landing_page_id?.toString(),
         };
-        console.log({ emailDto });
         await this.mailerService.sendEmail(emailDto);
       }
       saved.status = CampaignStatus.SENT;
@@ -149,7 +150,6 @@ export class CampaignService {
         await this.userRepository.find({ where: { profile: In(profileIds) }, relations: ['profile'] }) :
         [];
       for (const user of users) {
-        
         const emailDto: SendEmailDto = {
           to: user.email,
           subject: template?.subject || 'Test email',
@@ -158,6 +158,11 @@ export class CampaignService {
           profile_id: user.profile.id,
           landing_id: dto.landing_page_id?.toString(),
         };
+        try {
+          await this.trackingService.logEvent('email_sent', { campaignId: campaign.id, templateId: template?.id }, {}, user.id.toString());
+        } catch (error) {
+          console.error('Error logging email_sent event:', error);
+        }
         await this.mailerService.sendEmail(emailDto);
       }
 
@@ -175,6 +180,7 @@ export class CampaignService {
   @Cron('*/5 * * * * *')
   async processScheduledCampaigns() {
     const now = new Date();
+    console.log('Processing scheduled campaigns at', now.toISOString());
     const campaigns = await this.campaignRepository.find({
       where: {
         status: CampaignStatus.SCHEDULED,

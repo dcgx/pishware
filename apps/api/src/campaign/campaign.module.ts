@@ -9,13 +9,15 @@ import { UserManagmentModule } from 'src/iam/user-management/user-management.mod
 import { User } from 'src/iam/user-management/entities/user.entity';
 import { GroupEntity } from 'src/iam/groups/group.entity';
 import { LandingPageEntity } from 'src/landing/entities/landing-page.entity';
+import { TrackingModule } from 'src/tracking/tracking.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CampaignEntity, User, GroupEntity, LandingPageEntity]),
     TemplateModule,
     UserManagmentModule,
-    MailerModule
+    MailerModule,
+    TrackingModule
   ],
   controllers: [CampaignController],
   providers: [CampaignService],
